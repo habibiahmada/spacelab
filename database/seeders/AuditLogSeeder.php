@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use App\Models\AuditLog;
 use App\Models\User;
 use App\Models\ScheduleEntry;
-use Illuminate\Support\Str;
 
 class AuditLogSeeder extends Seeder
 {
@@ -16,7 +15,6 @@ class AuditLogSeeder extends Seeder
         $schedule = ScheduleEntry::first();
 
         AuditLog::create([
-            'id' => Str::uuid(),
             'entity' => 'ScheduleEntry',
             'record_id' => $schedule ? $schedule->id : null,
             'action' => 'create',

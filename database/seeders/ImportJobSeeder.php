@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\ImportJob;
-use Illuminate\Support\Str;
 use App\Models\User;
 
 class ImportJobSeeder extends Seeder
@@ -14,7 +13,6 @@ class ImportJobSeeder extends Seeder
         $user = User::where('email', 'admin@ilab.sch.id')->first();
 
         ImportJob::create([
-            'id' => Str::uuid(),
             'type' => 'import',
             'entity' => 'schedule',
             'file_path' => 'storage/imports/schedule.xlsx',

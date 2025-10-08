@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Notification;
 use App\Models\User;
-use Illuminate\Support\Str;
 use App\Models\ScheduleEntry;
 
 class NotificationSeeder extends Seeder
@@ -16,7 +15,6 @@ class NotificationSeeder extends Seeder
         $schedule = ScheduleEntry::first();
 
         Notification::create([
-            'id' => Str::uuid(),
             'user_id' => $user ? $user->id : null,
             'type' => 'info',
             'message' => 'Jadwal pertama semester genap sudah dibuat.',

@@ -2,30 +2,42 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Support\Facades\Hash;
 
-
-class User extends Authenticatable
+class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUuids, CanResetPassword; // ✅ tambahkan trait ini
 
     public $incrementing = false;
-
     protected $keyType = 'string';
+
     protected $fillable = [
-        'id', 'name', 'email', 'password_hash', 'password', 'role_id', 'last_login_at'
+        'id',
+        'name',
+        'email',
+        'password_hash',
+        'role_id',
+        'last_login_at',
     ];
-    protected $hidden = ['password_hash', 'password'];
-    protected $casts = ['last_login_at' => 'datetime', 'email_verified_at' => 'datetime'];
+
+    protected $hidden = ['password_hash'];
+
+    protected $casts = [
+        'last_login_at' => 'datetime',
+        'email_verified_at' => 'datetime',
+    ];
 
     /**
-     * Return the password for the authentication system.
-     * The database column is `password_hash`, but other parts of the app
-     * (and Laravel) expect a `password` attribute or getAuthPassword().
+     * Gunakan kolom password_hash untuk autentikasi.
      */
     public function getAuthPassword(): ?string
     {
@@ -33,19 +45,26 @@ class User extends Authenticatable
     }
 
     /**
-     * Provide a virtual `password` attribute that maps to `password_hash`.
-     * We assume the value assigned is already hashed by callers (the
-     * registration code calls Hash::make before creating a user).
+     * Map virtual attribute 'password' ke kolom password_hash.
      */
+    public function setPasswordAttribute(?string $value): void
+    {
+        $this->attributes['password_hash'] = $value
+            ? (Hash::needsRehash($value) ? Hash::make($value) : $value)
+            : null;
+    }
+
     public function getPasswordAttribute(): ?string
     {
         return $this->password_hash;
     }
 
-    public function setPasswordAttribute(?string $value): void
+    /**
+     * Kirim notifikasi reset password (agar test PasswordResetTest lulus).
+     */
+    public function sendPasswordResetNotification($token): void
     {
-        // Expecting $value to already be a hashed password. Store it in password_hash.
-        $this->attributes['password_hash'] = $value;
+        $this->notify(new ResetPassword($token));
     }
 
     public function role(): BelongsTo
@@ -64,42 +83,21 @@ class User extends Authenticatable
     }
 
     /**
-     * Fallback for environments where the Fortify trait may not provide
-     * hasEnabledTwoFactorAuthentication. If the trait defines it, this
-     * method will be ignored due to PHP method resolution order on traits.
-     */
-    public function hasEnabledTwoFactorAuthentication(): bool
-    {
-        return ! empty($this->two_factor_secret) && ! empty($this->two_factor_confirmed_at);
-    }
-
-    /**
      * Return the uppercase initials for the user's display name.
-     * Examples: "John Doe" -> "JD", "Alice" -> "A".
      */
     public function initials(): string
     {
         $name = trim($this->name ?? '');
-
-        if ($name === '') {
-            return '';
-        }
+        if ($name === '') return '';
 
         $parts = preg_split('/\s+/', $name);
-
-        if (! is_array($parts) || count($parts) === 0) {
-            return strtoupper(substr($name, 0, 1));
-        }
-
         if (count($parts) === 1) {
             return strtoupper(substr($parts[0], 0, 1));
         }
 
-        // Use first and last parts for initials
         $first = strtoupper(substr($parts[0], 0, 1));
-        $last = strtoupper(substr($parts[count($parts) - 1], 0, 1));
+        $last = strtoupper(substr(end($parts), 0, 1));
 
         return $first . $last;
     }
 }
-

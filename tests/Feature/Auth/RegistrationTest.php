@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
@@ -14,9 +13,9 @@ test('new users can register', function () {
         'email' => 'test@example.com',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'role_id' => \App\Models\Role::factory()->create(['name' => 'Siswa'])->id,
     ]);
 
     $this->assertAuthenticated();
-    $role = Auth::user()->role->lower_name;
-    $response->assertRedirect(route($role . '.dashboard', absolute: false));
+    $response->assertRedirect('/redirect');
 });

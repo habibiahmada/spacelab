@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\ClassRoom;
 use App\Models\Teacher;
-use Illuminate\Support\Str;
 
 class ClassSeeder extends Seeder
 {
@@ -14,7 +13,6 @@ class ClassSeeder extends Seeder
         $teacher = Teacher::where('name', 'Andi Setiawan, S.Kom')->first();
 
         ClassRoom::create([
-            'id' => Str::uuid(),
             'name' => '12 RPL 1',
             'level' => 12,
             'academic_year' => '2025/2026',

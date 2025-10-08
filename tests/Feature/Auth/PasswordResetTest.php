@@ -15,10 +15,13 @@ test('reset password link can be requested', function () {
 
     $user = User::factory()->create();
 
-    $this->post('/forgot-password', ['email' => $user->email]);
+    $this->post('/forgot-password', [
+        'email' => $user->email,
+    ])->assertStatus(302);
 
     Notification::assertSentTo($user, ResetPassword::class);
 });
+
 
 test('reset password screen can be rendered', function () {
     Notification::fake();

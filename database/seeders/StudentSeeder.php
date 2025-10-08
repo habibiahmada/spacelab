@@ -6,7 +6,6 @@ use Illuminate\Database\Seeder;
 use App\Models\Student;
 use App\Models\ClassRoom;
 use App\Models\User;
-use Illuminate\Support\Str;
 
 class StudentSeeder extends Seeder
 {
@@ -16,7 +15,6 @@ class StudentSeeder extends Seeder
         $user = User::where('name', 'Habib Ahmad A.')->first();
 
         Student::create([
-            'id' => (string) Str::uuid(),
             'nis' => '12230101',
             'nisn' => '0065432101',
             'name' => 'Habib Ahmad A.',
