@@ -5,13 +5,13 @@
     Dashboard
 </a>
 
-<a href="{{ route('staff.schedules') }}"
+<a href="#"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-calendar-days class="w-5 h-5" />
     Jadwal Sekolah
 </a>
 
-<a href="{{ route('staff.reports') }}"
+<a href="#"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-chart-pie class="w-5 h-5" />
     Laporan Harian

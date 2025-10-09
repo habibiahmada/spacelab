@@ -25,7 +25,6 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => (string) Str::uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
@@ -37,7 +36,6 @@ class UserFactory extends Factory
 
                 if (! $role) {
                     $role = Role::create([
-                        'id' => (string) Str::uuid(),
                         'name' => 'Siswa',
                         'permissions' => json_encode(['view_schedule']),
                     ]);
@@ -46,6 +44,20 @@ class UserFactory extends Factory
                 return $role->id;
             },
         ];
+    }
+
+    public function asStudent(): static
+    {
+        return $this->state(function () {
+            $role = \App\Models\Role::firstOrCreate(
+                ['name' => 'Siswa'],
+                [
+                    'permissions' => json_encode(['view_schedule']),
+                ]
+            );
+
+            return ['role_id' => $role->id];
+        });
     }
 
     /**

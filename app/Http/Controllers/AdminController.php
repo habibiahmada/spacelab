@@ -22,12 +22,22 @@ class AdminController extends Controller
             'description' => 'Halaman utama'
         ]);
     }
+
     public function getTeacher()
     {
-        $teachers = \App\Models\Teacher::orderBy('name')->get();
+        $teachers = Teacher::orderBy('name')->get();
         $title = 'Lihat Guru';
         $description = 'Semua Guru';
 
         return view('admin.pages.teachers', compact(['teachers', 'title', 'description']));
+    }
+
+    public function getStudent()
+    {
+        $students = Student::orderBy('name')->get();
+        $title = 'Lihat Siswa';
+        $description = 'Semua Siswa';
+
+        return view('admin.pages.teachers', compact(['student', 'title', 'description']));
     }
 }

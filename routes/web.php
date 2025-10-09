@@ -16,7 +16,7 @@ Route::get('/', [PagesController::class, 'index'])->name('welcome');
 
 Route::get('/redirect', function () {
     $role = Auth::user()->role->lower_name;
-
+    dd($role);
 
     return match ($role) {
         'admin'    => redirect()->route('admin.dashboard'),
@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/dashboard',[AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/teachers', [AdminController::class, 'getTeacher'])->name('admin.teachers.index');
+    Route::get('admin/students', [AdminController::class, 'getStudent'])->name('admin.students.index');
 });
 
 Route::middleware(['auth', 'role:Guru'])->group(function () {
