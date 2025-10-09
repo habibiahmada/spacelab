@@ -20,8 +20,13 @@ class Term extends Model
         'is_active' => 'boolean'
     ];
 
-    public function scheduleEntries(): HasMany
+    public function classes()
     {
-        return $this->hasMany(ScheduleEntry::class);
+        return $this->hasMany(Classroom::class, 'term_id');
     }
+    
+    public function schedules()
+    {
+        return $this->hasMany(ScheduleEntry::class, 'term_id');
+    }    
 }

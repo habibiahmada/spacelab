@@ -17,10 +17,15 @@ class Student extends Model
         'nis', 'nisn', 'name', 'class_id', 'guardian_name', 'phone', 'user_id'
     ];
 
-    public function classRoom(): BelongsTo
+    public function classroom()
     {
-        return $this->belongsTo(ClassRoom::class, 'class_id');
+        return $this->belongsTo(Classroom::class, 'class_id');
     }
+    
+    public function major()
+    {
+        return $this->belongsTo(Major::class, 'major_id');
+    }    
 
     public function user(): BelongsTo
     {

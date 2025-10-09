@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\ClassRoom;
 use App\Models\Teacher;
+use App\Models\Major;
+use App\Models\Term;
 
 class ClassSeeder extends Seeder
 {
@@ -12,11 +14,11 @@ class ClassSeeder extends Seeder
     {
         $teacher = Teacher::where('name', 'Andi Setiawan, S.Kom')->first();
 
-        ClassRoom::create([
-            'name' => '12 RPL 1',
-            'level' => 12,
-            'academic_year' => '2025/2026',
-            'homeroom_teacher_id' => $teacher ? $teacher->id : null
+        Classroom::create([
+            'level' => 10,
+            'rombel' => '1',
+            'major_id' => Major::where('code', 'RPL')->first()->id,
+            'term_id' => Term::where('is_active', true)->first()->id,
         ]);
     }
 }

@@ -27,10 +27,22 @@ class ScheduleEntry extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public function classRoom(): BelongsTo
+    public function classroom()
     {
-        return $this->belongsTo(ClassRoom::class, 'class_id');
+        return $this->belongsTo(Classroom::class, 'class_id');
     }
+    
+    public function major()
+    {
+        return $this->hasOneThrough(
+            Major::class,
+            Classroom::class,
+            'id', // Foreign key di Classroom
+            'id', // Foreign key di Major
+            'class_id', // FK di Schedule
+            'major_id' // FK di Classroom
+        );
+    }    
 
     public function teacher(): BelongsTo
     {

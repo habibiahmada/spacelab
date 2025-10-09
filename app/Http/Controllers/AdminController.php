@@ -38,6 +38,6 @@ class AdminController extends Controller
         $title = 'Lihat Siswa';
         $description = 'Semua Siswa';
 
-        return view('admin.pages.teachers', compact(['student', 'title', 'description']));
+        return view('admin.pages.students', compact(['students', 'title', 'description']));
     }
 }

@@ -2,35 +2,57 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class ClassRoom extends Model
+class Classroom extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'classes';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $table = 'classes'; 
+
     protected $fillable = [
-        'name', 'level', 'academic_year', 'homeroom_teacher_id'
+        'level',
+        'rombel',
+        'major_id',
+        'term_id',
+        'homeroom_teacher_id'
     ];
 
-    public function homeroomTeacher(): BelongsTo
+    // Relasi ke jurusan
+    public function major()
+    {
+        return $this->belongsTo(Major::class, 'major_id');
+    }
+
+    // Relasi ke tahun ajaran (terms)
+    public function term()
+    {
+        return $this->belongsTo(Term::class, 'term_id');
+    }
+
+    // Wali kelas
+    public function homeroomTeacher()
     {
         return $this->belongsTo(Teacher::class, 'homeroom_teacher_id');
     }
 
-    public function students(): HasMany
+    // Siswa dalam kelas
+    public function students()
     {
         return $this->hasMany(Student::class, 'class_id');
     }
 
-    public function scheduleEntries(): HasMany
+    // Jadwal kelas
+    public function scheduleEntries()
     {
         return $this->hasMany(ScheduleEntry::class, 'class_id');
+    }
+
+    // Helper: nama lengkap kelas
+    public function getFullNameAttribute()
+    {
+        return "{$this->level} {$this->major->code} {$this->rombel}";
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Teacher;
 use App\Models\Term;
 use App\Models\Room;
 use App\Models\ClassRoom;
+use App\Models\Major;
 
 class ScheduleSeeder extends Seeder
 {
@@ -18,7 +19,13 @@ class ScheduleSeeder extends Seeder
         $teacher = Teacher::where('name', 'Andi Setiawan, S.Kom')->first();
         $subject = Subject::where('name', 'Pemrograman Web')->first();
         $term = Term::where('name', 'Semester Genap 2025')->first();
-        $class = ClassRoom::where('name', '12 RPL 1')->first();
+        $major = Major::where('code', 'RPL')->first();
+
+        // Temukan kelas berdasarkan kombinasi level, major_id, dan rombel
+        $class = Classroom::where('level', 10)
+            ->where('rombel', 1)
+            ->where('major_id', $major?->id)
+            ->first();
 
         // Pastikan semua relasi ditemukan sebelum membuat schedule
         if (! $room || ! $teacher || ! $subject || ! $term || ! $class) {
