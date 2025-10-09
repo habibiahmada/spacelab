@@ -1,3 +1,9 @@
+@props([
+    'title' => config('app.name'),
+    'description' => 'Halaman default tanpa deskripsi'
+])
+
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
@@ -40,23 +46,14 @@
 
             <!-- Logo -->
             <div class="flex items-center justify-center py-6">
-                <a href="{{ route(Auth::user()->role->lower_name . '.dashboard') }}">
+                <a href="{{ route(Auth::user()->role->lower_name . '.dashboard') }}" class="flex items-center space-x-2">
                     <x-application-logo class="h-10 w-auto" />
+                    <span class="text-lg font-semibold">SpaceLab</span>
                 </a>
             </div>
 
             <!-- Navigation -->
-            <nav class="mt-6 space-y-1">
-                <div class="px-4 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-                    {{ __('Platform') }}
-                </div>
-                <a href="{{ route(Auth::user()->role->lower_name . '.dashboard') }}"
-                   class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
-                          {{ request()->routeIs(Auth::user()->role->lower_name . '.dashboard') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
-                    <x-heroicon-o-home class="w-5 h-5" />
-                    {{ __('Dashboard') }}
-                </a>
-            </nav>
+            @include('partials.auth.sidebar')
         </div>
 
         <!-- User dropdown -->
@@ -111,10 +108,9 @@
     <main class="flex-1 flex flex-col">
         <!-- Header (mobile) -->
         <header class="lg:hidden flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
-            <button @click="sidebarOpen = true" class="p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
-                <x-heroicon-o-bars-3 class="w-6 h-6" />
-            </button>
-
+            <div>
+                <p>Selamat Datang {{ Auth::user()->name }}</p>
+            </div>
             <div class="flex items-center gap-3">
                 <div class="relative flex h-8 w-8 overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-700">
                     <span class="flex h-full w-full items-center justify-center text-black dark:text-white">
@@ -145,6 +141,47 @@
                 </details>
             </div>
         </header>
+
+        <div class="flex sticky top-0 justify-between items-center py-2 px-4 border-b border-slate-200 dark:border-slate-700 gap-4 bg-neskar-blue-50 dark:bg-slate-900 z-10">
+            <button @click="sidebarOpen = true" class="p-2 rounded-md lg:hidden hover:bg-slate-200 dark:hover:bg-slate-800">
+                <x-heroicon-o-bars-3 class="w-6 h-6" />
+            </button>
+            <div class="hidden lg:flex">
+                {{ $header ?? '' }}
+            </div>
+            <div>
+                <!-- Notification Button -->
+                <button class="relative p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Notifications">
+                    <x-heroicon-o-bell class="w-6 h-6 text-gray-800 dark:text-gray-200" />
+                    <!-- Badge (opsional) -->
+                    <span class="absolute top-0 right-0 inline-flex h-2 w-2 rounded-full bg-red-500"></span>
+                </button>
+
+                <!-- Dark Mode Toggle -->
+                <button 
+                    x-data="{ 
+                        darkMode: localStorage.getItem('dark') 
+                            ? localStorage.getItem('dark') === 'true' 
+                            : window.matchMedia('(prefers-color-scheme: dark)').matches 
+                    }"
+                    x-init="$watch('darkMode', value => {
+                        document.documentElement.classList.toggle('dark', value);
+                        localStorage.setItem('dark', value);
+                    }); 
+                    document.documentElement.classList.toggle('dark', darkMode);"
+                    @click="darkMode = !darkMode"
+                    class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                    aria-label="Toggle Dark Mode"
+                >
+                    <template x-if="!darkMode">
+                        <x-heroicon-o-moon class="w-6 h-6 text-gray-800 dark:text-gray-200" />
+                    </template>
+                    <template x-if="darkMode">
+                        <x-heroicon-o-sun class="w-6 h-6 text-gray-800 dark:text-gray-200" />
+                    </template>
+                </button>
+            </div>
+        </div>
 
         <div class="flex-1 p-6">
             {{ $slot }}
