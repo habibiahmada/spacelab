@@ -16,8 +16,6 @@ Route::get('/', [PagesController::class, 'index'])->name('welcome');
 
 Route::get('/redirect', function () {
     $role = Auth::user()->role->lower_name;
-    dd($role);
-
     return match ($role) {
         'admin'    => redirect()->route('admin.dashboard'),
         'guru'     => redirect()->route('guru.dashboard'),
