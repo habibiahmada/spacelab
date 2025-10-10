@@ -3,35 +3,54 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Student;
-use App\Models\Classroom;
-use App\Models\User;
-use App\Models\Major;
+use App\Models\{Student, Classroom, User, Role};
+use Faker\Factory as Faker;
+use Illuminate\Support\Str;
 
 class StudentSeeder extends Seeder
 {
     public function run(): void
     {
-        // Temukan jurusan RPL
-        $major = Major::where('code', 'RPL')->first();
+        $faker = Faker::create('id_ID');
 
-        // Temukan kelas berdasarkan kombinasi level, major_id, dan rombel
-        $class = Classroom::where('level', 10)
-            ->where('rombel', 1)
-            ->where('major_id', $major?->id)
-            ->first();
+        // Ambil semua user dengan role "Siswa"
+        $studentRole = Role::where('name', 'Siswa')->first();
 
-        // Temukan user
-        $user = User::where('name', 'Habib Ahmad A.')->first();
+        if (! $studentRole) {
+            $this->command->warn('⚠️ Role "Siswa" belum ada. Jalankan RoleSeeder dulu.');
+            return;
+        }
 
-        Student::create([
-            'nis' => '12230101',
-            'nisn' => '0065432101',
-            'name' => 'Habib Ahmad A.',
-            'class_id' => $class?->id,
-            'guardian_name' => 'Ahmad Yusuf',
-            'phone' => '081234500111',
-            'user_id' => $user?->id,
-        ]);
+        $studentUsers = User::where('role_id', $studentRole->id)->get();
+        $classes = Classroom::all();
+
+        if ($classes->isEmpty()) {
+            $this->command->warn('⚠️ Tidak ada kelas di database. Jalankan ClassSeeder dulu.');
+            return;
+        }
+
+        $counter = 1;
+        foreach ($studentUsers as $user) {
+            $class = $classes->random();
+
+            // Buat NIS dan NISN unik berbasis counter
+            $nis = str_pad($counter, 8, '0', STR_PAD_LEFT);
+            $nisn = '00' . str_pad($counter, 8, '0', STR_PAD_LEFT);
+
+            Student::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'nis' => $nis,
+                    'nisn' => $nisn,
+                    'class_id' => $class->id,
+                    'guardian_name' => $faker->name('male'),
+                    'phone' => $faker->unique()->numerify('08##########'),
+                ]
+            );
+
+            $counter++;
+        }
+
+        $this->command->info("✅ StudentSeeder berhasil membuat/menyesuaikan {$studentUsers->count()} siswa dari tabel users.");
     }
 }

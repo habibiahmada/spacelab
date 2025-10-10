@@ -6,10 +6,10 @@
                 <x-application-logo class="w-16 h-16 text-gray-700 dark:text-gray-300" />
             </a>
             <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 tracking-tight">
-                Welcome Back
+                Selamat Datang Kembali
             </h1>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Sign in to continue to your account
+                Masuk untuk melanjutkan ke akun anda
             </p>
         </div>
 
@@ -31,7 +31,7 @@
                 <!-- Password -->
                 <div class="space-y-1">
                     <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Password
+                        Kata Sandi
                     </label>
                     <input id="password" type="password" name="password" required
                         class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" />
@@ -43,13 +43,13 @@
                     <label for="remember_me" class="flex items-center space-x-2">
                         <input id="remember_me" type="checkbox"
                             class="rounded border-gray-300 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500" name="remember">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">Remember me</span>
+                        <span class="text-sm text-gray-600 dark:text-gray-400">Ingat saya</span>
                     </label>
 
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}"
                             class="text-sm font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition">
-                            Forgot password?
+                            Lupa Kata Sandi?
                         </a>
                     @endif
                 </div>
@@ -58,7 +58,7 @@
                 <div>
                     <button type="submit"
                         class="w-full inline-flex justify-center items-center rounded-xl bg-indigo-600 text-white font-medium py-2.5 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400 focus:ring-opacity-30 transition">
-                        Log In
+                        Masuk
                     </button>
                 </div>
             </form>
@@ -66,15 +66,15 @@
             <!-- Divider -->
             <div class="flex items-center justify-center mt-8">
                 <span class="h-px w-1/4 bg-gray-200 dark:bg-gray-700"></span>
-                <span class="px-3 text-xs text-gray-400 uppercase">or</span>
+                <span class="px-3 text-xs text-gray-400 uppercase">atau</span>
                 <span class="h-px w-1/4 bg-gray-200 dark:bg-gray-700"></span>
             </div>
 
             <!-- Register Link -->
             <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-                Don't have an account?
+                Tidak punya akun?
                 <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                    Sign up
+                    Daftar
                 </a>
             </p>
         </div>

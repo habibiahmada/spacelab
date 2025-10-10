@@ -36,4 +36,15 @@ class Teacher extends Model
     {
         return $this->hasMany(ClassRoom::class, 'homeroom_teacher_id');
     }
+
+    public function majorsAsHead()
+    {
+        return $this->hasMany(Major::class, 'head_of_major_id');
+    }
+
+    public function majorsAsCoordinator()
+    {
+        return $this->hasMany(Major::class, 'program_coordinator_id');
+    }
+
 }

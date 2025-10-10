@@ -3,7 +3,6 @@
     'description' => 'Halaman default tanpa deskripsi'
 ])
 
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
@@ -16,7 +15,6 @@
     x-data="{ 
         sidebarOpen: false, 
         checkScreen() {
-            // Kalau layar >= 1024px (breakpoint lg), pastikan sidebar terbuka
             if (window.innerWidth >= 1024) {
                 this.sidebarOpen = true;
             } else {
@@ -25,7 +23,7 @@
         }
     }" 
     x-init="checkScreen(); window.addEventListener('resize', () => checkScreen())"
-    class="min-h-screen bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100 font-sans flex"
+    class="h-screen bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100 font-sans flex overflow-hidden"
 >
     <!-- Sidebar -->
     <aside
@@ -36,9 +34,10 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-x-0"
         x-transition:leave-end="opacity-0 -translate-x-full"
-        class="fixed lg:static inset-y-0 left-0 w-64 border-e border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 flex flex-col justify-between z-40"
+        class="fixed lg:static inset-y-0 left-0 w-64 border-e border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 flex flex-col z-40"
     >
-        <div>
+        <!-- Sidebar scroll area -->
+        <div class="flex-1 overflow-y-auto">
             <!-- Close button (mobile only) -->
             <div class="flex justify-end lg:hidden p-4">
                 <x-heroicon-o-x-mark class="w-6 h-6 text-accent cursor-pointer" @click="sidebarOpen = false" />
@@ -105,9 +104,9 @@
     ></div>
 
     <!-- Main content -->
-    <main class="flex-1 flex flex-col">
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
         <!-- Header (mobile) -->
-        <header class="lg:hidden flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
+        <header class="lg:hidden flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
             <div>
                 <p>Selamat Datang {{ Auth::user()->name }}</p>
             </div>
@@ -142,18 +141,20 @@
             </div>
         </header>
 
+        <!-- Topbar -->
         <div class="flex sticky top-0 justify-between items-center py-2 px-4 border-b border-slate-200 dark:border-slate-700 gap-4 bg-neskar-blue-50 dark:bg-slate-900 z-10">
             <button @click="sidebarOpen = true" class="p-2 rounded-md lg:hidden hover:bg-slate-200 dark:hover:bg-slate-800">
                 <x-heroicon-o-bars-3 class="w-6 h-6" />
             </button>
+
             <div class="hidden lg:flex">
                 {{ $header ?? '' }}
             </div>
-            <div>
-                <!-- Notification Button -->
+
+            <div class="flex items-center">
+                <!-- Notification -->
                 <button class="relative p-2 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Notifications">
                     <x-heroicon-o-bell class="w-6 h-6 text-gray-800 dark:text-gray-200" />
-                    <!-- Badge (opsional) -->
                     <span class="absolute top-0 right-0 inline-flex h-2 w-2 rounded-full bg-red-500"></span>
                 </button>
 
@@ -183,10 +184,10 @@
             </div>
         </div>
 
+        <!-- Scrollable Content -->
         <div class="flex-1 p-6">
             {{ $slot }}
         </div>
     </main>
 </body>
-
 </html>

@@ -23,5 +23,9 @@ class RoleSeeder extends Seeder
             'name' => 'Siswa',
             'permissions' => ['view_schedule'],
         ]);
+        Role::create([
+            'name' => 'Staff',
+            'permissions' => ['view_schedule', 'manage_class', 'view_reports', 'manage_users', 'manage_schedule'],
+        ]);
     }
 }

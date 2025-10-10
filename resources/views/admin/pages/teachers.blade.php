@@ -18,7 +18,7 @@
                 </div>
 
                 <a href="#"
-                   class="px-4 py-2 bg-neskar.blue-500 hover:bg-neskar.blue-600 text-white rounded-md text-sm">
+                   class="px-4 py-2 bg-neskar.blue-500 hover:bg-neskar.blue-600 text-white rounded-md text-sm transition duration-150 ease-in-out">
                     <x-heroicon-o-plus class="w-4 h-4 inline-block mr-1" />
                     Tambah Guru
                 </a>
@@ -37,34 +37,41 @@
                                 <th class="px-4 py-3 text-right text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
+
                         <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                             @forelse($teachers as $index => $teacher)
-                            <tr>
-                                <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">{{ $index + 1 }}</td>
-                                <td class="px-4 py-3 text-sm font-medium text-neskar.blue-700 dark:text-white">{{ $teacher->name }}</td>
-                                <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $teacher->email }}</td>
-                                <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $teacher->scheduleEntries->pluck('subject.name')->unique()->join(', ') ?: '-' }}</td>
-                                <td class="px-4 py-3 text-right space-x-2">
-                                    <a href="#"
-                                       class="text-neskar.blue-500 hover:text-neskar.blue-700">
-                                        <x-heroicon-o-pencil-square class="w-5 h-5 inline-block" />
-                                    </a>
-                                    <form action="#" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-neskar.red-500 hover:text-neskar.red-700"
-                                                onclick="return confirm('Hapus guru ini?')">
-                                            <x-heroicon-o-trash class="w-5 h-5 inline-block" />
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-3 text-sm font-medium text-neskar.blue-700 dark:text-white">
+                                        {{ $teacher->name }}
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">{{ $teacher->email ?? '-' }}</td>
+                                    <td class="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">
+                                        {{ $teacher->scheduleEntries->pluck('subject.name')->unique()->join(', ') ?: '-' }}
+                                    </td>
+                                    <td class="px-4 py-3 text-right space-x-2">
+                                        <a href="#"
+                                           class="text-neskar.blue-500 hover:text-neskar.blue-700 transition duration-100">
+                                            <x-heroicon-o-pencil-square class="w-5 h-5 inline-block" />
+                                        </a>
+
+                                        <form action="#" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="text-neskar.red-500 hover:text-neskar.red-700 transition duration-100"
+                                                    onclick="return confirm('Hapus guru ini?')">
+                                                <x-heroicon-o-trash class="w-5 h-5 inline-block" />
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="6" class="px-4 py-6 text-center text-slate-500 dark:text-slate-400">
-                                    Belum ada data guru.
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="5" class="px-4 py-6 text-center text-slate-500 dark:text-slate-400">
+                                        Belum ada data guru.
+                                    </td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>

@@ -21,7 +21,6 @@ Route::get('/redirect', function () {
         'guru'     => redirect()->route('guru.dashboard'),
         'siswa'    => redirect()->route('siswa.dashboard'),
         'staff'    => redirect()->route('staff.dashboard'),
-        'operator' => redirect()->route('operator.dashboard'),
         default    => abort(403, 'Unauthorized role'),
     };
 })->middleware('auth')->name('redirect');
@@ -45,6 +44,10 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/dashboard',[AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('admin/teachers', [AdminController::class, 'getTeacher'])->name('admin.teachers.index');
     Route::get('admin/students', [AdminController::class, 'getStudent'])->name('admin.students.index');
+    Route::get('admin/classes', [AdminController::class, 'getClass'])->name('admin.classes.index');
+    Route::get('admin/majors', [AdminController::class, 'getMajor'])->name('admin.majors.index');
+    Route::get('admin/rooms', [AdminController::class, 'getRoom'])->name('admin.rooms.index');
+    Route::get('admin/schedules', [AdminController::class, 'getSchedule'])->name('admin.schedules.index');
 });
 
 Route::middleware(['auth', 'role:Guru'])->group(function () {

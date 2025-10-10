@@ -14,7 +14,7 @@ class Student extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'nis', 'nisn', 'name', 'class_id', 'guardian_name', 'phone', 'user_id'
+        'nis', 'nisn', 'class_id', 'guardian_name', 'phone', 'user_id'
     ];
 
     public function classroom()

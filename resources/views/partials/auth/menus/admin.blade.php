@@ -20,29 +20,29 @@
     Siswa
 </a>
 
-<a href="#"
+<a href="{{ route('admin.classes.index')  }}"
    class="flex items-center gap-3 px-5 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
           {{ request()->routeIs('admin.classes.*') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
     <x-heroicon-o-rectangle-stack class="w-5 h-5" />
     Kelas
 </a>
-<a href="#"
+<a href="{{  route('admin.majors.index') }}"
    class="flex items-center gap-3 px-5 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
           {{ request()->routeIs('admin.majors.*') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
           <x-heroicon-o-academic-cap class="w-5 h-5" />
     Jurusan
 </a>
 
-<a href="#"
+<a href="{{ route('admin.rooms.index') }}"
    class="flex items-center gap-3 px-5 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
           {{ request()->routeIs('admin.rooms.*') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
     <x-heroicon-o-building-office class="w-5 h-5" />
     Ruangan
 </a>
 
-<a href="#"
+<a href="{{ route('admin.schedules.index') }}"
    class="flex items-center gap-3 px-5 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
-          {{ request()->routeIs('admin.schedule.*') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
+          {{ request()->routeIs('admin.schedules.*') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
     <x-heroicon-o-calendar-days class="w-5 h-5" />
     Jadwal
 </a>

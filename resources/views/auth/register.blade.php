@@ -4,7 +4,7 @@
             <a href="/">
                 <x-application-logo class="w-16 h-16 text-gray-700 dark:text-gray-300" />
             </a>
-            <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Create an Account</h1>
+            <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Buat Akun</h1>
         </div>
 
         <div class="w-full max-w-md bg-white dark:bg-gray-900 shadow-lg rounded-2xl p-8 border border-gray-200 dark:border-gray-800">
@@ -12,7 +12,7 @@
                 @csrf
 
                 <div class="space-y-1">
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama</label>
                     <input id="name" type="text" name="name" :value="old('name')" required autofocus
                         class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" />
                     <x-input-error :messages="$errors->get('name')" class="text-red-500 text-sm mt-1" />
@@ -26,22 +26,22 @@
                 </div>
 
                 <div class="space-y-1">
-                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kata Sandi</label>
                     <input id="password" type="password" name="password" required
                         class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" />
                     <x-input-error :messages="$errors->get('password')" class="text-red-500 text-sm mt-1" />
                 </div>
 
                 <div class="space-y-1">
-                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Konfirmasi</label>
                     <input id="password_confirmation" type="password" name="password_confirmation" required
                         class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" />
                     <x-input-error :messages="$errors->get('password_confirmation')" class="text-red-500 text-sm mt-1" />
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <a href="{{ route('login') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition">Already registered?</a>
-                    <x-primary-button class="ml-2 w-full">Register</x-primary-button>
+                    <a href="{{ route('login') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition">Sudah punya akun?</a>
+                    <x-primary-button class="ml-2 w-full">Daftar</x-primary-button>
                 </div>
             </form>
         </div>

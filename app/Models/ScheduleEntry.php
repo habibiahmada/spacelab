@@ -15,7 +15,7 @@ class ScheduleEntry extends Model
     protected $keyType = 'string';
     protected $fillable = [
         'room_id', 'class_id', 'teacher_id', 'subject_id', 'term_id',
-        'start_at', 'end_at', 'recurrence_rule', 'status', 'note', 'created_by'
+        'start_at', 'end_at', 'recurrence_rule', 'status', 'note', 'created_by, day'
     ];
     protected $casts = [
         'start_at' => 'datetime',

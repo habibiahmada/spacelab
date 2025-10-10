@@ -27,7 +27,7 @@
                         Dashboard
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="hover:text-accent transition">Log in</a>
+                    <a href="{{ route('login') }}" class="hover:text-accent transition">Masuk</a>
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}" 
                            class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border text-[#1b1b18] dark:text-[#EDEDEC]">
