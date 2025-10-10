@@ -82,4 +82,11 @@ jobs:
         run: npm run build
 
       - name: Run Tests
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: spacelab
+          DB_USERNAME: root
+          DB_PASSWORD: root
         run: ./vendor/bin/pest
