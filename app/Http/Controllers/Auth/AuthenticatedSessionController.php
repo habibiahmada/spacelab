@@ -16,7 +16,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        $title = __('Masuk');
+        $description = __('Lanjutkan ke akun anda');
+        return view('auth.login', ['title' => $title, 'description' => $description]);
     }
 
     /**

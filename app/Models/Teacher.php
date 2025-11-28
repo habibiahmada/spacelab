@@ -15,7 +15,7 @@ class Teacher extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'staff_id', 'name', 'email', 'phone', 'subjects', 'available_hours', 'user_id'
+        'staff_id', 'name', 'email', 'phone', 'subjects', 'available_hours', 'user_id', 'image'
     ];
     protected $casts = [
         'subjects' => 'array',

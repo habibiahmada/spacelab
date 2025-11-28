@@ -41,7 +41,9 @@
                         <tbody class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                             @forelse($teachers as $index => $teacher)
                                 <tr>
-                                    <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">
+                                        {{ $teachers->firstItem() + $index }}
+                                    </td>                                    
                                     <td class="px-4 py-3 text-sm font-medium text-neskar.blue-700 dark:text-white">
                                         {{ $teacher->name }}
                                     </td>
@@ -75,6 +77,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="px-4 py-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+                        {{ $teachers->links() }}
+                    </div>                    
                 </div>
             </div>
 

@@ -25,6 +25,45 @@
                 </a>
             </div>
 
+            <!-- Header section -->
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-neskar.neutral-800 dark:text-white">Daftar Siswa</h3>
+                    <p class="text-sm text-neskar.neutral-500 dark:text-neskar.neutral-400">
+                        Kelola data seluruh siswa di sekolah Anda.
+                    </p>
+                </div>
+
+                <a href="#"
+                class="px-4 py-2 bg-neskar.blue-500 hover:bg-neskar.blue-600 text-white rounded-md text-sm transition duration-150 ease-in-out">
+                    <x-heroicon-o-plus class="w-4 h-4 inline-block mr-1" />
+                    Tambah siswa
+                </a>
+            </div>
+
+            <!-- Filter & Search -->
+            <form method="GET" action="{{ route('admin.students.index') }}" class="mt-4 flex flex-col sm:flex-row items-center gap-3">
+                <input type="text" name="search" value="{{ $search ?? '' }}"
+                    placeholder="Cari nama, NIS, atau NISN..."
+                    class="w-full sm:w-64 px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-neskar.blue-400 dark:bg-slate-700 dark:text-white" />
+
+                <select name="classroom_id"
+                        class="w-full sm:w-48 px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-neskar.blue-400 dark:bg-slate-700 dark:text-white">
+                    <option value="">Semua Kelas</option>
+                    @foreach ($classrooms as $classroom)
+                        <option value="{{ $classroom->id }}" {{ $classFilter == $classroom->id ? 'selected' : '' }}>
+                            {{ $classroom->full_name ?? $classroom->name }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <button type="submit"
+                        class="px-4 py-2 bg-neskar.blue-500 hover:bg-neskar.blue-600 text-white rounded-md text-sm">
+                    <x-heroicon-o-magnifying-glass class="w-4 h-4 inline-block mr-1" />
+                    Cari
+                </button>
+            </form>
+
             <!-- Table section -->
             <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
@@ -78,6 +117,9 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="p-4">
+                        {{ $students->links('pagination::tailwind') }}
+                    </div>                    
                 </div>
             </div>
 

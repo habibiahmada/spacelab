@@ -21,11 +21,11 @@ class Student extends Model
     {
         return $this->belongsTo(Classroom::class, 'class_id');
     }
-    
+
     public function major()
     {
         return $this->belongsTo(Major::class, 'major_id');
-    }    
+    }
 
     public function user(): BelongsTo
     {

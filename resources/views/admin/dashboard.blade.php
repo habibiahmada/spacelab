@@ -33,7 +33,7 @@
             <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm overflow-hidden">
                 <div class="p-4 border-b dark:border-slate-700 flex justify-between items-center">
                     <h3 class="text-lg font-semibold text-neskar.blue-700 dark:text-white">Jadwal Hari Ini</h3>
-                    <a href="#" class="text-sm text-neskar.blue-500 hover:underline">Lihat Semua</a>
+                    <a href="{{ route('admin.schedules.index') }}" class="text-sm text-neskar.blue-500 hover:underline">Lihat Semua</a>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
