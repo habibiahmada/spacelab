@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        //
+         Schema::table('terms', function (Blueprint $table) {
+            if (Schema::hasColumn('terms', 'name')) {
+                $table->renameColumn('name', 'tahun_ajaran');
+            }
+
+            if (!Schema::hasColumn('terms', 'kind')) {
+                $table->enum('kind', ['ganjil', 'genap'])->after('tahun_ajaran');
+            }
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        //
+    }
+};

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable implements CanResetPasswordContract
 {
-    use HasFactory, Notifiable, HasUuids, CanResetPassword; // ✅ tambahkan trait ini
+    use HasFactory, Notifiable, HasUuids, CanResetPassword;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -80,6 +80,11 @@ class User extends Authenticatable implements CanResetPasswordContract
     public function auditLogs(): HasMany
     {
         return $this->hasMany(AuditLog::class);
+    }
+
+    public function classHistory(): HasMany
+    {
+        return $this->hasMany(ClassHistory::class);
     }
 
     /**

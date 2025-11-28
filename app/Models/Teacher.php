@@ -15,11 +15,7 @@ class Teacher extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'staff_id', 'name', 'email', 'phone', 'subjects', 'available_hours', 'user_id', 'image'
-    ];
-    protected $casts = [
-        'subjects' => 'array',
-        'available_hours' => 'array',
+        'phone', 'user_id', 'code', 'avatar'
     ];
 
     public function user(): BelongsTo
@@ -29,22 +25,29 @@ class Teacher extends Model
 
     public function scheduleEntries(): HasMany
     {
-        return $this->hasMany(ScheduleEntry::class);
+        return $this->hasMany(TimetableEntry::class, 'teacher_id');
     }
 
-    public function homeroomClasses(): HasMany
+    public function timetableEntries(): HasMany
     {
-        return $this->hasMany(ClassRoom::class, 'homeroom_teacher_id');
+        return $this->hasMany(TimetableEntry::class, 'teacher_id');
     }
 
-    public function majorsAsHead()
+    public function subjects()
     {
-        return $this->hasMany(Major::class, 'head_of_major_id');
+        return $this->belongsToMany(Subject::class, 'teacher_subjects_', 'teacher_id', 'subject_id')
+            ->withTimestamps()
+            ->withPivot(['started_at', 'ended_at']);
     }
 
-    public function majorsAsCoordinator()
+    public function roleAssignments(): HasMany
     {
-        return $this->hasMany(Major::class, 'program_coordinator_id');
+        return $this->hasMany(RoleAssignment::class, 'head_of_major_id');
+    }
+
+    public function asCoordinatorAssignments(): HasMany
+    {
+        return $this->hasMany(RoleAssignment::class, 'program_coordinator_id');
     }
 
 }

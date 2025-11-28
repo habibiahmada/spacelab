@@ -14,12 +14,21 @@ class Room extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'code', 'name', 'building', 'floor', 'capacity', 'type', 'resources'
+        'code', 'name', 'building_id', 'floor', 'capacity', 'type', 'is_active', 'notes'
     ];
-    protected $casts = ['resources' => 'array'];
+
+    public function timetableEntries(): HasMany
+    {
+        return $this->hasMany(TimetableEntry::class, 'room_id');
+    }
 
     public function scheduleEntries(): HasMany
     {
-        return $this->hasMany(ScheduleEntry::class);
+        return $this->hasMany(TimetableEntry::class, 'room_id');
+    }
+
+    public function building()
+    {
+        return $this->belongsTo(Building::class, 'building_id');
     }
 }

@@ -20,13 +20,13 @@ class Term extends Model
         'is_active' => 'boolean'
     ];
 
-    public function classes()
+    public function blocks()
     {
-        return $this->hasMany(Classroom::class, 'term_id');
+        return $this->hasMany(Block::class, 'terms_id');
     }
     
-    public function schedules()
+    public function timetableTemplates()
     {
-        return $this->hasMany(ScheduleEntry::class, 'term_id');
-    }    
+        return $this->hasMany(TimetableTemplate::class, 'block_id');
+    }
 }

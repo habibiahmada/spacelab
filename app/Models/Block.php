@@ -7,18 +7,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Student extends Model
+class Block extends Model
 {
+    //
     use HasFactory, HasUuids;
 
     public $incrementing = false;
     protected $keyType = 'string';
+
     protected $fillable = [
-        'nis', 'nisn', 'name', 'users_id', 'avatar'
+        'terms_id',
+        'name',
+        'start_date',
+        'end_date'
     ];
 
-    public function user(): BelongsTo
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date'   => 'date'
+    ];
+
+    public function term(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(Term::class, 'terms_id');
     }
 }

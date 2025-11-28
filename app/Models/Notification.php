@@ -23,6 +23,6 @@ class Notification extends Model
 
     public function schedule(): BelongsTo
     {
-        return $this->belongsTo(ScheduleEntry::class, 'related_schedule_id');
+        return $this->belongsTo(TimetableEntry::class, 'related_schedule_id');
     }
 }

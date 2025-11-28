@@ -7,18 +7,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Student extends Model
+class ClassHistory extends Model
 {
+    //
     use HasFactory, HasUuids;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
     protected $fillable = [
-        'nis', 'nisn', 'name', 'users_id', 'avatar'
+        'user_id', 'class_id', 'terms_id', 'block_id',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function classes(): BelongsTo
+    {
+        return $this->belongsTo(Classroom::class, 'class_id');
+    }
+
+    
 }

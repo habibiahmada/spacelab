@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Classroom extends Model
 {
@@ -14,43 +16,37 @@ class Classroom extends Model
 
     protected $fillable = [
         'level',
-        'rombel',
         'major_id',
-        'term_id',
-        'homeroom_teacher_id'
+        'rombel',
     ];
 
-    // Relasi ke jurusan
     public function major()
     {
         return $this->belongsTo(Major::class, 'major_id');
     }
 
-    // Relasi ke tahun ajaran (terms)
-    public function term()
+    public function classhistories(): HasMany
     {
-        return $this->belongsTo(Term::class, 'term_id');
+        return $this->hasMany(ClassHistory::class);
     }
 
-    // Wali kelas
-    public function homeroomTeacher()
+    public function timetableTemplates(): HasMany
     {
-        return $this->belongsTo(Teacher::class, 'homeroom_teacher_id');
+        return $this->hasMany(TimetableTemplate::class, 'class_id');
     }
 
-    // Siswa dalam kelas
-    public function students()
+    public function timetableEntries(): HasManyThrough
     {
-        return $this->hasMany(Student::class, 'class_id');
+        return $this->hasManyThrough(
+            TimetableEntry::class,
+            TimetableTemplate::class,
+            'class_id',
+            'template_id',
+            'id',
+            'id'
+        );
     }
 
-    // Jadwal kelas
-    public function scheduleEntries()
-    {
-        return $this->hasMany(ScheduleEntry::class, 'class_id');
-    }
-
-    // Helper: nama lengkap kelas
     public function getFullNameAttribute()
     {
         return "{$this->level} {$this->major->code} {$this->rombel}";

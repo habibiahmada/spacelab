@@ -16,27 +16,15 @@ class Major extends Model
         'code',
         'name',
         'description',
-        'head_of_major_id',
-        'program_coordinator_id',
     ];
 
     public function classes(): HasMany
     {
-        return $this->hasMany(ClassRoom::class, 'major_id');
+        return $this->hasMany(Classroom::class, 'major_id');
     }
 
-    public function students(): HasMany
+    public function roleAssignments()
     {
-        return $this->hasMany(Student::class, 'major_id');
-    }
-
-    public function headOfMajor(): BelongsTo
-    {
-        return $this->belongsTo(Teacher::class, 'head_of_major_id');
-    }
-
-    public function programCoordinator(): BelongsTo
-    {
-        return $this->belongsTo(Teacher::class, 'program_coordinator_id');
+        return $this->hasMany(RoleAssignment::class, 'major_id');
     }
 }

@@ -13,9 +13,11 @@ class ScheduleEntry extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+    /** @deprecated ScheduleEntry table was dropped in favor of timetable_entries. Keep model for backward compatibility. */
+    protected $table = 'schedule_entries';
     protected $fillable = [
         'room_id', 'class_id', 'teacher_id', 'subject_id', 'term_id',
-        'start_at', 'end_at', 'recurrence_rule', 'status', 'note', 'created_by, day'
+        'start_at', 'end_at', 'recurrence_rule', 'status', 'note', 'created_by', 'day'
     ];
     protected $casts = [
         'start_at' => 'datetime',
