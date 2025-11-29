@@ -9,51 +9,64 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             {{-- Statistik Ringkas --}}
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Card 1: Pelajaran Hari Ini -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 p-5 hover:shadow-md transition-all duration-150">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+
+                <!-- Card 1 -->
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                            hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Pelajaran Hari Ini</p>
-                            <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white">{{ $countToday }}</h3>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">mata pelajaran</p>
+                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Pelajaran Hari Ini</p>
+                            <h3 class="text-2xl md:text-5xl font-extrabold text-gray-900 dark:text-white">{{ $countToday }}</h3>
+                            <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">mata pelajaran</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg flex items-center justify-center border border-gray-100 dark:border-gray-700">
-                            <x-heroicon-o-book-open class="w-6 h-6 text-gray-500 dark:text-gray-100" />
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center 
+                                    border border-gray-100 dark:border-gray-700">
+                            <x-heroicon-o-book-open class="w-5 h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2: Hari Ini -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 p-5 hover:shadow-md transition-all duration-150">
+                <!-- Card 2 -->
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                            hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Hari Ini</p>
+                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Hari Ini</p>
                             <h3 class="text-lg md:text-2xl font-semibold text-gray-900 dark:text-white capitalize">{{ $today }}</h3>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">{{ now()->format('d M Y') }}</p>
+                            <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">{{ now()->format('d M Y') }}</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg flex items-center justify-center border border-gray-100 dark:border-gray-700">
-                            <x-heroicon-o-calendar class="w-6 h-6 text-gray-500 dark:text-gray-100" />
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center 
+                                    border border-gray-100 dark:border-gray-700">
+                            <x-heroicon-o-calendar class="w-5 h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 3: Nama Siswa -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 p-5 hover:shadow-md transition-all duration-150">
+                <!-- Card 3 -->
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                            hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Nama Siswa</p>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white truncate">{{ $student->name }}</h3>
-                            <p class="text-sm text-gray-400 dark:text-gray-500 mt-1 truncate">{{ $studentClassFullName ?? '-' }}</p>
+                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Nama Siswa</p>
+                            <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white truncate">{{ $student->name }}</h3>
+                            <p class="text-xs md:text-sm text-gray-400 dark:text-gray-500 mt-1 truncate">{{ $studentClassFullName ?? '-' }}</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg flex-shrink-0 flex items-center justify-center border border-gray-100 dark:border-gray-700">
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex-shrink-0 flex items-center justify-center 
+                                    border border-gray-100 dark:border-gray-700">
                             <img src="{{ $student->student->avatar ?? asset('images/default-student.png') }}"
                                 alt="Avatar Siswa"
-                                class="w-10 h-10 rounded-full object-cover border-2 shadow border-gray-200 dark:border-gray-700">
+                                class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 shadow 
+                                        border-gray-200 dark:border-gray-700">
                         </div>
                     </div>
                 </div>
+
             </div>
+
 
             {{-- Jadwal Hari Ini --}}
             <div class="bg-white dark:bg-gray-900 shadow rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800">
@@ -241,11 +254,11 @@
                                                             <div class="flex-1 min-w-0">
                                                                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">Ruangan</p>
                                                                 <p class="font-semibold text-sm text-gray-900 dark:text-white truncate">
-                                                                    {{ $schedule->room->name ?? '-' }}
+                                                                    {{ $schedule->roomHistory?->room?->name ?? '-' }}
                                                                 </p>
-                                                                @if($schedule->room?->building?->name)
+                                                                @if($schedule->roomHistory?->room?->building?->name)
                                                                     <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                                                        {{ $schedule->room->building->name }}
+                                                                        {{ $schedule->roomHistory->room->building->name }}
                                                                     </p>
                                                                 @endif
                                                             </div>

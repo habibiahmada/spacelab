@@ -24,13 +24,13 @@ class DatabaseSeeder extends Seeder
             StudentSeeder::class,
             TeacherSubjectSeeder::class,
             ClassHistorySeeder::class,
+            RoomHistorySeeder::class,
+            GuardianClassHistorySeeder::class,
             TimetableSeeder::class,
             NotificationSeeder::class,
             ImportJobSeeder::class,
             AuditLogSeeder::class,
             ReportSeeder::class,
-            RoomHistorySeeder::class,
-            GuardianClassHistorySeeder::class,
         ]);
     }
 }

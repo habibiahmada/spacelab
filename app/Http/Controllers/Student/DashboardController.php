@@ -49,37 +49,33 @@ class DashboardController extends Controller
             Log::warning('⚠️ Tidak ada class history untuk user; tidak menampilkan jadwal.');
             $schedules = collect();
         } else {
-            // Cek keberadaan kolom sekali saja (lebih efisien)
             $hasStartTime = Schema::hasColumn('periods', 'start_time');
             $hasStartDate = Schema::hasColumn('periods', 'start_date');
 
+            // Build base query
             $query = TimetableEntry::select('timetable_entries.*')
                 ->join('timetable_templates', 'timetable_templates.id', '=', 'timetable_entries.template_id')
                 ->join('periods', 'periods.id', '=', 'timetable_entries.period_id')
                 ->whereIn('timetable_templates.class_id', $classIds)
                 ->where('timetable_entries.day_of_week', $dayIndex);
 
-            // Ordering: pilih strategi berdasarkan skema DB saat ini
+            // ordering based on available columns
             if ($hasStartTime && $hasStartDate) {
-                // Kedua kolom ada: bandingkan kedua kolom sebagai string waktu agar tipe kompatibel
-                // to_char bekerja untuk timestamp dan time di PostgreSQL
                 $query->orderByRaw("COALESCE(to_char(periods.start_time, 'HH24:MI:SS'), to_char(periods.start_date, 'HH24:MI:SS')) ASC");
             } elseif ($hasStartTime) {
-                // Hanya time
                 $query->orderBy('periods.start_time', 'asc');
             } elseif ($hasStartDate) {
-                // Hanya timestamp (legacy)
                 $query->orderByRaw("to_char(periods.start_date, 'HH24:MI:SS') ASC");
             } else {
-                // Tidak ada kedua kolom, fallback aman dengan primary key ordering
                 $query->orderBy('periods.id', 'asc');
             }
 
+            // Eager load roomHistory and its room (nullable-safe). Jangan pakai 'room' langsung.
             $schedules = $query->with([
                     'period',
                     'teacherSubject.subject',
                     'teacherSubject.teacher.user',
-                    'room',
+                    'roomHistory.room',
                     'template.class.major',
                 ])
                 ->get();

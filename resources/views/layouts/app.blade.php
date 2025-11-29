@@ -104,7 +104,7 @@
     ></div>
 
     <!-- Main content -->
-    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+    <main class="flex-1 flex flex-col h-full overflow-y-auto overflow-x-hidden">
         <!-- Header (mobile) -->
         <header class="lg:hidden flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
             <div>

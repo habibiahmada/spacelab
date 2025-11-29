@@ -15,7 +15,7 @@ class TimetableEntry extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['template_id', 'day_of_week', 'period_id', 'teacher_subject_id', 'room_id'];
+    protected $fillable = ['template_id', 'day_of_week', 'period_id', 'teacher_subject_id', 'room_history_id'];
     protected $casts = [
         'day_of_week' => 'integer'
     ];
@@ -35,9 +35,9 @@ class TimetableEntry extends Model
         return $this->belongsTo(TeacherSubject::class, 'teacher_subject_id');
     }
 
-    public function room(): BelongsTo
+    public function roomHistory(): BelongsTo
     {
-        return $this->belongsTo(Room::class, 'room_id');
+        return $this->belongsTo(RoomHistory::class, 'room_history_id');
     }
 
 
