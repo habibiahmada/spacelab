@@ -14,9 +14,9 @@ class DashboardController extends Controller
             'students' => Student::count(),
             'classes' => ClassRoom::count(),
             'rooms' => Room::count(),
-            'schedules_today' => ScheduleEntry::whereDate('start_at', now())->count(),
-            'todaySchedules' => ScheduleEntry::with(['room', 'class', 'teacher', 'subject'])
-                ->whereDate('start_at', now())->get(),
+            // 'schedules_today' => ScheduleEntry::whereDate('start_at', now())->count(),
+            // 'todaySchedules' => ScheduleEntry::with(['room', 'class', 'teacher', 'subject'])
+                // ->whereDate('start_at', now())->get(),
             'recentLogs' => AuditLog::with('user')->latest()->take(5)->get(),
             'title' => 'Admin Panel',
             'description' => 'Halaman utama'

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\{Student, Classroom, User, Role};
 use Faker\Factory as Faker;
-use Illuminate\Support\Str;
 
 class StudentSeeder extends Seeder
 {
@@ -13,7 +12,6 @@ class StudentSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        // Ambil semua user dengan role "Siswa"
         $studentRole = Role::where('name', 'Siswa')->first();
 
         if (! $studentRole) {
@@ -31,18 +29,22 @@ class StudentSeeder extends Seeder
 
         $counter = 1;
         foreach ($studentUsers as $user) {
-            // create student records referencing users_id; the new students table stores
-            // a users_id foreign key and avatar instead of older class/guardian fields
             $nis = str_pad($counter, 8, '0', STR_PAD_LEFT);
             $nisn = '00' . str_pad($counter, 8, '0', STR_PAD_LEFT);
+
+            $hash = crc32($user->id); 
+            $index = $hash % 100;
+            $gender = ($hash % 2 === 0) ? 'men' : 'women';
+
+            $avatarUrl = "https://randomuser.me/api/portraits/{$gender}/{$index}.jpg";
+
 
             Student::updateOrCreate(
                 ['users_id' => $user->id],
                 [
                     'nis' => $nis,
                     'nisn' => $nisn,
-                    'name' => $user->name,
-                    'avatar' => null,
+                    'avatar' => $avatarUrl,
                 ]
             );
 

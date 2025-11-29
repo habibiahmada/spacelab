@@ -33,10 +33,12 @@ class TeacherSeeder extends Seeder
             // Build a code like T-001
             $code = 'T-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
 
+            $avatar = 'https://i.pravatar.cc/300?img=' . rand(1, 70);
+
             Teacher::create([
                 'code' => $code,
                 'phone' => $faker->unique()->phoneNumber(),
-                'avatar' => null,
+                'avatar' => $avatar,
                 'user_id' => $user->id,
             ]);
         }

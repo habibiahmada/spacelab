@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{ClassRoom, Teacher, Major, Term};
-use Illuminate\Support\Arr;
+use App\Models\{Classroom, Teacher, Major, Term};
 
 class ClassSeeder extends Seeder
 {
@@ -20,8 +19,6 @@ class ClassSeeder extends Seeder
             return;
         }
 
-        $teachers = Teacher::all();
-
         // Jumlah rombel per level
         $rombelPerLevel = 3; // ubah sesuai kebutuhan
 
@@ -33,9 +30,6 @@ class ClassSeeder extends Seeder
                             'level' => $level,
                             'rombel' => (string) $rombel,
                             'major_id' => $major->id,
-                        ],
-                        [
-                            // only set fields that exist in current schema
                         ]
                     );
                 }

@@ -14,7 +14,7 @@ class Student extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'nis', 'nisn', 'name', 'users_id', 'avatar'
+        'nis', 'nisn', 'users_id', 'avatar'
     ];
 
     public function user(): BelongsTo

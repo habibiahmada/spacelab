@@ -20,9 +20,14 @@ class Subject extends Model
         return $this->hasMany(TimetableEntry::class, 'subject_id');
     }
 
+    public function teacherSubjects(): HasMany
+    {
+        return $this->hasMany(TeacherSubject::class);
+    }
+
     public function teachers()
     {
-        return $this->belongsToMany(Teacher::class, 'teacher_subjects_', 'subject_id', 'teacher_id')
+        return $this->belongsToMany(Teacher::class, 'teacher_subjects', 'subject_id', 'teacher_id')
             ->withTimestamps()
             ->withPivot(['started_at', 'ended_at']);
     }

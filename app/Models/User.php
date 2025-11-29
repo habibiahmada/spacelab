@@ -87,6 +87,12 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->hasMany(ClassHistory::class);
     }
 
+    public function student()
+{
+    return $this->hasOne(Student::class, 'users_id');
+}
+
+
     /**
      * Return the uppercase initials for the user's display name.
      */

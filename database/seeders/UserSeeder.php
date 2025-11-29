@@ -23,18 +23,34 @@ class UserSeeder extends Seeder
             'role_id' => $adminRole?->id,
         ]);
 
-        // ====== GURU (200 orang) ======
+        // ====== GURU (20 orang) ======
         // Use factory to generate names and emails
         User::factory()
-            ->count(200)
+            ->count(20)
             ->asTeacher()
             ->create([ 'password' => 'guru123' ]);
+        
+        $gururole = Role::where('name', 'Guru')->first();
+        User::create([
+            'name' => 'Guru Contoh',
+            'email' => 'guru@ilab.sch.id',
+            'password_hash' => Hash::make('guru123'),
+            'role_id' => $gururole?->id,
+        ]);
 
-        // ====== SISWA (000 orang) ======
+        // ====== SISWA (300 orang) ======
         User::factory()
-            ->count(3000)
+            ->count(300)
             ->asStudent()
             ->create([ 'password' => 'siswa123' ]);
+
+        $studentRole = Role::where('name', 'Siswa')->first();
+        User::create([
+            'name' => 'Siswa Contoh',
+            'email' => 'siswa@ilab.sch.id',
+            'password_hash' => Hash::make('siswa123'),
+            'role_id' => $studentRole?->id,
+        ]);
 
         // ====== STAFF (optional, 5 orang) ======
         User::factory()
@@ -42,10 +58,18 @@ class UserSeeder extends Seeder
             ->asStaff()
             ->create([ 'password' => 'staff123' ]);
 
+        $staffRole = Role::where('name', 'Staff')->first();
+        User::create([
+            'name' => 'Staff Contoh',
+            'email' => 'staff@ilab.sch.id',
+            'password_hash' => Hash::make('staff123'),
+            'role_id' => $staffRole?->id,
+        ]);
+
         $this->command->info('✅ UserSeeder berhasil membuat:
         - 1 Admin
-        - 200 Guru
-        - 3000 Siswa
+        - 20 Guru
+        - 300 Siswa
         - 5 Staff');
     }
 }

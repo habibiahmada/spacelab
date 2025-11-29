@@ -15,7 +15,7 @@
                     ['Siswa', $students, 'neskar.green-500', 'heroicon-o-user-group'],
                     ['Kelas', $classes, 'neskar.yellow-500', 'heroicon-o-queue-list'],
                     ['Ruangan', $rooms, 'neskar.red-500', 'heroicon-o-building-library'],
-                    ['Jadwal Hari Ini', $schedules_today, 'neskar.blue-600', 'heroicon-o-calendar-days']
+                    // ['Jadwal Hari Ini', $schedules_today, 'neskar.blue-600', 'heroicon-o-calendar-days']
                 ] as [$label, $count, $color, $icon])
                 <div class="bg-white dark:bg-slate-800 shadow-sm rounded-lg p-5 flex items-center gap-4">
                     <div class="p-3 rounded-md bg-opacity-10" style="background-color: theme('colors.{{ $color }}')">
@@ -46,7 +46,7 @@
                                 <th class="px-4 py-2 text-left">Waktu</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y dark:divide-slate-700">
+                        {{-- <tbody class="divide-y dark:divide-slate-700">
                             @forelse($todaySchedules as $item)
                             <tr>
                                 <td class="px-4 py-2">{{ $item->room->name ?? '-' }}</td>
@@ -60,7 +60,7 @@
                                 <td colspan="5" class="px-4 py-4 text-center text-neskar.neutral-500">Tidak ada jadwal hari ini</td>
                             </tr>
                             @endforelse
-                        </tbody>
+                        </tbody> --}}
                     </table>
                 </div>
             </div>

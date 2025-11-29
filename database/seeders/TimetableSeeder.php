@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{TimetableTemplate, TimetableEntry, ClassRoom, Block, Term, Teacher, Subject, Room};
+use App\Models\{TimetableTemplate, TimetableEntry, Classroom, Block, Term, Teacher, Subject, Room};
 use Illuminate\Support\Str;
 
 class TimetableSeeder extends Seeder
@@ -13,12 +13,16 @@ class TimetableSeeder extends Seeder
         $term = Term::where('is_active', true)->first();
         $classes = ClassRoom::all();
         $blocks = Block::all();
-        $teachers = Teacher::all();
-        $subjects = Subject::all();
         $rooms = Room::whereIn('type', ['kelas', 'lab', 'aula'])->get();
+        $teacherSubjects = \App\Models\TeacherSubject::all();
 
         if (! $term || $classes->isEmpty()) {
             $this->command->warn('⚠️ Term and classes are required for timetable seeding.');
+            return;
+        }
+
+        if ($teacherSubjects->isEmpty()) {
+            $this->command->warn('⚠️ TeacherSubject data is required. Run TeacherSubjectSeeder first.');
             return;
         }
 
@@ -41,8 +45,7 @@ class TimetableSeeder extends Seeder
                             'template_id' => $template->id,
                             'day_of_week' => $day,
                             'period_id' => $period->id,
-                            'subject_id' => $subjects->random()?->id,
-                            'teacher_id' => $teachers->random()?->id,
+                            'teacher_subject_id' => $teacherSubjects->random()?->id,
                             'room_id' => $rooms->random()?->id,
                         ]);
                     }
@@ -50,6 +53,6 @@ class TimetableSeeder extends Seeder
             }
         }
 
-        $this->command->info('✅ TimetableSeeder: timetable templates & entries seeded.');
+        $this->command->info('✅ TimetableSeeder: timetable templates & entries seeded dengan teacher_subject data.');
     }
 }
