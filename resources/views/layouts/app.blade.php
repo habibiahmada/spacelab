@@ -59,9 +59,11 @@
         <div class="border-t border-slate-200 dark:border-slate-700 p-4">
             <div class="flex items-center gap-3">
                 <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg">
-                    <span class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
-                        {{ auth()->user()->initials() }}
-                    </span>
+                    <img 
+                        src="{{ auth()->user()->student->avatar ?? auth()->user()->teacher->avatar ?? asset('assets/images/avatar/default-profile.png') }}" 
+                        alt="{{ auth()->user()->name }}" 
+                        class="h-full w-full object-cover"
+                    />
                 </div>
 
                 <div class="flex-1">

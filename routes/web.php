@@ -1,6 +1,5 @@
     <?php
 
-    use App\Http\Controllers\AdminController;
     use App\Http\Controllers\PagesController;
     use App\Http\Controllers\ProfileController;
     use App\Http\Controllers\TeacherController;
@@ -18,10 +17,11 @@
     };
 
     use App\Http\Controllers\Student\{
-    ClassroomController,
-    DashboardController as StudentDashboardController,
-    ScheduleController
-};
+        ClassroomController as StudentClassroomController,
+        DashboardController as StudentDashboardController,
+        ScheduleController as StudentScheduleController,
+        ProfileController as StudentProfileController,
+    };
 
     Route::get('/', [PagesController::class, 'index'])->name('welcome');
 
@@ -74,9 +74,11 @@
     Route::middleware(['auth', 'role:Siswa'])->prefix('student')->name('siswa.')->group(function () {
         Route::get('/dashboard',[StudentDashboardController::class, 'index'])->name('index');
 
-        Route::get('schedules', [ ScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/schedules', [ StudentScheduleController::class, 'index'])->name('schedules.index');
 
-        Route::get('class', [ ClassroomController::class, 'index'])->name('classroom.index');
+        Route::get('/class', [ StudentClassroomController::class, 'index'])->name('classroom.index');
+
+        Route::get('/profile', [ StudentProfileController::class, 'index' ])->name('profile.index');
     });
 
     Route::middleware(['auth', 'role:Staff'])->group(function () {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\ClassHistory;
@@ -17,11 +16,10 @@ class ClassroomController extends Controller
     {
         $user = Auth::user();
 
-        // Find the active term if available
         $activeTerm = Term::where('is_active', true)->first();
 
-        // Find the student's current class history for the active term or latest
-        $classHistoryQuery = $user->classHistory();
+        $classHistoryQuery = ClassHistory::where('user_id', $user->id);
+        
         if ($activeTerm) {
             $classHistoryQuery = $classHistoryQuery->where('terms_id', $activeTerm->id);
         }
@@ -35,14 +33,12 @@ class ClassroomController extends Controller
         $currentEntry = null;
 
         if ($classroom) {
-            // Load classmates from class history (same class and term)
             $classmatesQuery = ClassHistory::where('class_id', $classroom->id);
             if ($activeTerm) {
                 $classmatesQuery = $classmatesQuery->where('terms_id', $activeTerm->id);
             }
             $students = $classmatesQuery->with('user.student')->get()->map(fn($ch) => $ch->user);
 
-            // Find the guardian (wali kelas) — latest active guardian for the class
             $guardian = GuardianClassHistory::where('class_id', $classroom->id)
                     ->where(function ($q) {
                         $q->whereNull('ended_at')->orWhere('ended_at', '>=', Carbon::now());
@@ -51,9 +47,8 @@ class ClassroomController extends Controller
                     ->with('teacher.user')
                     ->first();
 
-            // Today timetable entries
-            $dayOfWeek = Carbon::now()->dayOfWeek; // Carbon: 0 Sun, 1 Mon
-            $dayOfWeek = $dayOfWeek === 0 ? 7 : $dayOfWeek; // convert to 1..7 where 7 is Sunday
+            $dayOfWeek = Carbon::now()->dayOfWeek; 
+            $dayOfWeek = $dayOfWeek === 0 ? 7 : $dayOfWeek;
 
             $todayEntries = $classroom->timetableEntries()
                 ->where('day_of_week', $dayOfWeek)
