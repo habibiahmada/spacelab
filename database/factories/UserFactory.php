@@ -60,6 +60,42 @@ class UserFactory extends Factory
         });
     }
 
+    public function asTeacher(): static
+    {
+        return $this->state(function () {
+            $role = \App\Models\Role::firstOrCreate(
+                ['name' => 'Guru'],
+                ['permissions' => json_encode(['view_schedule'])]
+            );
+
+            return ['role_id' => $role->id];
+        });
+    }
+
+    public function asAdmin(): static
+    {
+        return $this->state(function () {
+            $role = \App\Models\Role::firstOrCreate(
+                ['name' => 'Admin'],
+                ['permissions' => json_encode(['manage_users', 'manage_schedule', 'view_reports'])]
+            );
+
+            return ['role_id' => $role->id];
+        });
+    }
+
+    public function asStaff(): static
+    {
+        return $this->state(function () {
+            $role = \App\Models\Role::firstOrCreate(
+                ['name' => 'Staff'],
+                ['permissions' => json_encode(['view_schedule', 'manage_class', 'view_reports'])]
+            );
+
+            return ['role_id' => $role->id];
+        });
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

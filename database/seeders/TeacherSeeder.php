@@ -29,29 +29,14 @@ class TeacherSeeder extends Seeder
                 continue;
             }
 
-            // Buat staff_id unik (misal T001, T002, dst)
-            $staffId = 'T' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
-
-            // Pilih 1–3 mata pelajaran acak
-            $assignedSubjects = $faker->randomElements($subjects, rand(1, 3));
-
-            // Jadwal tersedia acak
-            $days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-            $available = [];
-            for ($i = 0; $i < rand(2, 4); $i++) {
-                $day = $faker->randomElement($days);
-                $start = $faker->randomElement(['07:00', '08:00', '09:00']);
-                $end = $faker->randomElement(['10:00', '11:00', '12:00']);
-                $available[] = "{$day} {$start}-{$end}";
-            }
+            // Teacher table now expects `code`, `phone`, `avatar` and `user_id`.
+            // Build a code like T-001
+            $code = 'T-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
 
             Teacher::create([
-                'staff_id' => $staffId,
-                'name' => $user->name,
-                'email' => $user->email,
+                'code' => $code,
                 'phone' => $faker->unique()->phoneNumber(),
-                'subjects' => $assignedSubjects,
-                'available_hours' => array_values(array_unique($available)),
+                'avatar' => null,
                 'user_id' => $user->id,
             ]);
         }

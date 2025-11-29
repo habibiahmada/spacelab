@@ -14,7 +14,7 @@ class RoomSeeder extends Seeder
             [
                 'code' => 'LAB01',
                 'name' => 'Laboratorium Komputer 1',
-                'building' => 'Gedung A',
+                    'building' => 'Gedung A',
                 'floor' => 1,
                 'capacity' => 30,
                 'type' => 'lab',
@@ -23,7 +23,7 @@ class RoomSeeder extends Seeder
             [
                 'code' => 'LAB02',
                 'name' => 'Laboratorium Komputer 2',
-                'building' => 'Gedung A',
+                    'building' => 'Gedung A',
                 'floor' => 2,
                 'capacity' => 30,
                 'type' => 'lab',
@@ -184,7 +184,32 @@ class RoomSeeder extends Seeder
         ];
 
         foreach ($rooms as $room) {
-            Room::create($room);
+            // Normalize type to the new enum in rooms table
+            $typeMap = [
+                'lab' => 'lab',
+                'kelas' => 'kelas',
+                'aula' => 'aula',
+                'kantor' => 'lainnya',
+                'fasilitas' => 'lainnya',
+                'penyimpanan' => 'lainnya',
+            ];
+
+            $type = $typeMap[$room['type']] ?? 'lainnya';
+
+            // Map building name to building_id if building exists
+            $building = \App\Models\Building::where('name', $room['building'])->first();
+            $building_id = $building?->id;
+
+            Room::create([
+                'code' => $room['code'],
+                'name' => $room['name'],
+                'building_id' => $building_id,
+                'floor' => $room['floor'] ?? null,
+                'capacity' => $room['capacity'] ?? null,
+                'type' => $type,
+                'is_active' => true,
+                'notes' => null,
+            ]);
         }
 
         $this->command->info('✅ RoomSeeder berhasil menambahkan ' . count($rooms) . ' ruangan sekolah.');

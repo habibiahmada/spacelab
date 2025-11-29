@@ -13,7 +13,7 @@ class Term extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $fillable = ['name', 'start_date', 'end_date', 'is_active'];
+    protected $fillable = ['tahun_ajaran', 'start_date', 'end_date', 'is_active', 'kind'];
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
@@ -27,6 +27,13 @@ class Term extends Model
     
     public function timetableTemplates()
     {
-        return $this->hasMany(TimetableTemplate::class, 'block_id');
+        return $this->hasManyThrough(
+            TimetableTemplate::class,
+            Block::class,
+            'terms_id', // FK on Block
+            'block_id', // FK on TimetableTemplate
+            'id', // local key on Term
+            'id' // local key on Block
+        );
     }
 }

@@ -10,10 +10,11 @@ class TermSeeder extends Seeder
     public function run(): void
     {
         Term::create([
-            'name' => 'Semester Genap 2025',
+            'tahun_ajaran' => '2025/Genap',
             'start_date' => '2025-01-10',
             'end_date' => '2025-06-30',
-            'is_active' => true
+            'is_active' => true,
+            'kind' => 'genap'
         ]);
     }
 }

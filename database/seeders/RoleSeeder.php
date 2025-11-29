@@ -11,21 +11,17 @@ class RoleSeeder extends Seeder
     {
         Role::create([
             'name' => 'Admin',
-            'permissions' => ['manage_users', 'manage_schedule', 'view_reports'],
         ]);
 
         Role::create([
             'name' => 'Guru',
-            'permissions' => ['view_schedule', 'manage_class'],
         ]);
 
         Role::create([
             'name' => 'Siswa',
-            'permissions' => ['view_schedule'],
         ]);
         Role::create([
             'name' => 'Staff',
-            'permissions' => ['view_schedule', 'manage_class', 'view_reports', 'manage_users', 'manage_schedule'],
         ]);
     }
 }

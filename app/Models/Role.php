@@ -14,9 +14,7 @@ class Role extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = ['name'];
-    protected $casts = [
-        'permissions' => 'array',
-    ];
+    // Previously we had a 'permissions' jsonb column; it was removed by migrations.
 
     public function users(): HasMany
     {

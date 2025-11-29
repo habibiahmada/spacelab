@@ -31,20 +31,18 @@ class StudentSeeder extends Seeder
 
         $counter = 1;
         foreach ($studentUsers as $user) {
-            $class = $classes->random();
-
-            // Buat NIS dan NISN unik berbasis counter
+            // create student records referencing users_id; the new students table stores
+            // a users_id foreign key and avatar instead of older class/guardian fields
             $nis = str_pad($counter, 8, '0', STR_PAD_LEFT);
             $nisn = '00' . str_pad($counter, 8, '0', STR_PAD_LEFT);
 
             Student::updateOrCreate(
-                ['user_id' => $user->id],
+                ['users_id' => $user->id],
                 [
                     'nis' => $nis,
                     'nisn' => $nisn,
-                    'class_id' => $class->id,
-                    'guardian_name' => $faker->name('male'),
-                    'phone' => $faker->unique()->numerify('08##########'),
+                    'name' => $user->name,
+                    'avatar' => null,
                 ]
             );
 

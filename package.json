@@ -1,6 +1,9 @@
 {
     "private": true,
     "type": "module",
+    "author": {
+        "name": "Habibi Ahmad Aziz"
+    },
     "scripts": {
         "build": "vite build",
         "dev": "vite"

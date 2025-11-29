@@ -10,12 +10,8 @@ class ClassSeeder extends Seeder
 {
     public function run(): void
     {
-        $term = Term::where('is_active', true)->first();
-
-        if (! $term) {
-            $this->command->warn('⚠️ Tidak ada term aktif. Jalankan TermSeeder dulu.');
-            return;
-        }
+        // Historically classes had a term_id column, but the latest schema uses
+        // timetable templates/assignments to represent active terms per class.
 
         $majors = Major::all();
 
@@ -39,9 +35,7 @@ class ClassSeeder extends Seeder
                             'major_id' => $major->id,
                         ],
                         [
-                            'term_id' => $term->id,
-                            // acak wali kelas dari daftar guru
-                            'homeroom_teacher_id' => $teachers->random()?->id,
+                            // only set fields that exist in current schema
                         ]
                     );
                 }
