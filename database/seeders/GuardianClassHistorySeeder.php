@@ -4,32 +4,45 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\GuardianClassHistory;
-use App\Models\ClassRoom;
-use App\Models\User;
+use App\Models\Classroom;
+use App\Models\Teacher;
 
 class GuardianClassHistorySeeder extends Seeder
 {
     public function run(): void
     {
-        $class = ClassRoom::first();
-        $teacher = User::whereHas('role', fn($q) => $q->where('name','Guru'))->first();
+        $classes = Classroom::all();
+        $teachers = Teacher::all();
 
-        if (!$class || !$teacher) {
-            $this->command->warn('⚠️ Missing teacher or class for GuardianClassHistorySeeder.');
+        if ($classes->isEmpty()) {
+            $this->command->warn('⚠️ No classes found. Aborting GuardianClassHistorySeeder.');
             return;
         }
 
-        GuardianClassHistory::updateOrCreate(
-            [
-                'teacher_id' => $teacher->id,
-                'class_id' => $class->id,
-            ],
-            [
-                'started_at' => now()->subMonths(6),
-                'ended_at' => null,
-            ]
-        );
+        if ($teachers->isEmpty()) {
+            $this->command->warn('⚠️ No teachers found. Aborting GuardianClassHistorySeeder.');
+            return;
+        }
 
-        $this->command->info('✅ GuardianClassHistorySeeder: created sample guardian assignment.');
+        $teacherCount = $teachers->count();
+        $index = 0;
+
+        foreach ($classes as $class) {
+            $teacher = $teachers[$index % $teacherCount];
+            $index++;
+
+            GuardianClassHistory::updateOrCreate(
+                [
+                    'teacher_id' => $teacher->id,
+                    'class_id' => $class->id,
+                ],
+                [
+                    'started_at' => now()->subMonths(6),
+                    'ended_at' => null,
+                ]
+            );
+        }
+
+        $this->command->info('✅ GuardianClassHistorySeeder: assigned guardians to all classes (round-robin).');
     }
 }

@@ -45,7 +45,7 @@
 
             <!-- Logo -->
             <div class="flex items-center justify-center py-6">
-                <a href="{{ route(Auth::user()->role->lower_name . '.dashboard') }}" class="flex items-center space-x-2">
+                <a href="{{ route(Auth::user()->role->lower_name . '.index') }}" class="flex items-center space-x-2">
                     <x-application-logo class="h-10 w-auto" />
                     <span class="text-lg font-semibold">SpaceLab</span>
                 </a>

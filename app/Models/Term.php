@@ -30,10 +30,10 @@ class Term extends Model
         return $this->hasManyThrough(
             TimetableTemplate::class,
             Block::class,
-            'terms_id', // FK on Block
-            'block_id', // FK on TimetableTemplate
-            'id', // local key on Term
-            'id' // local key on Block
+            'terms_id',
+            'block_id',
+            'id',
+            'id'
         );
     }
 }

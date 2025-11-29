@@ -52,31 +52,25 @@
                         $currentOrdinal = $endPeriod?->ordinal;
                         $nextOrdinal = $next->period?->ordinal;
 
-                        // If ordinals are missing, or not consecutive, stop merging
                         if (!$currentOrdinal || !$nextOrdinal) break;
                         if (((int) $nextOrdinal) !== ((int) $currentOrdinal) + 1) break;
 
-                        // Ensure same core properties before merging
                         if ($getKey($first) !== $getKey($next)) break;
 
-                        // Merge: include next in the group and update endPeriod
                         $group[] = $next;
                         $endPeriod = $next->period;
                         $i++;
                     }
 
-                    // Build label like "Jam ke 1" or "Jam ke 1 & 2"
                     $ordinalLabel = $startPeriod?->ordinal ? 'Jam ke ' . $startPeriod->ordinal : null;
                     if (count($group) > 1 && $startPeriod?->ordinal && $endPeriod?->ordinal) {
                         $sep = count($group) === 2 ? ' & ' : ' - ';
                         $ordinalLabel = 'Jam ke ' . $startPeriod->ordinal . $sep . $endPeriod->ordinal;
                     }
 
-                    // Determine start and end times using the start/end periods
                     $startTimeStr = $startPeriod?->start_time ?? $startPeriod?->start_date?->format('H:i:s');
                     $endTimeStr = $endPeriod?->end_time ?? $endPeriod?->end_date?->format('H:i:s');
 
-                    // Use the first element's subject/teacher/template/room data as the main info
                     $firstItem = $group[0];
 
                     $mergedSchedules[] = (object) [
@@ -225,7 +219,7 @@
                                             class="w-8 h-8 rounded-full object-cover border-2 shadow-sm
                                             {{ $isOngoing ? 'border-gray-300 ring-1 ring-gray-200 dark:ring-gray-700' : 'border-gray-200 dark:border-gray-600' }}">
                                         <div class="flex-1">
-                                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Pengajar</p>
+                                            <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Guru</p>
                                             <p class="font-semibold text-gray-900 dark:text-white text-sm truncate">
                                                 {{ $item->teacher?->user?->name ?? $item->teacher?->name ?? $item->first->teacher?->user?->name ?? $item->first->teacher?->name ?? '-' }}
                                             </p>
@@ -234,19 +228,6 @@
 
                                     {{-- Location Info - Stacked --}}
                                     <div class="space-y-3">
-                                        {{-- Class --}}
-                                        <div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
-                                                <div class="flex-shrink-0 w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center shadow">
-                                                    <x-heroicon-o-book-open class="w-5 h-5 md:w-6 md:h-6 text-white" />
-                                            </div>
-                                            <div class="flex-1">
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">Kelas</p>
-                                                <p class="font-medium text-gray-900 dark:text-white text-xs truncate">
-                                                    {{ $item->template?->class?->full_name ?? $item->first->template?->class?->full_name ?? '-' }}
-                                                </p>
-                                            </div>
-                                        </div>
-
                                         {{-- Room --}}
                                         <div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
                                             <div class="flex-shrink-0 w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center shadow">

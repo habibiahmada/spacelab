@@ -44,6 +44,11 @@ class Teacher extends Model
             ->withTimestamps()
             ->withPivot(['started_at', 'ended_at']);
     }
+    
+    public function guardianClassHistories(): HasMany
+    {
+        return $this->hasMany(GuardianClassHistory::class, 'teacher_id');
+    }
 
     public function roleAssignments(): HasMany
     {
