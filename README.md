@@ -11,25 +11,21 @@
   <!-- <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green" alt="License"></a> -->
 </p>
 
-Spacelab adalah aplikasi manajemen jadwal dan ruang akademik berbasis web yang membantu institusi pendidikan (sekolah, kampus, atau lembaga kursus) dalam:
+Spacelab is a web-based academic schedule and room management application that helps educational institutions (schools, campuses, and training centers) with:
 
-- Mengatur jadwal kelas dan guru
+- Managing class schedules and teachers
+- Preventing room booking conflicts
+- Monitoring room utilization efficiently
+- Providing reports and analytics for academic activities
 
-- Menghindari konflik penggunaan ruangan
-
-- Memantau pemakaian ruang secara efisien
-
-- Menyediakan laporan dan analitik kegiatan akademik
-
-
-Spacelab dibangun dengan Laravel Breeze (Blade), berfokus pada otomatisasi, akurasi, dan antarmuka pengguna yang sederhana serta cepat.
+Spacelab is built using Laravel Breeze (Blade) and focuses on automation, accuracy, and a simple, fast user interface.
 
 
 ---
 
-## 🏗️ Teknologi yang Digunakan
+## 🏗️ Technology Stack
 
-Layer	Teknologi
+Layer	Technology
 
 Frontend	Laravel Breeze (Blade), Tailwind CSS, Alpine.js
 Backend	Laravel 11 (PHP 8.3)
@@ -44,30 +40,30 @@ Testing	PHPUnit
 </p>
 ---
 
-## ⚙️ Fitur Utama
+## ⚙️ Key Features
 
-✅ Manajemen Jadwal Otomatis
-Kelola jadwal kelas, guru, dan ruang dalam satu sistem dengan deteksi konflik otomatis.
+✅ Automatic Schedule Management
+Manage class, teacher, and room schedules in a single system with automatic conflict detection.
 
-🏫 Pengelolaan Ruang & Gedung
-Pantau ketersediaan ruangan secara real-time berdasarkan jadwal dan kapasitas.
+🏫 Room & Building Management
+Monitor room availability in real-time based on schedules and capacities.
 
-👩‍🏫 Manajemen Data Akademik
-CRUD data guru, siswa, mata pelajaran, dan tahun ajaran.
+👩‍🏫 Academic Data Management
+CRUD operations for teachers, students, subjects, and academic years.
 
-📊 Laporan & Analitik
-Visualisasi data pemakaian ruang, kegiatan belajar, dan tingkat utilisasi.
+📊 Reports & Analytics
+Visualize room usage, learning activities, and utilization metrics.
 
 🔐 Multi-Role Authentication
-Peran: Admin, Guru, Siswa, Tata Usaha — masing-masing dengan hak akses berbeda.
+Roles: Admin, Teacher, Student, and Administrative Staff — each with specific access rights.
 
 📥 Import / Export Data
-Dukungan impor file CSV/XLSX dan ekspor laporan ke Excel/PDF.
+Support for CSV/XLSX import and exporting reports to Excel/PDF.
 
 
 ---
 
-## 🧩 Struktur Direktori
+## 🧩 Directory Structure
 
 ```
 spacelab/
@@ -89,7 +85,7 @@ spacelab/
 
 ---
 
-### 📸 Tampilan Antarmuka (Mockup)
+### 📸 UI Mockup
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/6c6a2577-5818-4890-828e-e9972b87e7c1" alt="Dashboard Mockup" />
@@ -97,9 +93,9 @@ spacelab/
 
 ---
 
-## 🚦 Cara Instalasi
+## 🚦 Installation Guide
 
-### 1️⃣ Clone Repository
+### 1️⃣ Clone the Repository
 
 ```
 git clone https://github.com/habibiahmada/spacelab.git
@@ -107,7 +103,7 @@ git clone https://github.com/habibiahmada/spacelab.git
 cd spacelab
 ```
 
-### 2️⃣ Instal Dependensi
+### 2️⃣ Install Dependencies
 
 ```
 composer install
@@ -115,16 +111,16 @@ composer install
 npm install && npm run build
 ```
 
-### 3️⃣ Konfigurasi Environment
+### 3️⃣ Configure Environment
 
-Buat file .env:
+Create the `.env` file from the example:
 
 ```
 cp .env.example .env
 php artisan key:generate
 ```
 
-Lalu sesuaikan koneksi database (PostgreSQL):
+Then update the database connection settings (PostgreSQL):
 
 ```
 DB_CONNECTION=pgsql
@@ -135,37 +131,35 @@ DB_USERNAME=postgres
 DB_PASSWORD=yourpassword
 ```
 
-### 4️⃣ Jalankan Migrasi & Seeder
+### 4️⃣ Run Migrations & Seeders
 
 ```
 php artisan migrate --seed
 ```
 
-### 5️⃣ Jalankan Server Lokal
+### 5️⃣ Run the Local Server
 
 ```
 php artisan serve
 
-Buka di browser:
+Open in browser:
 👉 http://localhost:8000
 ```
 
 ---
 
-## 🧠 Konsep Utama Sistem
+## 🧠 Core System Concepts
 
 ### 🧩 Conflict Detection Logic
 
-- Sistem akan otomatis mencegah bentrokan jadwal dengan algoritma:
+- The system automatically prevents schedule conflicts using logic that:
 
-- Mengecek overlap waktu antar jadwal
-
-- Validasi guru, ruangan, dan kelas
-
-- Memberikan peringatan saat konflik terdeteksi
+- Checks for overlapping time ranges
+- Validates teacher, room, and class availability
+- Displays warnings when conflicts are detected
 
 
-### 📅 Struktur Data Jadwal (PostgreSQL)
+### 📅 Schedule Data Structure (PostgreSQL)
 
 ```
 CREATE TABLE schedule_entries (
@@ -182,23 +176,23 @@ CREATE TABLE schedule_entries (
 
 ---
 
-🧩 Rencana Pengembangan
+🧩 Roadmap & Future Enhancements
 
-[ ] Kalender akademik dinamis per semester
+- [ ] Dynamic academic calendar by semester
 
-[ ] Modul absensi berbasis jadwal
+- [ ] Attendance module tied to schedule
 
-[ ] Dashboard interaktif dengan chart
+- [ ] Interactive dashboard with charts
 
-[ ] Export laporan PDF dengan desain modern
+- [ ] PDF report export with modern design
 
 
 
 ---
 
-## 👨‍💻 Pengembang
+## 👨‍💻 Developer
 
-Spacelab dikembangkan secara independen oleh
+Spacelab is independently developed by
 Habib Ahmad Aziz (habibiahmada)
 ![contributors badge](https://readme-contribs.as93.net/contributors/habibiahmada/spacelab)
 
