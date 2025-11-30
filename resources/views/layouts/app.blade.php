@@ -34,7 +34,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-x-0"
         x-transition:leave-end="opacity-0 -translate-x-full"
-        class="fixed lg:static inset-y-0 left-0 w-64 border-e border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 flex flex-col z-40"
+        class="fixed lg:static inset-y-0 left-0 w-64 border-e border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 flex flex-col z-30"
     >
         <!-- Sidebar scroll area -->
         <div class="flex-1 overflow-y-auto">

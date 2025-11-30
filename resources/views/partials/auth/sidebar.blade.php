@@ -14,12 +14,22 @@
         @case('guru')
                 @php
                     $isUserIsGuardian = false;
+                    $isUserIsHeadOfMajor = false;
+                    $isUserIsProgramCoodinatior = false;
+
                     $user = Auth::user();
                     if ($user && $user->teacher) {
                         $isUserIsGuardian = $user->teacher->guardianClassHistories()->where(function ($q) {
                             $q->whereNull('ended_at')->orWhere('ended_at', '>=', \Carbon\Carbon::now());
                         })->exists();
+
+                        $teacher = $user->teacher;
+
+                        $isHeadOfMajor = $teacher ? $teacher->roleAssignments()->exists() : false;
+                        $isProgramCoordinator = $teacher ? $teacher->asCoordinatorAssignments()->exists() : false;
                     }
+
+
                 @endphp
                 @include('partials.auth.menus.teacher', ['isUserIsGuardian' => $isUserIsGuardian])
             @break

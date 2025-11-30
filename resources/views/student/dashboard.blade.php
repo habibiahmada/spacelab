@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-10">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div>
 
             {{-- Statistik Ringkas --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">

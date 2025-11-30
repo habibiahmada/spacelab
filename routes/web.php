@@ -26,6 +26,9 @@
         DashboardController as TeacherDashboardController,
         ScheduleController as TeacherScheduleController,
         ClassroomController as TeacherClassroomController,
+        MajorHeadController as TeacherMajorHeadController,
+        ProgramCoordinatorController as TeacherProgramCoordinatorController,
+        ProfileController as TeacherProfileController,
     };
 
     Route::get('/', [PagesController::class, 'index'])->name('welcome');
@@ -78,6 +81,12 @@
         Route::get('/schedules', [ TeacherScheduleController::class, 'index'])->name('schedules.index');
 
         Route::get('/class', [ TeacherClassroomController::class, 'index'])->name('classroom.index');
+
+        Route::get('/major/major-head', [TeacherMajorHeadController::class, 'Index' ])->name('major.majorhead.index');
+
+        Route::get('/major/program-coordinator', [TeacherProgramCoordinatorController::class, 'Index' ])->name('major.majorprogram.index');
+
+        Route::get('/profile', [ TeacherProfileController::class, 'index' ])->name('profile.index');
     });
 
     Route::middleware(['auth', 'role:Siswa'])->prefix('student')->name('siswa.')->group(function () {

@@ -16,6 +16,10 @@ class Major extends Model
         'code',
         'name',
         'description',
+        'logo',
+        'website',
+        'contact_email',
+        'slogan',
     ];
 
     public function classes(): HasMany
@@ -26,5 +30,27 @@ class Major extends Model
     public function roleAssignments()
     {
         return $this->hasMany(RoleAssignment::class, 'major_id');
+    }
+
+    public function companyRelations(): HasMany
+    {
+        return $this->hasMany(CompanyRelation::class, 'major_id');
+    }
+
+    public function majorSubjects(): HasMany
+    {
+        return $this->hasMany(MajorSubject::class, 'major_id');
+    }
+    // Major.php
+    public function allowedSubjects()
+    {
+        return $this->hasMany(SubjectMajorAllowed::class, 'major_id');
+    }
+    
+    public function subjects() // existing many-to-many through major_subject
+    {
+        return $this->belongsToMany(Subject::class, 'major_subject', 'major_id', 'subject_id')
+                    ->withTimestamps()
+                    ->withPivot(['notes']);
     }
 }

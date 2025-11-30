@@ -31,4 +31,21 @@ class Subject extends Model
             ->withTimestamps()
             ->withPivot(['started_at', 'ended_at']);
     }
+
+    public function majorSubjects(): HasMany
+    {
+        return $this->hasMany(MajorSubject::class, 'subject_id');
+    }
+
+    public function allowedMajors()
+    {
+        return $this->hasMany(SubjectMajorAllowed::class, 'subject_id');
+    }
+    
+    public function majors() // existing many-to-many through major_subject
+    {
+        return $this->belongsToMany(Major::class, 'major_subject', 'subject_id', 'major_id')
+                    ->withTimestamps()
+                    ->withPivot(['notes']);
+    }
 }

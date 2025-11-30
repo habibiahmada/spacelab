@@ -21,9 +21,35 @@
     </a>
 @endif
 
-<a href="#"
+@if($isHeadOfMajor)
+    <a href="{{ route('guru.major.majorhead.index') }}"
+       class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
+        {{ request()->routeIs('guru.major.majorhead.index') || request()->routeIs('guru.major.majorhead.index') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
+        <x-heroicon-o-users class="w-5 h-5" />
+        Jurusan
+    </a>
+@endif
+
+@if($isProgramCoordinator)
+        <a href="{{ route('guru.major.majorprogram.index') }}"
+            class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
+            {{ request()->routeIs('guru.major.majorprogram.index') || request()->routeIs('guru.major.majorprogram.index') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
+
+        <x-heroicon-o-users class="w-5 h-5" />
+        Jurusan
+    </a>
+@endif
+
+{{-- <a href="#"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
           {{ request()->routeIs('guru.reports') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
     <x-heroicon-o-clipboard-document class="w-5 h-5" />
     Laporan Mengajar
+</a> --}}
+
+<a href="{{ route('guru.profile.index') }}"
+   class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
+          {{ request()->routeIs('guru.profile.index') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
+    <x-heroicon-o-user class="w-5 h-5" />
+    Profile
 </a>

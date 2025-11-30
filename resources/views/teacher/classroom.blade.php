@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6 sm:py-8">
-        <div class="mx-auto px-2 sm:px-4 lg:px-6">
+        <div>
             <!-- Header Card with Classroom Info -->
             <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 p-4 md:p-5 hover:shadow-md transition-all duration-150">
                 <div class="p-4 sm:p-8">
