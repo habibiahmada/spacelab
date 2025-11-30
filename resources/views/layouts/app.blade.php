@@ -122,7 +122,7 @@
                     <summary class="cursor-pointer list-none">
                         <x-heroicon-o-chevron-down class="w-5 h-5" />
                     </summary>
-                    <ul class="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-800 shadow-lg rounded-md border border-gray-200 dark:border-slate-700">
+                    <ul class="absolute top-full right-0 mt-2 w-48 bg-white dark:bg-slate-800 shadow-lg rounded-md border border-gray-200 dark:border-slate-700 z-50">
                         <li>
                             <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700">
                                 <x-heroicon-o-cog-6-tooth class="w-5 h-5" />

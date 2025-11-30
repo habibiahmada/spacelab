@@ -51,7 +51,7 @@
                             hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div class="flex-1 min-w-0">
-                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Nama Siswa</p>
+                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Nama</p>
                             <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white truncate">{{ $student->name }}</h3>
                             <p class="text-xs md:text-sm text-gray-400 dark:text-gray-500 mt-1 truncate">{{ $studentClassFullName ?? '-' }}</p>
                         </div>

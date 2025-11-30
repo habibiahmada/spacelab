@@ -2,7 +2,6 @@
 
     use App\Http\Controllers\PagesController;
     use App\Http\Controllers\ProfileController;
-    use App\Http\Controllers\TeacherController;
     use Illuminate\Support\Facades\Route;
     use Illuminate\Support\Facades\Auth;
 
@@ -23,6 +22,11 @@
         ProfileController as StudentProfileController,
     };
 
+    use App\Http\Controllers\Teacher\{
+        DashboardController as TeacherDashboardController,
+        ScheduleController as TeacherScheduleController,
+    };
+
     Route::get('/', [PagesController::class, 'index'])->name('welcome');
 
     /*
@@ -35,7 +39,7 @@
         $role = Auth::user()->role->lower_name;
         return match ($role) {
             'admin'    => redirect()->route('admin.dashboard'),
-            'guru'     => redirect()->route('guru.dashboard'),
+            'guru'     => redirect()->route('guru.index'),
             'siswa'    => redirect()->route('siswa.index'),
             'staff'    => redirect()->route('staff.dashboard'),
             default    => abort(403, 'Unauthorized role'),
@@ -68,7 +72,9 @@
     });
 
     Route::middleware(['auth', 'role:Guru'])->prefix('teacher')->name('guru.')->group(function () {
-        Route::get('/dashboard', [TeacherController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('index');
+
+        Route::get('/schedules', [ TeacherScheduleController::class, 'index'])->name('schedules.index');
     });
 
     Route::middleware(['auth', 'role:Siswa'])->prefix('student')->name('siswa.')->group(function () {

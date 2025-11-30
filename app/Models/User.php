@@ -88,9 +88,14 @@ class User extends Authenticatable implements CanResetPasswordContract
     }
 
     public function student()
-{
-    return $this->hasOne(Student::class, 'users_id');
-}
+    {
+        return $this->hasOne(Student::class, 'users_id');
+    }
+
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class, 'user_id');
+    }
 
 
     /**

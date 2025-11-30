@@ -231,7 +231,7 @@
                                         {{-- Room --}}
                                         <div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
                                             <div class="flex-shrink-0 w-8 h-8 bg-gray-600 rounded-lg flex items-center justify-center shadow">
-                                                <x-heroicon-o-book-open class="w-5 h-5 md:w-6 md:h-6 text-white" />
+                                                <x-heroicon-o-building-office-2 class="w-5 h-5 md:w-6 md:h-6 text-white" />
                                             </div>
                                             <div class="flex-1">
                                                 <p class="text-xs text-gray-500 dark:text-gray-400">Ruangan</p>

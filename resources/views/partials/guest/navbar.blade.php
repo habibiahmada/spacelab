@@ -27,7 +27,7 @@
                 @if (!request()->routeIs('login'))
                     <!-- Auth Links -->
                     @auth
-                        <a href="{{ route(Auth::user()->role->lower_name . '.dashboard') }}" 
+                        <a href="{{ route(Auth::user()->role->lower_name . '.index') }}" 
                         class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border text-[#1b1b18] dark:text-[#EDEDEC]">
                             Dashboard
                         </a>
