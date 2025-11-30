@@ -25,6 +25,7 @@
     use App\Http\Controllers\Teacher\{
         DashboardController as TeacherDashboardController,
         ScheduleController as TeacherScheduleController,
+        ClassroomController as TeacherClassroomController,
     };
 
     Route::get('/', [PagesController::class, 'index'])->name('welcome');
@@ -75,6 +76,8 @@
         Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('index');
 
         Route::get('/schedules', [ TeacherScheduleController::class, 'index'])->name('schedules.index');
+
+        Route::get('/class', [ TeacherClassroomController::class, 'index'])->name('classroom.index');
     });
 
     Route::middleware(['auth', 'role:Siswa'])->prefix('student')->name('siswa.')->group(function () {

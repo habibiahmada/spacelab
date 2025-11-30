@@ -26,6 +26,8 @@ class ScheduleController extends Controller
                 'teacher' => null,
                 'allSchedules' => collect(),
                 'teacherFullName' => $user?->name ?? '-',
+                'subjects' => collect(),
+                'totalSubjects' => 0,
             ]);
         }
 
@@ -75,10 +77,16 @@ class ScheduleController extends Controller
 
         $teacherFullName = $teacher->user?->name ?? $teacher->name ?? '-';
 
+        // Subjects the teacher teaches (via teacher_subjects pivot)
+        $subjects = $teacher->subjects()->orderBy('name')->get();
+        $totalSubjects = $subjects->count();
+
         return view('teacher.schedules', [
             'teacher' => $teacher,
             'teacherFullName' => $teacherFullName,
             'allSchedules' => $allSchedules,
+            'subjects' => $subjects,
+            'totalSubjects' => $totalSubjects,
         ]);
     }
 }

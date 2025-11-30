@@ -20,10 +20,33 @@
                 </div>
             </div>
 
+            {{-- Mobile-only: Pelajaran Saya under the header --}}
+            <div class="xl:hidden mt-3">
+                <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl p-3 shadow-sm">
+                    <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Pelajaran Saya</h4>
+                    <div class="space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                            <x-heroicon-o-academic-cap class="w-5 h-5 text-gray-500" />
+                            <div class="ml-3">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Total Mata Pelajaran</p>
+                                <p class="font-medium text-gray-900 dark:text-white text-sm">{{ $totalSubjects }}</p>
+                            </div>
+                            <div class="mt-2 sm:mt-0 sm:flex-1">
+                                <ul class="flex flex-wrap gap-2">
+                                    @foreach($subjects as $subject)
+                                        <li class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 text-sm text-gray-700 dark:text-gray-200">{{ $subject->name }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             @foreach($allSchedules as $day => $schedules)
                 <div class="mt-4 mb-2 flex items-center gap-2 scroll-mt-28" id="day-{{ $day }}">
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
-                    <h3 class="text-base md:text-xl font-semibold tracking-wide px-3 py-1 bg-gray-800 rounded-full text-white shadow-sm">
+                    <h3 class="text-base md:text-xl font-semibold tracking-wide px-3 py-1 bg-gray-50 dark:bg-gray-800/30 rounded-full text-gray-900 dark:text-gray-100 shadow-sm">
                         {{ $dayNames[$day] ?? 'Hari' }}
                     </h3>
                     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent"></div>
@@ -92,7 +115,7 @@
                 @endphp
 
                 @if(collect($mergedSchedules)->isEmpty())
-                    <div class="p-3 mb-3 border rounded-lg bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 text-center">
+                    <div class="p-3 mb-3 border rounded-lg bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-800 text-center">
                         <div class="mx-auto mb-3 text-gray-400 dark:text-gray-600 inline-block">
                             <x-heroicon-o-book-open class="w-8 h-8 text-gray-400 dark:text-gray-600" />
                         </div>
@@ -114,18 +137,18 @@
 
                             {{-- Teacher POV Card --}}
                             <div class="group relative text-sm">
-                                <div class="relative rounded-lg overflow-hidden transition-all duration-150 h-full
+                                <div class="relative rounded-xl overflow-hidden transition-all duration-150 h-full
                                     {{ $isOngoing
-                                        ? 'bg-gray-50 dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 shadow-lg shadow-gray-200/40 dark:shadow-gray-800/30 scale-105'
+                                        ? 'bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm ring-1 ring-gray-200 dark:ring-gray-800 scale-100'
                                         : ($isPast
-                                            ? 'bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 opacity-60'
-                                            : 'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:shadow-xl dark:hover:shadow-gray-800/50 hover:border-gray-300 dark:hover:border-gray-600')
+                                            ? 'bg-gray-50 dark:bg-gray-900/60 border border-gray-100 dark:border-gray-800 opacity-70'
+                                            : 'bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 hover:shadow-sm')
                                     }}">
-                                    <div class="h-1 {{ $isOngoing ? 'bg-gray-300 dark:bg-gray-700 animate-pulse' : 'bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-600' }}"></div>
+                                        <div class="h-1 {{ $isOngoing ? 'bg-gray-300 dark:bg-gray-700 animate-pulse' : 'bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600' }}"></div>
 
                                     @if ($isOngoing)
                                         <div class="absolute top-3 right-3 z-10">
-                                            <div class="bg-gray-800 text-white px-3 py-1 rounded-full shadow flex items-center gap-2 animate-bounce">
+                                            <div class="bg-gray-700 text-white px-3 py-1 rounded-full shadow flex items-center gap-2 animate-bounce">
                                                 <span class="relative flex h-2.5 w-2.5">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
@@ -144,7 +167,7 @@
                                     <div class="p-3">
                                         <div class="flex items-start justify-between">
                                             <div class="flex-1 pr-2">
-                                                <h4 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate">
+                                                <h4 class="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1 truncate">
                                                     {{ $item->subject?->name ?? $item->first->subject?->name ?? '-' }}
                                                 </h4>
                                                 <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
@@ -152,7 +175,7 @@
                                                         {{ $item->subject?->code ?? $item->first->subject?->code ?? '' }}
                                                     </span>
                                                 </div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Kelas</div>
+                                                <div class="text-xs text-gray-600 dark:text-gray-400 mb-1">Kelas</div>
                                                 <div class="font-semibold text-gray-900 dark:text-white text-sm">
                                                     {{ $item->template?->class?->full_name ?? $item->first->template?->class?->full_name ?? ($item->first->template?->class?->name ?? '-') }}
                                                 </div>
@@ -160,7 +183,7 @@
 
                                             {{-- Time block --}}
                                             <div class="text-right min-w-[80px]">
-                                                <div class="text-sm font-semibold">
+                                                    <div class="text-sm font-semibold">
                                                     {{ $startTimeStr ? \Carbon\Carbon::parse($startTimeStr)->format('H:i') : ($periodStart?->start_date?->format('H:i') ?? '-') }}
                                                     -
                                                     {{ $endTimeStr ? \Carbon\Carbon::parse($endTimeStr)->format('H:i') : ($periodEnd?->end_date?->format('H:i') ?? '-') }}
@@ -203,23 +226,44 @@
         </main>
 
         <aside class="hidden xl:block w-56 lg:sticky lg:top-28 lg:h-[calc(100vh-7rem)] lg:overflow-auto lg:flex-shrink-0" style="height: calc(100vh - 10rem);">
-            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-2 shadow-md h-full">
+            <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-2 shadow-md">
                 @for ($d = 1; $d <= 7; $d++)
-                    <a href="#day-{{ $d }}" class="flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-150 hover:bg-gray-100 dark:hover:bg-gray-800 {{ $d === $currentDayIndex ? 'bg-gray-100 dark:bg-gray-900/20' : '' }}">
+                    <a href="#day-{{ $d }}" class="flex items-center gap-2 px-3 py-2 rounded-md transition-colors duration-150 hover:bg-gray-100 dark:hover:bg-gray-800 {{ $d === $currentDayIndex ? 'bg-gray-50 dark:bg-gray-800/20' : '' }}">
                         <x-heroicon-o-book-open class="w-4 h-4 text-gray-600 dark:text-gray-300" />
                         <span class="text-sm text-gray-700 dark:text-gray-200">{{ $dayNames[$d] }}</span>
                     </a>
                 @endfor
             </div>
+            <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-3 shadow-md mt-5">
+                <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Pelajaran Saya</h4>
+                <div class="space-y-3">
+                    <div class="flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <x-heroicon-o-academic-cap class="w-5 h-5 text-gray-500" />
+                            <div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Total Mata Pelajaran</p>
+                                <p class="font-medium text-gray-900 dark:text-white text-sm">{{ $totalSubjects }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <ul class="flex flex-wrap gap-2">
+                                @foreach($subjects as $subject)
+                                    <li class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-800 text-sm text-gray-700 dark:text-gray-200">{{ $subject->name }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </aside>
     </div>
 
-    <div class="xl:hidden fixed bottom-4 right-4 z-50 flex items-end justify-end">
+            <div class="xl:hidden fixed bottom-4 right-4 z-50 flex items-end justify-end">
         <div class="relative">
-            <button id="dayToggleBtn" aria-expanded="false" aria-controls="dayMenu" class="bg-gray-800 p-3 rounded-full shadow-lg text-white focus:outline-none">
+            <button id="dayToggleBtn" aria-expanded="false" aria-controls="dayMenu" class="bg-gray-700 p-3 rounded-full shadow-md text-white focus:outline-none">
                 <x-heroicon-o-book-open class="w-5 h-5 text-white" />
             </button>
-            <div id="dayMenu" class="hidden absolute right-0 bottom-14 w-44 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md p-2">
+            <div id="dayMenu" class="hidden absolute right-0 bottom-14 w-44 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg shadow-md p-2">
                 @for ($d = 1; $d <= 7; $d++)
                     <a href="#day-{{ $d }}" onclick="document.getElementById('dayMenu').classList.add('hidden')" class="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
                         <x-heroicon-o-book-open class="w-4 h-4 text-gray-600 dark:text-gray-300" />

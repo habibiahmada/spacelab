@@ -12,7 +12,16 @@
             @break
 
         @case('guru')
-            @include('partials.auth.menus.teacher')
+                @php
+                    $isUserIsGuardian = false;
+                    $user = Auth::user();
+                    if ($user && $user->teacher) {
+                        $isUserIsGuardian = $user->teacher->guardianClassHistories()->where(function ($q) {
+                            $q->whereNull('ended_at')->orWhere('ended_at', '>=', \Carbon\Carbon::now());
+                        })->exists();
+                    }
+                @endphp
+                @include('partials.auth.menus.teacher', ['isUserIsGuardian' => $isUserIsGuardian])
             @break
 
         @case('staff')
