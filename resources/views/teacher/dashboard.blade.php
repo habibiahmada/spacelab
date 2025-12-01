@@ -128,8 +128,6 @@
                                 $currentDayIndex = $currentDayIndex ?? (int) $currentTime->format('N');
                             @endphp
 
-                            {{ $currentTime->toDateTimeString() }} (Hari: {{ $currentDayIndex }})
-                            
                             @foreach ($schedulesToday as $schedule)
                                 @php
                                     $startTime = $schedule->period?->start_date;
@@ -139,19 +137,6 @@
                                     $isPast = ((int) $schedule->day_of_week === (int) $currentDayIndex) && ($schedule->isPast($currentTime) ?? false);
                                 @endphp
 
-                                {{-- Developer debug: show timestamps when running locally --}}
-                                @if (app()->isLocal())
-                                    <div class="mt-2 text-xs text-gray-500">
-                                        start_date: {{ optional($startTime)?->toDateTimeString() ?? '-'}} |
-                                        end_date: {{ optional($endTime)?->toDateTimeString() ?? '-'}} |
-                                        start_time: {{ optional($period)?->start_time ?? '-'}} |
-                                        end_time: {{ optional($period)?->end_time ?? '-'}} |
-                                        now: {{ $currentTime->toDateTimeString() }} |
-                                        ongoing: {{ $isOngoing ? 'true' : 'false' }} |
-                                        past: {{ $isPast ? 'true' : 'false' }} |
-                                        schedule_day: {{ $schedule->day_of_week }}
-                                    </div>
-                                @endif
 
                                 <div class="relative group">
                                     {{-- Ongoing Side Indicator --}}

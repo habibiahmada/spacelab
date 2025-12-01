@@ -8,13 +8,16 @@
     <div class="py-6 sm:py-8">
         <div class="mx-auto px-2 sm:px-4 lg:px-6">
             <!-- Header Card with Classroom Info -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="p-4 sm:p-8">
+            <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                            hover:shadow-md transition-all duration-150">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-6">
                         <!-- Classroom Info -->
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gray-100 dark:bg-gray-700 rounded-xl flex items-center justify-center shadow-sm">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                                border border-gray-100 dark:border-gray-800
+                                hover:shadow-md transition-all duration-150 flex items-center justify-center">
                                     <x-heroicon-o-academic-cap class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-200" />
                                 </div>
                                 <div>
@@ -32,7 +35,9 @@
 
                         <!-- Guardian Info -->
                         @if($guardian)
-                            <div class="flex items-center gap-3 px-3 py-2 sm:px-6 sm:py-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                            <div class="flex items-center gap-3 px-3 py-2 sm:px-6 sm:py-4 bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                            border border-gray-100 dark:border-gray-800
+                            hover:shadow-md transition-all duration-150">
                                 <div class="relative">
                                     <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-200 font-semibold ring-2 ring-gray-100 dark:ring-gray-700">
                                         @if($guardian->teacher->avatar ?? false)
@@ -61,7 +66,9 @@
             <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
                 <!-- Students List - 2/3 width -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="bbg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                            border border-gray-100 dark:border-gray-800
+                            hover:shadow-md transition-all duration-150">
                         <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
                             <div class="flex items-center justify-between">
                                 <h3 class="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
@@ -76,13 +83,13 @@
                         
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-800">
                                     <tr>
                                         <th class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">No</th>
                                         <th class="px-4 py-3 sm:px-6 sm:py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Siswa</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
+                                <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-700">
                                     @forelse($students as $index => $student)
                                         <tr class="transition-colors duration-150">
                                             <td class="px-4 py-3 sm:px-6 sm:py-4 whitespace-nowrap">
@@ -121,10 +128,10 @@
                 <div class="lg:col-span-1">
                     <div class="space-y-6">
                         <!-- Current Day Info -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                            <div class="p-3 sm:p-5 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                            <div class="p-3 sm:p-5 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center shadow-sm">
+                                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center shadow-sm">
                                         <x-heroicon-o-calendar class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-200" />
                                     </div>
                                     <div>
@@ -140,7 +147,7 @@
                         </div>
 
                         <!-- Current Class -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                             <div class="p-3 sm:p-5 border-b border-gray-200 dark:border-gray-700">
                                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide flex items-center gap-2">
                                     <div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
@@ -181,7 +188,7 @@
                         </div>
 
                         <!-- Today's Schedule -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                             <div class="p-5 border-b border-gray-200 dark:border-gray-700">
                                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide">Jadwal Hari Ini</h3>
                             </div>
@@ -190,7 +197,7 @@
                                 @if($todayEntries->isNotEmpty())
                                     <div class="space-y-2 max-h-60 sm:max-h-96 overflow-y-auto">
                                         @foreach($todayEntries as $entry)
-                                            <div class="p-3 sm:p-4 bg-gray-50 dark:bg-gray-750 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-150">
+                                            <div class="p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-150">
                                                 <div class="flex justify-between items-start gap-3">
                                                     <div class="flex-1 min-w-0">
                                                         <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $entry->subject?->name ?? '-' }}</p>

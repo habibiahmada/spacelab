@@ -20,6 +20,13 @@
     Kelas Saya
 </a>
 
+<a href="{{ route('siswa.rooms.index') }}"
+   class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
+   {{ request()->routeIs('siswa.rooms.index') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
+    <x-heroicon-s-rocket-launch class="w-5 h-5" />
+    Daftar Ruangan
+</a>
+
 
 <a href="{{ route('siswa.profile.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800

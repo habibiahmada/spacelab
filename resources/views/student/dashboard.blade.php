@@ -69,7 +69,7 @@
 
 
             {{-- Jadwal Hari Ini --}}
-            <div class="bg-white dark:bg-gray-900 shadow rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800">
+            <div class="mt-10 bg-white dark:bg-gray-900 shadow rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800">
                 <div class="bg-gray-100 dark:bg-gray-800 px-6 py-5">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -129,21 +129,7 @@
                                     $period = $schedule->period;
                                     $isOngoing = ((int) $schedule->day_of_week === (int) $currentDayIndex) && ($schedule->isOngoing($currentTime) ?? false);
                                     $isPast = ((int) $schedule->day_of_week === (int) $currentDayIndex) && ($schedule->isPast($currentTime) ?? false);
-                                @endphp
-
-                                {{-- Developer debug: show timestamps when running locally --}}
-                                @if (app()->isLocal())
-                                    <div class="mt-2 text-xs text-gray-500">
-                                        start_date: {{ optional($startTime)?->toDateTimeString() ?? '-'}} |
-                                        end_date: {{ optional($endTime)?->toDateTimeString() ?? '-'}} |
-                                        start_time: {{ optional($period)?->start_time ?? '-'}} |
-                                        end_time: {{ optional($period)?->end_time ?? '-'}} |
-                                        now: {{ $currentTime->toDateTimeString() }} |
-                                        ongoing: {{ $isOngoing ? 'true' : 'false' }} |
-                                        past: {{ $isPast ? 'true' : 'false' }} |
-                                        schedule_day: {{ $schedule->day_of_week }}
-                                    </div>
-                                @endif
+                                @endphp 
 
                                 <div class="relative group">
                                     {{-- Ongoing Side Indicator --}}

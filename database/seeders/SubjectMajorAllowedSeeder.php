@@ -15,10 +15,9 @@ class SubjectMajorAllowedSeeder extends Seeder
         $mappings = [
             'RPL101' => ['RPL'],
             'RPL102' => ['RPL'],
-            'RPL104' => ['RPL','AKL'], // boleh di lebih dari satu major
+            'RPL104' => ['RPL','AKL'],
             'TKJ101' => ['TKJ'],
             'DKV101' => ['DKV'],
-            'IND101' => ['RPL','TKJ','DKV','AKL','OTKP','BDP','TSM','TKR','TPM','TITL'], // core untuk semua
         ];
 
         foreach ($mappings as $subjectCode => $majorCodes) {

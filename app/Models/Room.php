@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use App\Models\RoomHistory;
+use App\Models\TimetableEntry;
 
 class Room extends Model
 {
@@ -17,14 +20,22 @@ class Room extends Model
         'code', 'name', 'building_id', 'floor', 'capacity', 'type', 'is_active', 'notes'
     ];
 
-    public function timetableEntries(): HasMany
+    public function timetableEntries(): HasManyThrough
     {
-        return $this->hasMany(TimetableEntry::class, 'room_id');
+        // TimetableEntry is related to Room via RoomHistory.room_id => room_history.room_id
+        return $this->hasManyThrough(
+            TimetableEntry::class,
+            RoomHistory::class,
+            'room_id', // Foreign key on RoomHistory table...
+            'room_history_id', // Foreign key on TimetableEntry table...
+            'id', // Local key on rooms table
+            'id' // Local key on room_history table
+        );
     }
 
-    public function scheduleEntries(): HasMany
+    public function scheduleEntries(): HasManyThrough
     {
-        return $this->hasMany(TimetableEntry::class, 'room_id');
+        return $this->timetableEntries();
     }
 
     public function building()

@@ -20,6 +20,7 @@
         DashboardController as StudentDashboardController,
         ScheduleController as StudentScheduleController,
         ProfileController as StudentProfileController,
+        RoomController as StudentRoomController
     };
 
     use App\Http\Controllers\Teacher\{
@@ -94,7 +95,9 @@
 
         Route::get('/schedules', [ StudentScheduleController::class, 'index'])->name('schedules.index');
 
-        Route::get('/class', [ StudentClassroomController::class, 'index'])->name('classroom.index');
+        Route::get('/rooms', [ StudentRoomController::class, 'index'])->name('rooms.index');
+
+        Route::get('/classes', [ StudentClassroomController::class, 'index'])->name('classroom.index');
 
         Route::get('/profile', [ StudentProfileController::class, 'index' ])->name('profile.index');
     });
