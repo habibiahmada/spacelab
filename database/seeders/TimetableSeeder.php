@@ -56,6 +56,8 @@ class TimetableSeeder extends Seeder
 
         // track used room_history ids per slot key "day:period_id"
         $usedPerSlot = [];
+        // track used teacher ids per slot key to avoid double-teaching
+        $usedPerSlotTeachers = [];
 
         foreach ($classes as $class) {
             foreach ($blocks as $block) {
@@ -74,17 +76,17 @@ class TimetableSeeder extends Seeder
                         // candidate histories: prefer matching class, else global pool
                         $candidateHistories = $roomHistoryByClass->get($class->id) ?? $roomHistory;
 
-                        // filter out already used room_history in this slot
-                        $usedInSlot = $usedPerSlot[$slotKey] ?? [];
+                        // filter out already used rooms in this slot (track by room_id)
+                        $usedRoomIdsInSlot = $usedPerSlot[$slotKey] ?? [];
 
-                        $available = $candidateHistories->filter(function ($rh) use ($usedInSlot) {
-                            return ! in_array($rh->id, $usedInSlot);
+                        $available = $candidateHistories->filter(function ($rh) use ($usedRoomIdsInSlot) {
+                            return ! in_array($rh->room_id, $usedRoomIdsInSlot);
                         });
 
                         // fallback to global available if none left in class-specific candidate
                         if ($available->isEmpty()) {
-                            $available = $roomHistory->filter(function ($rh) use ($usedInSlot) {
-                                return ! in_array($rh->id, $usedInSlot);
+                            $available = $roomHistory->filter(function ($rh) use ($usedRoomIdsInSlot) {
+                                return ! in_array($rh->room_id, $usedRoomIdsInSlot);
                             });
                         }
 
@@ -96,16 +98,30 @@ class TimetableSeeder extends Seeder
                         }
 
                         // create entry with chosen room_history_id
+                        // pick a teacher subject that hasn't been scheduled within this slot
+                        $usedTeachers = $usedPerSlotTeachers[$slotKey] ?? [];
+                        $availableTeacherSubjects = $teacherSubjects->filter(function ($t) use ($usedTeachers) {
+                            return ! in_array($t->teacher_id, $usedTeachers);
+                        });
+                        if ($availableTeacherSubjects->isEmpty()) {
+                            $ts = $teacherSubjects->random();
+                        } else {
+                            $ts = $availableTeacherSubjects->random();
+                        }
                         TimetableEntry::create([
                             'template_id'         => $template->id,
                             'day_of_week'         => $day,
                             'period_id'           => $period->id,
-                            'teacher_subject_id'  => $teacherSubjects->random()?->id,
+                            'teacher_subject_id'  => $ts?->id,
                             'room_history_id'     => $selected?->id,
+                            'teacher_id'          => $ts?->teacher_id,
+                            'room_id'             => $selected?->room_id,
                         ]);
 
                         // mark used for this slot
-                        $usedPerSlot[$slotKey][] = $selected?->id;
+                        // mark used room id for this slot
+                        $usedPerSlot[$slotKey][] = $selected?->room_id;
+                        $usedPerSlotTeachers[$slotKey][] = $ts?->teacher_id;
                     }
                 }
             }

@@ -27,9 +27,31 @@ class GuardianClassHistorySeeder extends Seeder
         $teacherCount = $teachers->count();
         $index = 0;
 
+        // avoid assigning teachers who are head_of_major or program_coordinator
+        $roleAssignedTeacherIds = \App\Models\RoleAssignment::pluck('head_of_major_id')
+                                ->merge(\App\Models\RoleAssignment::pluck('program_coordinator_id'))
+                                ->filter()
+                                ->unique()
+                                ->toArray();
+
         foreach ($classes as $class) {
-            $teacher = $teachers[$index % $teacherCount];
-            $index++;
+            // choose teacher in round-robin but skip role assigned teachers
+            $teacher = null;
+            $tries = 0;
+            while ($tries < $teacherCount) {
+                $candidate = $teachers[$index % $teacherCount];
+                $index++;
+                $tries++;
+                if (! in_array($candidate->id, $roleAssignedTeacherIds)) {
+                    $teacher = $candidate;
+                    break;
+                }
+            }
+
+            if (! $teacher) {
+                // fallback: just pick random
+                $teacher = $teachers->random();
+            }
 
             GuardianClassHistory::updateOrCreate(
                 [

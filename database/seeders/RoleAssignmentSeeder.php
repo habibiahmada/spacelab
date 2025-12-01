@@ -24,9 +24,24 @@ class RoleAssignmentSeeder extends Seeder
             return;
         }
 
+        $usedTeacherIds = [];
         foreach ($majors as $major) {
-            $head = $teachers->random();
-            $coordinator = $teachers->random();
+            // pick head and coordinator that are not used yet in this term and not conflicting
+            $candidatesForHead = $teachers->whereNotIn('id', $usedTeacherIds);
+            if ($candidatesForHead->isEmpty()) {
+                $head = $teachers->random();
+            } else {
+                $head = $candidatesForHead->random();
+            }
+            $usedTeacherIds[] = $head->id;
+
+            $availableCoordinators = $teachers->whereNotIn('id', $usedTeacherIds);
+            if ($availableCoordinators->isEmpty()) {
+                $coordinator = $teachers->random();
+            } else {
+                $coordinator = $availableCoordinators->random();
+            }
+            $usedTeacherIds[] = $coordinator->id;
 
             RoleAssignment::updateOrCreate(
                 ['major_id' => $major->id, 'terms_id' => $term->id],
