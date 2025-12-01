@@ -38,6 +38,11 @@ class Room extends Model
         return $this->timetableEntries();
     }
 
+    public function directTimetableEntries(): HasMany
+    {
+        return $this->hasMany(\App\Models\TimetableEntry::class, 'room_id');
+    }
+
     public function building()
     {
         return $this->belongsTo(Building::class, 'building_id');

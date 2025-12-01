@@ -48,6 +48,15 @@ class Teacher extends Model
         return $this->scheduleEntries();
     }
 
+    /**
+     * Direct timetable entries via denormalized teacher_id on timetable_entries
+     * This is added to make uniqueness constraints and checks easier.
+     */
+    public function directTimetableEntries(): HasMany
+    {
+        return $this->hasMany(\App\Models\TimetableEntry::class, 'teacher_id');
+    }
+
     public function teacherSubjects(): HasMany
     {
         return $this->hasMany(TeacherSubject::class);

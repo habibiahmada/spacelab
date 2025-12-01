@@ -35,4 +35,41 @@ class RoleAssignment extends Model
     {
         return $this->belongsTo(Term::class, 'terms_id');
     }
+
+    protected static function booted()
+    {
+        static::saving(function ($model) {
+            // Check uniqueness constraints at application level as well.
+            // Prevent a teacher from being head or program_coordinator in more than one major in the same term.
+            $term = $model->terms_id;
+
+            if ($model->head_of_major_id) {
+                $conflict = RoleAssignment::where('terms_id', $term)
+                                ->where(function ($q) use ($model) {
+                                    $q->where('head_of_major_id', $model->head_of_major_id)
+                                      ->orWhere('program_coordinator_id', $model->head_of_major_id);
+                                })
+                                ->where('id', '!=', $model->id ?? null)
+                                ->exists();
+
+                if ($conflict) {
+                    throw new \Exception('Teacher already assigned as head or program coordinator in the same term.');
+                }
+            }
+
+            if ($model->program_coordinator_id) {
+                $conflict = RoleAssignment::where('terms_id', $term)
+                                ->where(function ($q) use ($model) {
+                                    $q->where('head_of_major_id', $model->program_coordinator_id)
+                                      ->orWhere('program_coordinator_id', $model->program_coordinator_id);
+                                })
+                                ->where('id', '!=', $model->id ?? null)
+                                ->exists();
+
+                if ($conflict) {
+                    throw new \Exception('Teacher already assigned as head or program coordinator in the same term.');
+                }
+            }
+        });
+    }
 }
