@@ -26,7 +26,7 @@ return new class extends Migration
         // and then make them not null if user wants
         DB::transaction(function () {
             // update teacher_id from teacher_subjects
-            DB::table('timetable_entries')->whereNotNull('teacher_subject_id')->chunk(100, function ($entries) {
+            DB::table('timetable_entries')->whereNotNull('teacher_subject_id')->orderBy('id')->chunk(100, function ($entries) {
                 foreach ($entries as $entry) {
                     $ts = DB::table('teacher_subjects')->where('id', $entry->teacher_subject_id)->first();
                     if ($ts) {
@@ -36,7 +36,7 @@ return new class extends Migration
             });
 
             // update room_id from room_history
-            DB::table('timetable_entries')->whereNotNull('room_history_id')->chunk(100, function ($entries) {
+            DB::table('timetable_entries')->whereNotNull('room_history_id')->orderBy('id')->chunk(100, function ($entries) {
                 foreach ($entries as $entry) {
                     $rh = DB::table('room_history')->where('id', $entry->room_history_id)->first();
                     if ($rh) {

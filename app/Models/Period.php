@@ -15,7 +15,7 @@ class Period extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['ordinal', 'start_time', 'end_time'];
+    protected $fillable = ['ordinal', 'start_time', 'end_time', 'is_teaching'];
 
     protected $casts = [
         'start_time' => 'string',

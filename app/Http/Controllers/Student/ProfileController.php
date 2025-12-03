@@ -14,16 +14,19 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $student = $user->student;
 
         $activeTerm = DB::table('terms')->where('is_active', true)->first();
 
         // Get the most recent class history for the active term (if any)
-        $classHistoryQuery = ClassHistory::where('user_id', $user->id);
-        if ($activeTerm) {
-            $classHistoryQuery->where('terms_id', $activeTerm->id);
+        $classHistory = null;
+        if ($student) {
+            $classHistoryQuery = ClassHistory::where('student_id', $student->id);
+            if ($activeTerm) {
+                $classHistoryQuery->where('terms_id', $activeTerm->id);
+            }
+            $classHistory = $classHistoryQuery->with(['classroom.major', 'block'])->orderBy('created_at', 'desc')->first();
         }
-
-        $classHistory = $classHistoryQuery->with(['classroom.major', 'block'])->orderBy('created_at', 'desc')->first();
 
         $classroom = $classHistory?->classroom;
 

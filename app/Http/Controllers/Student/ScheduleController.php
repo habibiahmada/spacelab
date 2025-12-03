@@ -17,80 +17,61 @@ class ScheduleController extends Controller
     //
     public function index()
     {
-        $student = Auth::user();
+        $user = Auth::user();
+        $student = $user->student;
+        $activeTerm = \App\Models\Term::where('is_active', true)->first();
 
-        $activeTerm = DB::table('terms')->where('is_active', true)->first();
-
-        // Ambil class history user
-        $classHistoryQuery = DB::table('classhistories')
-            ->where('user_id', $student->id);
-
-        if ($activeTerm) {
-            $classHistoryQuery->where('terms_id', $activeTerm->id);
+        // Ambil class history user dengan relasi model
+        $classIds = collect();
+        if ($student) {
+            $classHistoryQuery = \App\Models\ClassHistory::where('student_id', $student->id);
+            if ($activeTerm) {
+                $classHistoryQuery->where('terms_id', $activeTerm->id);
+            }
+            $classIds = $classHistoryQuery->pluck('class_id')->unique()->values();
         }
-
-        $classIds = $classHistoryQuery->pluck('class_id')->unique()->values();
 
         if ($classIds->isEmpty()) {
             Log::warning('⚠️ Tidak ada class history untuk user; tidak menampilkan jadwal.');
             return view('student.schedules', [
-                'student' => $student,
+                'student' => $user,
                 'allSchedules' => collect(),
                 'studentClassFullName' => '-'
             ]);
         }
 
-        // Cek kolom period
-        $hasStartTime = Schema::hasColumn('periods', 'start_time');
-        $hasStartDate = Schema::hasColumn('periods', 'start_date');
-
-        // Query utama jadwal untuk semua hari (1..7)
-        $query = TimetableEntry::select('timetable_entries.*')
-            ->join('timetable_templates', 'timetable_templates.id', '=', 'timetable_entries.template_id')
-            ->join('periods', 'periods.id', '=', 'timetable_entries.period_id')
-            ->whereIn('timetable_templates.class_id', $classIds)
-            ->whereBetween('timetable_entries.day_of_week', [1, 7]);
-
-
-        // Order berdasarkan hari (Senin..Minggu) lalu berdasarkan waktu/nomor periode
-        $query->orderBy('timetable_entries.day_of_week', 'asc');
-        // Order berdasarkan kolom yang tersedia
-        if ($hasStartTime && $hasStartDate) {
-            $query->orderByRaw("COALESCE(to_char(periods.start_time, 'HH24:MI:SS'), to_char(periods.start_date, 'HH24:MI:SS')) ASC");
-        } elseif ($hasStartTime) {
-            $query->orderBy('periods.start_time', 'asc');
-        } elseif ($hasStartDate) {
-            $query->orderByRaw("to_char(periods.start_date, 'HH24:MI:SS') ASC");
-        } else {
-            $query->orderBy('periods.id', 'asc');
-        }
-
-        $allSchedules = $query->with([
+        // Ambil semua jadwal dengan relasi model
+        $allSchedulesRaw = \App\Models\TimetableEntry::whereHas('template', function($q) use ($classIds) {
+                $q->whereIn('class_id', $classIds);
+            })
+            ->whereBetween('day_of_week', [1, 7])
+            ->with([
                 'period',
+                'template.class.major',
                 'teacherSubject.subject',
                 'teacherSubject.teacher.user',
                 'roomHistory.room',
-                'template.class.major',
             ])
+            ->orderBy('day_of_week', 'asc')
+            ->orderBy('period_id', 'asc')
             ->get()
-            ->groupBy('day_of_week'); // Biar enak ditampilkan per hari
+            ->groupBy('day_of_week');
 
         // Pastikan setiap hari 1..7 disediakan, meskipun kosong
         $groupedOrdered = collect();
         for ($d = 1; $d <= 7; $d++) {
-            $groupedOrdered[$d] = $allSchedules->get($d, collect());
+            $groupedOrdered[$d] = $allSchedulesRaw->get($d, collect());
         }
         $allSchedules = $groupedOrdered;
 
-
         // Nama kelas siswa
         $classId = $classIds->first();
-        $classroom = Classroom::with('major')->find($classId);
+        $classroom = \App\Models\Classroom::with('major')->find($classId);
         $studentClassFullName = $classroom?->full_name ?? ($classroom?->name ?? '-');
 
         return view('student.schedules', [
             'student'              => $student,
-            'allSchedules'         => $allSchedules,   // Semua jadwal Senin-Jumat
+            'allSchedules'         => $allSchedules,
             'studentClassFullName' => $studentClassFullName,
         ]);
     }

@@ -8,26 +8,26 @@
     <div class="py-10">
         <div>
             {{-- Statistik Ringkas --}}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 <!-- Card 1 -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                        border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
+                        border border-gray-100 dark:border-gray-800 p-4 md:p-5
                         hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div>
                             <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Hari Ini</p>
-                            <h3 class="text-lg md:text-2xl font-semibold text-gray-900 dark:text-white capitalize">{{ now()->format('l') }}</h3>
-                            <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">{{ now()->format('d M Y') }}</p>
+                            <h3 class="text-lg md:text-2xl font-semibold text-gray-900 dark:text-white capitalize">{{ now()->translatedformat('l') }}</h3>
+                            <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">{{ now()->translatedformat('H:i, d M Y') }}</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center 
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
                             <x-heroicon-o-calendar class="w-5 h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
                         </div>
                     </div>
                 </div>
                 <!-- Card 2 -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5
                             hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div>
@@ -35,7 +35,7 @@
                             <h3 class="text-2xl md:text-5xl font-extrabold text-gray-900 dark:text-white">{{ $todaySubjectsCount ?? 0 }}</h3>
                             <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">mata pelajaran</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center 
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
                             <x-heroicon-o-book-open class="w-5 h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
                         </div>
@@ -43,8 +43,8 @@
                 </div>
 
                 <!-- Card 3 -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                        border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
+                        border border-gray-100 dark:border-gray-800 p-4 md:p-5
                         hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div>
@@ -52,29 +52,9 @@
                             <h3 class="text-2xl md:text-5xl font-extrabold text-gray-900 dark:text-white">{{ $todayRoomsCount ?? 0 }}</h3>
                             <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">hari ini</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center 
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
                             <x-heroicon-o-book-open class="w-5 h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
-                            hover:shadow-md transition-all duration-150">
-                    <div class="flex items-center justify-between gap-4">
-                        <div class="flex-1 min-w-0">
-                            <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Nama</p>
-                            <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white truncate">Nama Disini</h3>
-                            <p class="text-xs md:text-sm text-gray-400 dark:text-gray-500 mt-1 truncate">{{ $studentClassFullName ?? '-' }}</p>
-                        </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex-shrink-0 flex items-center justify-center 
-                                    border border-gray-100 dark:border-gray-700">
-                            <img src="{{ $student->student->avatar ?? asset('assets/images/avatar/default-profile.png') }}"
-                                alt="Avatar Siswa"
-                                class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 shadow 
-                                        border-gray-200 dark:border-gray-700">
                         </div>
                     </div>
                 </div>
@@ -134,7 +114,6 @@
                                     <td class="px-4 py-3 align-middle">
                                         @if($room->todays_entries_count > 0)
                                             <div class="flex flex-col gap-2">
-                                                <span class="inline-flex items-center gap-2 bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold w-max">Dipakai ({{ $room->todays_entries_count }})</span>
                                                 <div class="text-xs text-gray-500 dark:text-gray-400">
                                                     @foreach($room->timetableEntries as $entry)
                                                         @php
@@ -150,11 +129,11 @@
                                                             }
                                                         @endphp
                                                         <div class="flex items-center justify-between">
+                                                            @if($entry->isOngoing())
                                                             <div>
                                                                 <div class="font-medium text-gray-900 dark:text-white">{{ $entry->subject?->name ?? '-' }}</div>
                                                                 <div class="text-xs text-gray-500">{{ $entry->teacher?->user?->name ?? '-' }} • <span class="text-xs">{{ $time }}</span></div>
                                                             </div>
-                                                            @if($entry->isOngoing())
                                                                 <div class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded font-semibold">Sedang berjalan</div>
                                                             @endif
                                                         </div>
@@ -188,27 +167,21 @@
                             {{-- Konten Utama Halaman --}}
                             <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Daftar Ruangan Hari Ini</h1>
                             {{-- Daftar ruangan yang dipakai hari ini (berdasarkan jadwal pelajaran) --}}
-                            @php
-                                $groupedToday = $todayEntries->groupBy(function ($e) { return $e->roomHistory?->room?->id ?? 'no-room'; });
-                            @endphp
-                            @if($groupedToday->isEmpty())
+                            @if($todayRooms->isEmpty())
                                 <p class="text-gray-700 dark:text-gray-300">Tidak ada ruangan yang dipakai hari ini.</p>
                             @else
                                 <div class="space-y-4">
-                                    @foreach($groupedToday as $key => $entries)
-                                        @php
-                                            $room = $entries->first()->roomHistory?->room;
-                                        @endphp
+                                    @foreach($todayRooms as $room)
                                         <div class="p-3 border border-gray-100 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900">
                                             <div class="flex items-start justify-between">
                                                 <div>
-                                                    <div class="font-semibold text-gray-900 dark:text-white">{{ $room?->code ?? 'N/A' }} — {{ $room?->name ?? 'Tanpa Ruangan' }}</div>
-                                                    <div class="text-xs text-gray-500">{{ $room?->building?->name ?? '-' }}</div>
+                                                    <div class="font-semibold text-gray-900 dark:text-white">{{ $room->code ?? 'N/A' }} — {{ $room->name ?? 'Tanpa Ruangan' }}</div>
+                                                    <div class="text-xs text-gray-500">{{ $room->building?->name ?? '-' }}</div>
                                                 </div>
-                                                <div class="text-xs text-gray-500">{{ $entries->count() }} entri</div>
+                                                <div class="text-xs text-gray-500">{{ $room->todays_entries_count ?? $room->timetableEntries->count() }} jadwal</div>
                                             </div>
                                             <div class="mt-3 space-y-2">
-                                                @foreach($entries as $entry)
+                                                @foreach($room->timetableEntries as $entry)
                                                     @php
                                                         $period = $entry->period;
                                                         $time = '-';
@@ -234,6 +207,10 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                </div>
+
+                                <div class="mt-4">
+                                    {{ $todayRooms->links() }}
                                 </div>
                             @endif
                         </div>

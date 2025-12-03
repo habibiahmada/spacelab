@@ -12,8 +12,8 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 
                 <!-- Card 1 -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5
                             hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div>
@@ -21,7 +21,7 @@
                             <h3 class="text-2xl md:text-5xl font-extrabold text-gray-900 dark:text-white">{{ $countToday }}</h3>
                             <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">mata pelajaran</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center 
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
                             <x-heroicon-o-book-open class="w-5 h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
                         </div>
@@ -29,8 +29,8 @@
                 </div>
 
                 <!-- Card 2 -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5
                             hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div>
@@ -38,7 +38,7 @@
                             <h3 class="text-lg md:text-2xl font-semibold text-gray-900 dark:text-white capitalize">{{ $today }}</h3>
                             <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2">{{ now()->format('d M Y') }}</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center 
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
                             <x-heroicon-o-calendar class="w-5 h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
                         </div>
@@ -46,8 +46,8 @@
                 </div>
 
                 <!-- Card 3 -->
-                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+                <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5
                             hover:shadow-md transition-all duration-150">
                     <div class="flex items-center justify-between gap-4">
                         <div class="flex-1 min-w-0">
@@ -55,11 +55,11 @@
                             <h3 class="text-base md:text-lg font-semibold text-gray-900 dark:text-white truncate">{{ $student->name }}</h3>
                             <p class="text-xs md:text-sm text-gray-400 dark:text-gray-500 mt-1 truncate">{{ $studentClassFullName ?? '-' }}</p>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex-shrink-0 flex items-center justify-center 
+                        <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex-shrink-0 flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
                             <img src="{{ $student->student->avatar ?? asset('images/default-student.png') }}"
                                 alt="Avatar Siswa"
-                                class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 shadow 
+                                class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 shadow
                                         border-gray-200 dark:border-gray-700">
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                             @endphp
 
                             {{ $currentTime->toDateTimeString() }} (Hari: {{ $currentDayIndex }})
-                            
+
                             @foreach ($schedulesToday as $schedule)
                                 @php
                                     $startTime = $schedule->period?->start_date;
@@ -129,7 +129,7 @@
                                     $period = $schedule->period;
                                     $isOngoing = ((int) $schedule->day_of_week === (int) $currentDayIndex) && ($schedule->isOngoing($currentTime) ?? false);
                                     $isPast = ((int) $schedule->day_of_week === (int) $currentDayIndex) && ($schedule->isPast($currentTime) ?? false);
-                                @endphp 
+                                @endphp
 
                                 <div class="relative group">
                                     {{-- Ongoing Side Indicator --}}
@@ -139,10 +139,10 @@
 
                                     <div class="
                                         relative overflow-hidden rounded-xl border-2 transition-all duration-300
-                                        {{ $isOngoing 
-                                            ? 'bg-blue-50 dark:bg-gray-900/10 border-blue-300 dark:border-blue-400 shadow scale-[1.01]' 
-                                            : ($isPast 
-                                                ? 'bg-gray-50 dark:bg-gray-800/30 border-gray-200 dark:border-gray-700 opacity-70' 
+                                        {{ $isOngoing
+                                            ? 'bg-blue-50 dark:bg-gray-900/10 border-blue-300 dark:border-blue-400 shadow scale-[1.01]'
+                                            : ($isPast
+                                                ? 'bg-gray-50 dark:bg-gray-800/30 border-gray-200 dark:border-gray-700 opacity-70'
                                                 : 'bg-white dark:bg-gray-900/20 border-gray-200 dark:border-gray-700  hover:shadow')
                                         }}
                                     ">
@@ -169,8 +169,8 @@
                                                 <div class="flex-shrink-0">
                                                     <div class="
                                                         inline-flex flex-col items-center justify-center rounded-xl p-4 min-w-[100px] shadow
-                                                        {{ $isOngoing 
-                                                            ? 'bg-blue-300 text-gray-900 ring-2 ring-blue-100 dark:ring-blue-400' 
+                                                        {{ $isOngoing
+                                                            ? 'bg-blue-300 text-gray-900 ring-2 ring-blue-100 dark:ring-blue-400'
                                                             : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                                                         }}
                                                     ">
@@ -222,7 +222,7 @@
                                                         {{-- Class --}}
                                                         <div class="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-lg p-3 shadow-sm border border-gray-100 dark:border-gray-700">
                                                             <div class="flex-shrink-0 w-11 h-11 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center shadow">
-                                                                <x-heroicon-o-user-group class="w-6 h-6 text-white" />
+                                                                <x-heroicon-o-user-group class="h-5 md:w-6 md:h-6 text-gray-500 dark:text-gray-100" />
                                                             </div>
                                                             <div class="flex-1 min-w-0">
                                                                 <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">Kelas</p>

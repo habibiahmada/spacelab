@@ -12,14 +12,14 @@ class ClassHistory extends Model
     //
     use HasFactory, HasUuids;
 
-    protected $table = 'classhistories'; 
+    protected $table = 'classhistories';
     protected $fillable = [
-        'user_id', 'class_id', 'terms_id', 'block_id',
+        'student_id', 'class_id', 'terms_id', 'block_id',
     ];
 
-    public function user(): BelongsTo
+    public function student(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Student::class, 'student_id');
     }
 
     public function classroom(): BelongsTo
@@ -36,5 +36,5 @@ class ClassHistory extends Model
     {
         return $this->belongsTo(Block::class, 'block_id');
     }
-    
+
 }

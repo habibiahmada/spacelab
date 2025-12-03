@@ -3,11 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        DB::disableQueryLog();
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
@@ -26,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ClassHistorySeeder::class,
             RoomHistorySeeder::class,
             GuardianClassHistorySeeder::class,
+            TimetableTemplateSeeder::class,
             TimetableSeeder::class,
             CompanySeeder::class,
             CompanyRelationSeeder::class,

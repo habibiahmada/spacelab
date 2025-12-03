@@ -82,10 +82,6 @@ class User extends Authenticatable implements CanResetPasswordContract
         return $this->hasMany(AuditLog::class);
     }
 
-    public function classHistory(): HasMany
-    {
-        return $this->hasMany(ClassHistory::class);
-    }
 
     public function student()
     {

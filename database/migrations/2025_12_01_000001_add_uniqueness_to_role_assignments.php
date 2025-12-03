@@ -29,7 +29,8 @@ return new class extends Migration
 
         if ($driver === 'pgsql') {
             // Create trigger function to prevent teacher assigned as head or pc multiple times
-            DB::statement(<<<'SQL'
+            // Use DB::unprepared or split statements because PG doesn't allow multiple statements in a prepared statement
+            DB::unprepared(<<<'SQL'
 CREATE OR REPLACE FUNCTION check_role_assignments_once_per_teacher()
 RETURNS trigger AS $$
 BEGIN
@@ -48,13 +49,10 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_check_role_assignments_once
-BEFORE INSERT OR UPDATE ON role_assignments
-FOR EACH ROW
-EXECUTE FUNCTION check_role_assignments_once_per_teacher();
 SQL
             );
+
+            DB::statement('CREATE TRIGGER trg_check_role_assignments_once BEFORE INSERT OR UPDATE ON role_assignments FOR EACH ROW EXECUTE FUNCTION check_role_assignments_once_per_teacher();');
         }
     }
 

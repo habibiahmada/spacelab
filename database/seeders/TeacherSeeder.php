@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\{Teacher, User, Subject};
+use App\Models\{Classroom, Teacher, User, Subject};
 use Faker\Factory as Faker;
 
 class TeacherSeeder extends Seeder
@@ -12,11 +12,26 @@ class TeacherSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        // Ambil semua user dengan role guru
         $teachers = User::whereHas('role', fn($q) => $q->where('name', 'Guru'))->get();
 
+        // If there are fewer teachers than classes, create additional users with role Guru
+        $classesCount = Classroom::count();
+        $currentTeacherCount = $teachers->count();
+        if ($currentTeacherCount < $classesCount) {
+            $needed = $classesCount - $currentTeacherCount;
+            $this->command->info("⚠️ Not enough teachers. Creating {$needed} additional teacher users.");
+            // Use User factory to create more teacher users
+            User::factory()
+                ->count($needed)
+                ->asTeacher()
+                ->create([ 'password' => 'guru123' ]);
+
+            // Refresh teachers collection
+            $teachers = User::whereHas('role', fn($q) => $q->where('name', 'Guru'))->get();
+            $currentTeacherCount = $teachers->count();
+        }
+
         // Ambil semua mata pelajaran untuk diacak
-        $subjects = Subject::pluck('id')->toArray();
 
         if ($teachers->isEmpty()) {
             $this->command->warn('⚠️ Tidak ada user dengan role Guru. Jalankan UserSeeder dulu.');

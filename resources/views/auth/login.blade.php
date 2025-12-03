@@ -1,6 +1,6 @@
 <x-guest-layout :title="$title" :description="$description">
     <div class="min-h-screen flex flex-col">
-        <div class="flex-1 h-dvh flex flex-col items-center justify-center 
+        <div class="flex-1 h-dvh flex flex-col items-center justify-center
         bg-gray-50 dark:bg-gray-950 px-4">
             <!-- Logo -->
             <div class="flex flex-col items-center space-y-2 mb-8">
@@ -22,21 +22,15 @@
 
                     <!-- Email -->
                     <div class="space-y-1">
-                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Email
-                        </label>
-                        <input id="email" type="email" name="email" :value="old('email')" required autofocus
-                            class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" />
+                        <x-input-label for="email" :value="__('Email')" />
+                        <x-text-input id="email" class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" type="email" name="email" :value="old('email')" required autofocus />
                         <x-input-error :messages="$errors->get('email')" class="text-red-500 text-sm mt-1" />
                     </div>
 
                     <!-- Password -->
                     <div class="space-y-1">
-                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Kata Sandi
-                        </label>
-                        <input id="password" type="password" name="password" required
-                            class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" />
+                        <x-input-label for="password" :value="__('Kata Sandi')" />
+                        <x-text-input id="password" class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" type="password" name="password" required />
                         <x-input-error :messages="$errors->get('password')" class="text-red-500 text-sm mt-1" />
                     </div>
 
@@ -58,10 +52,7 @@
 
                     <!-- Submit Button -->
                     <div>
-                        <button type="submit"
-                            class="w-full inline-flex justify-center items-center rounded-xl bg-indigo-600 text-white font-medium py-2.5 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-400 focus:ring-opacity-30 transition">
-                            Masuk
-                        </button>
+                        <x-primary-button class="w-full">Masuk</x-primary-button>
                     </div>
                 </form>
             </div>

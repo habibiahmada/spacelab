@@ -36,20 +36,17 @@ class DashboardController extends Controller
 
         $schedulesToday = TimetableEntry::with([
             'period',
+            'template.class.major',
             'teacherSubject.subject',
             'teacherSubject.teacher.user',
-            'template.class',
             'roomHistory.room.building',
         ])
             ->where('day_of_week', $currentDayIndex)
             ->whereHas('teacherSubject', function ($q) use ($teacher) {
                 $q->where('teacher_id', $teacher->id);
             })
-            ->get()
-            // Sort using period.ordinal if available to display in correct time order
-            ->sortBy(function ($entry) {
-                return optional($entry->period)->ordinal ?? 0;
-            })->values();
+            ->orderBy('period_id', 'asc')
+            ->get();
 
         $lessonsCount = $schedulesToday->count();
         $uniqueSubjectsCount = $schedulesToday->pluck('subject.id')->filter()->unique()->count();

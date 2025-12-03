@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\TimetableEntry;
 use Carbon\Carbon;
@@ -13,7 +12,7 @@ class RoomController extends Controller
     //
     public function index()
     {
-        $todayDay = Carbon::now()->isoWeekday(); // 1 (Mon) - 7 (Sun)
+        $todayDay = Carbon::now()->isoWeekday();
 
         $q = request('q');
         $filter = request('filter');
@@ -47,7 +46,7 @@ class RoomController extends Controller
             });
         }
 
-        $rooms = $roomsQuery->paginate(12)->withQueryString();
+        $rooms = $roomsQuery->paginate(52)->withQueryString();
 
         // Today's timetable entries
         $todayEntries = TimetableEntry::with(['roomHistory.room.building', 'period', 'teacherSubject.teacher', 'teacherSubject.subject'])
@@ -59,6 +58,18 @@ class RoomController extends Controller
         $todayRoomsCount = $todayEntries->map(fn ($e) => $e->roomHistory?->room?->id)->filter()->unique()->count();
         $todaySubjectsCount = $todayEntries->map(fn ($e) => $e->teacher_subject_id)->filter()->unique()->count();
 
-        return view('student.room', compact('rooms', 'todayEntries', 'q', 'filter', 'totalRooms', 'todayRoomsCount', 'todaySubjectsCount'));
+        $todayRooms = Room::query()
+            ->with(['building', 'timetableEntries' => function ($query) use ($todayDay) {
+                $query->where('day_of_week', $todayDay)
+                    ->with(['period', 'teacherSubject.teacher', 'teacherSubject.subject', 'roomHistory']);
+            }])
+            ->whereHas('timetableEntries', function ($query) use ($todayDay) {
+                $query->where('day_of_week', $todayDay);
+            })
+            ->orderBy('name')
+            ->paginate(6)
+            ->withQueryString();
+
+        return view('student.room', compact('rooms', 'todayEntries', 'todayRooms', 'q', 'filter', 'totalRooms', 'todayRoomsCount', 'todaySubjectsCount'));
     }
 }

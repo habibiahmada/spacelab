@@ -16,9 +16,8 @@
                 @csrf
 
                 <div class="space-y-1">
-                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                    <input id="password" type="password" name="password" required
-                        class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" />
+                    <x-input-label for="password" :value="__('Password')" />
+                    <x-text-input id="password" class="w-full rounded-xl border-gray-300 dark:border-gray-700 dark:bg-gray-950 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring focus:ring-indigo-400 focus:ring-opacity-30 transition" type="password" name="password" required />
                     <x-input-error :messages="$errors->get('password')" class="text-red-500 text-sm mt-1" />
                 </div>
 

@@ -45,16 +45,22 @@ class ClassroomController extends Controller
             if ($activeTerm) {
                 $classmatesQuery = $classmatesQuery->where('terms_id', $activeTerm->id);
             }
-            $students = $classmatesQuery->with('user.student')->get()->map(fn($ch) => $ch->user);
+            $students = $classmatesQuery->with('student.user')->get()->map(fn($ch) => $ch->student->user);
 
             // Keep $guardian as the current user's guardian record for the class
 
-            $dayOfWeek = Carbon::now()->dayOfWeek; 
+            $dayOfWeek = Carbon::now()->dayOfWeek;
             $dayOfWeek = $dayOfWeek === 0 ? 7 : $dayOfWeek;
 
             $todayEntries = $classroom->timetableEntries()
                 ->where('day_of_week', $dayOfWeek)
-                ->with(['period', 'teacherSubject.teacher.user', 'teacherSubject.subject', 'roomHistory.room'])
+                ->with([
+                    'period',
+                    'teacherSubject.subject',
+                    'teacherSubject.teacher.user',
+                    'roomHistory.room',
+                ])
+                ->orderBy('period_id', 'asc')
                 ->get();
 
             $currentEntry = $todayEntries->first(fn($e) => $e->isOngoing());

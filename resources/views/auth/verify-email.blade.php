@@ -2,7 +2,7 @@
     <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-950 px-4 space-y-6">
         <div class="text-center max-w-md space-y-2">
             <p class="text-sm text-gray-600 dark:text-gray-400">
-                Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? 
+                Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you?
                 If you didn't receive the email, we will gladly send you another.
             </p>
             @if (session('status') == 'verification-link-sent')
@@ -20,9 +20,7 @@
 
             <form method="POST" action="{{ route('logout') }}" class="flex-1">
                 @csrf
-                <button type="submit" class="w-full underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                    Log Out
-                </button>
+                <x-secondary-button type="submit" class="w-full">Log Out</x-secondary-button>
             </form>
         </div>
     </div>

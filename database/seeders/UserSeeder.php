@@ -12,8 +12,6 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $faker = Faker::create('id_ID');
-
         // ====== ADMIN ======
         $adminRole = Role::where('name', 'Admin')->first();
         User::create([
@@ -29,7 +27,7 @@ class UserSeeder extends Seeder
             ->count(20)
             ->asTeacher()
             ->create([ 'password' => 'guru123' ]);
-        
+
         $gururole = Role::where('name', 'Guru')->first();
         User::create([
             'name' => 'Guru Contoh',
@@ -38,9 +36,9 @@ class UserSeeder extends Seeder
             'role_id' => $gururole?->id,
         ]);
 
-        // ====== SISWA (300 orang) ======
+        // ====== SISWA (3149+1 orang) ======
         User::factory()
-            ->count(300)
+            ->count(3149)
             ->asStudent()
             ->create([ 'password' => 'siswa123' ]);
 
@@ -69,7 +67,7 @@ class UserSeeder extends Seeder
         $this->command->info('✅ UserSeeder berhasil membuat:
         - 1 Admin
         - 20 Guru
-        - 300 Siswa
+        - 3150 Siswa
         - 5 Staff');
     }
 }

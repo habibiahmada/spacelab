@@ -18,6 +18,8 @@ class BuildingSeeder extends Seeder
             ['code' => 'G_F', 'name' => 'Gedung F'],
             ['code' => 'G_G', 'name' => 'Gedung G'],
             ['code' => 'G_H', 'name' => 'Gedung H'],
+            ['code' => 'G_I', 'name' => 'Gedung I'],
+            ['code' => 'G_OUT', 'name' => 'Outdoor'],
         ];
 
         foreach ($buildings as $b) {

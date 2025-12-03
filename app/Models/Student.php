@@ -21,4 +21,9 @@ class Student extends Model
     {
         return $this->belongsTo(User::class, 'users_id');
     }
+
+    public function classHistories()
+    {
+        return $this->hasMany(ClassHistory::class, 'student_id');
+    }
 }

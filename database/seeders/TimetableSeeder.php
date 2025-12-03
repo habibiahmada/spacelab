@@ -12,7 +12,9 @@ use App\Models\{
     Term,
     RoomHistory,
     TeacherSubject,
-    Period
+    Period,
+    Room,
+    Teacher
 };
 
 class TimetableSeeder extends Seeder
@@ -24,15 +26,15 @@ class TimetableSeeder extends Seeder
             return;
         }
 
-        $term = Term::where('is_active', true)->first();
-        $classes = Classroom::all();
-        $blocks = Block::all();
-        $roomHistory = RoomHistory::all();
+        $term = Term::where('is_active', true)->first() ?? Term::first();
+        $templates = TimetableTemplate::where('is_active', true)->get();
         $teacherSubjects = TeacherSubject::all();
-        $periods = Period::all();
+        $periods = Period::orderBy('start_time')->get();
+        $rooms = Room::where('type', 'kelas')->get();
+        $teachers = Teacher::all();
 
-        if (! $term || $classes->isEmpty()) {
-            $this->command->warn('⚠️ Term and classes are required for timetable seeding.');
+        if ($templates->isEmpty()) {
+            $this->command->warn('⚠️ No timetable templates found. Run TimetableTemplateSeeder first.');
             return;
         }
 
@@ -42,91 +44,168 @@ class TimetableSeeder extends Seeder
         }
 
         if ($periods->isEmpty()) {
-            $this->command->warn('⚠️ Period data is required. Create periods before seeding timetable.');
+            $this->command->warn('⚠️ Period data is required. Run PeriodSeeder first.');
             return;
         }
 
-        if ($roomHistory->isEmpty()) {
-            $this->command->warn('⚠️ room_history is empty. Run RoomHistorySeeder first.');
+        if ($rooms->isEmpty()) {
+            $this->command->warn('⚠️ Classroom rooms are required. Run RoomSeeder first.');
             return;
         }
 
-        // Group room histories by classes_id for preference
-        $roomHistoryByClass = $roomHistory->groupBy('classes_id');
+        if ($teachers->isEmpty()) {
+            $this->command->warn('⚠️ Teachers are required. Run TeacherSeeder first.');
+            return;
+        }
 
-        // track used room_history ids per slot key "day:period_id"
-        $usedPerSlot = [];
-        // track used teacher ids per slot key to avoid double-teaching
-        $usedPerSlotTeachers = [];
+        // Filter only teaching periods (skip breaks) but keep full list if you want explicit break entries
+        $teachingPeriods = $periods->filter(fn($p) => ($p->is_teaching ?? true));
 
-        foreach ($classes as $class) {
-            foreach ($blocks as $block) {
-                $template = TimetableTemplate::create([
-                    'class_id' => $class->id,
-                    'block_id' => $block->id,
-                    'version'  => 'v1',
-                    'is_active'=> true,
-                ]);
+        if ($teachingPeriods->isEmpty()) {
+            $this->command->warn('⚠️ No teaching periods found (check is_teaching flags).');
+            return;
+        }
 
-                $days = [1,2,3,4,5];
-                foreach ($days as $day) {
-                    foreach ($periods as $period) {
-                        $slotKey = "{$day}:{$period->id}";
+        // Prepare room history map
+        $roomHistory = RoomHistory::where('terms_id', $term->id)->get();
+        $roomHistoryByClass = $roomHistory->keyBy('classes_id');
 
-                        // candidate histories: prefer matching class, else global pool
-                        $candidateHistories = $roomHistoryByClass->get($class->id) ?? $roomHistory;
+        $daysOfWeek = [1,2,3,4,5]; // Monday-Friday
+        $periodIds = $teachingPeriods->pluck('id')->toArray();
 
-                        // filter out already used rooms in this slot (track by room_id)
-                        $usedRoomIdsInSlot = $usedPerSlot[$slotKey] ?? [];
+        // Track teacher/room usage per slot to prevent conflicts
+        $teacherSchedule = []; // "day:period" => [teacher_ids]
+        $roomSchedule = [];    // "day:period" => [room_ids]
 
-                        $available = $candidateHistories->filter(function ($rh) use ($usedRoomIdsInSlot) {
-                            return ! in_array($rh->room_id, $usedRoomIdsInSlot);
+        $entriesCreated = 0;
+        $entriesFailed = 0;
+
+        // For each template (class + block + version)
+        foreach ($templates as $template) {
+            $classId = $template->class_id;
+
+            foreach ($daysOfWeek as $day) {
+                foreach ($periodIds as $periodId) {
+                    $slotKey = "{$day}:{$periodId}";
+
+                    // find a teacherSubject not already teaching at this slot
+                    $candidate = $teacherSubjects->first(function($ts) use ($teacherSchedule, $slotKey) {
+                        $used = $teacherSchedule[$slotKey] ?? [];
+                        return ! in_array($ts->teacher_id, $used);
+                    });
+
+                    if (! $candidate) {
+                        // no available teacher for this slot
+                        $entriesFailed++;
+                        continue;
+                    }
+
+                    // find room history mapping for this class and term
+                    $roomHistEntry = $roomHistoryByClass->get($classId);
+
+                    if ($roomHistEntry === null) {
+                        // pick a free classroom for this slot
+                        $usedRooms = $roomSchedule[$slotKey] ?? [];
+                        $availableRoom = $rooms->first(function($r) use ($usedRooms) {
+                            return ! in_array($r->id, $usedRooms);
                         });
 
-                        // fallback to global available if none left in class-specific candidate
-                        if ($available->isEmpty()) {
-                            $available = $roomHistory->filter(function ($rh) use ($usedRoomIdsInSlot) {
-                                return ! in_array($rh->room_id, $usedRoomIdsInSlot);
+                        if (! $availableRoom) {
+                            $availableRoom = $rooms->first(); // fallback
+                        }
+
+                        $teacherForRoom = $teachers->random();
+
+                        $roomHistEntry = RoomHistory::updateOrCreate(
+                            [
+                                'room_id' => $availableRoom->id,
+                                'classes_id' => $classId,
+                                'terms_id' => $term->id,
+                                'event_type' => 'initial',
+                            ],
+                            [
+                                'room_id' => $availableRoom->id,
+                                'classes_id' => $classId,
+                                'terms_id' => $term->id,
+                                'event_type' => 'initial',
+                                'teacher_id' => $teacherForRoom->id,
+                                'user_id' => $teacherForRoom->user_id ?? null,
+                            ]
+                        );
+
+                        // refresh map
+                        $roomHistoryByClass->put($classId, $roomHistEntry);
+                    }
+
+                    // ensure chosen room isn't used in slot; if used, try find alternative roomHistory
+                    $usedRooms = $roomSchedule[$slotKey] ?? [];
+                    if (in_array($roomHistEntry->room_id, $usedRooms)) {
+                        $alternatives = RoomHistory::where('classes_id', $classId)->get();
+                        $found = $alternatives->first(function($alt) use ($usedRooms) {
+                            return ! in_array($alt->room_id, $usedRooms);
+                        });
+
+                        if ($found) {
+                            $roomHistEntry = $found;
+                        } else {
+                            // pick another physical room and create new roomHistory if needed
+                            $availableRoom = $rooms->first(function($r) use ($usedRooms) {
+                                return ! in_array($r->id, $usedRooms);
                             });
-                        }
 
-                        // final fallback: allow reuse (no choice left)
-                        if ($available->isEmpty()) {
-                            $selected = $roomHistory->random();
-                        } else {
-                            $selected = $available->random();
-                        }
+                            if (! $availableRoom) {
+                                $availableRoom = $rooms->first();
+                            }
 
-                        // create entry with chosen room_history_id
-                        // pick a teacher subject that hasn't been scheduled within this slot
-                        $usedTeachers = $usedPerSlotTeachers[$slotKey] ?? [];
-                        $availableTeacherSubjects = $teacherSubjects->filter(function ($t) use ($usedTeachers) {
-                            return ! in_array($t->teacher_id, $usedTeachers);
-                        });
-                        if ($availableTeacherSubjects->isEmpty()) {
-                            $ts = $teacherSubjects->random();
-                        } else {
-                            $ts = $availableTeacherSubjects->random();
+                            $teacherForRoom = $teachers->random();
+
+                            $roomHistEntry = RoomHistory::updateOrCreate(
+                                [
+                                    'room_id' => $availableRoom->id,
+                                    'classes_id' => $classId,
+                                    'terms_id' => $term->id,
+                                    'event_type' => 'initial',
+                                ],
+                                [
+                                    'room_id' => $availableRoom->id,
+                                    'classes_id' => $classId,
+                                    'terms_id' => $term->id,
+                                    'event_type' => 'initial',
+                                    'teacher_id' => $teacherForRoom->id,
+                                    'user_id' => $teacherForRoom->user_id ?? null,
+                                ]
+                            );
+
+                            // refresh map
+                            $roomHistoryByClass->put($classId, $roomHistEntry);
                         }
+                    }
+
+                    // Create timetable entry
+                    try {
                         TimetableEntry::create([
                             'template_id'         => $template->id,
                             'day_of_week'         => $day,
-                            'period_id'           => $period->id,
-                            'teacher_subject_id'  => $ts?->id,
-                            'room_history_id'     => $selected?->id,
-                            'teacher_id'          => $ts?->teacher_id,
-                            'room_id'             => $selected?->room_id,
+                            'period_id'           => $periodId,
+                            'teacher_subject_id'  => $candidate->id,
+                            'room_history_id'     => $roomHistEntry->id,
+                            'teacher_id'          => $candidate->teacher_id,
+                            'room_id'             => $roomHistEntry->room_id,
                         ]);
 
-                        // mark used for this slot
-                        // mark used room id for this slot
-                        $usedPerSlot[$slotKey][] = $selected?->room_id;
-                        $usedPerSlotTeachers[$slotKey][] = $ts?->teacher_id;
+                        // mark teacher and room used in this slot
+                        $teacherSchedule[$slotKey][] = $candidate->teacher_id;
+                        $roomSchedule[$slotKey][]    = $roomHistEntry->room_id;
+
+                        $entriesCreated++;
+                    } catch (\Exception $e) {
+                        $entriesFailed++;
+                        $this->command->warn("Error creating entry for template {$template->id}: {$e->getMessage()}");
                     }
                 }
             }
         }
 
-        $this->command->info('✅ TimetableSeeder: seeded templates & entries with reduced room conflicts.');
+        $this->command->info("✅ TimetableEntrySeeder: Created {$entriesCreated} entries, {$entriesFailed} failed.");
     }
 }

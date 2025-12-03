@@ -3,68 +3,56 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
-use App\Models\RoomHistory;
-use App\Models\Room;
-use App\Models\Classroom;
-use App\Models\Teacher;
-use App\Models\Term;
-use App\Models\User;
+use App\Models\{RoomHistory, Room, Classroom, Term, Teacher};
 
 class RoomHistorySeeder extends Seeder
 {
     public function run(): void
     {
-        $rooms = Room::all();
+        $rooms = Room::where('type', 'kelas')->get();
         $classes = Classroom::all();
         $terms = Term::all();
         $teachers = Teacher::all();
-        $users = User::all();
 
-        if ($rooms->isEmpty() || $classes->isEmpty() || $terms->isEmpty()) {
-            $this->command->warn('⚠️ rooms/classes/terms required. Seed them first.');
+        if ($rooms->isEmpty() || $classes->isEmpty() || $terms->isEmpty() || $teachers->isEmpty()) {
+            $this->command->warn('⚠️ Classroom rooms, classes, terms, and teachers required. Seed them first.');
             return;
         }
 
-        $eventTypes = ['initial', 'relocated', 'lab-setup', 'temporary', 'exam']; // contoh
-
-        // Kita akan membuat kombinasi: untuk setiap room, buat history untuk beberapa class & term
         $created = 0;
+
+        // For each classroom room, create history entries that link it to classes
+        // This ensures each room can be scheduled for multiple classes
         foreach ($rooms as $room) {
-            // setiap ruangan buat 2-5 history (acak) agar banyak opsi
-            $countPerRoom = rand(2, 5);
+            // Get a subset of classes to assign to this room
+            $assignedClasses = $classes->random(min(3, $classes->count()));
 
-            for ($i = 0; $i < $countPerRoom; $i++) {
-                $class = $classes->random();
-                $term = $terms->random();
-                $teacher = $teachers->random()?->id;
-                $user = $users->random()?->id;
-                $eventType = Arr::random($eventTypes);
+            foreach ($assignedClasses as $class) {
+                foreach ($terms as $term) {
+                    // Pick a random teacher for this room history entry
+                    $teacher = $teachers->random();
 
-                // Pastikan tidak duplicate exact (room+class+term+event_type)
-                $exists = RoomHistory::where('room_id', $room->id)
-                    ->where('classes_id', $class->id)
-                    ->where('terms_id', $term->id)
-                    ->where('event_type', $eventType)
-                    ->exists();
+                    $exists = RoomHistory::where('room_id', $room->id)
+                        ->where('classes_id', $class->id)
+                        ->where('terms_id', $term->id)
+                        ->where('event_type', 'initial')
+                        ->exists();
 
-                if ($exists) {
-                    continue;
+                    if (! $exists) {
+                        RoomHistory::create([
+                            'room_id'    => $room->id,
+                            'event_type' => 'initial',
+                            'classes_id' => $class->id,
+                            'terms_id'   => $term->id,
+                            'teacher_id' => $teacher->id,
+                            'user_id'    => $teacher->user_id,
+                        ]);
+                        $created++;
+                    }
                 }
-
-                RoomHistory::create([
-                    'room_id'    => $room->id,
-                    'event_type' => $eventType,
-                    'classes_id' => $class->id,
-                    'terms_id'   => $term->id,
-                    'teacher_id' => $teacher,
-                    'user_id'    => $user,
-                ]);
-
-                $created++;
             }
         }
 
-        $this->command->info("✅ RoomHistorySeeder: created {$created} room_history records.");
+        $this->command->info("✅ RoomHistorySeeder: created {$created} room_history records for scheduling.");
     }
 }

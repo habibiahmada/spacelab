@@ -8,14 +8,14 @@
     <div class="py-6 sm:py-8">
         <div class="mx-auto px-2 sm:px-4 lg:px-6">
             <!-- Header Card with Classroom Info -->
-            <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
-                            border border-gray-100 dark:border-gray-800 p-4 md:p-5 
+            <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
+                            border border-gray-100 dark:border-gray-800 p-4 md:p-5
                             hover:shadow-md transition-all duration-150">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-6">
                         <!-- Classroom Info -->
                         <div class="flex-1">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
                                 border border-gray-100 dark:border-gray-800
                                 hover:shadow-md transition-all duration-150 flex items-center justify-center">
                                     <x-heroicon-o-academic-cap class="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 dark:text-gray-200" />
@@ -35,7 +35,7 @@
 
                         <!-- Guardian Info -->
                         @if($guardian)
-                            <div class="flex items-center gap-3 px-3 py-2 sm:px-6 sm:py-4 bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                            <div class="flex items-center gap-3 px-3 py-2 sm:px-6 sm:py-4 bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
                             border border-gray-100 dark:border-gray-800
                             hover:shadow-md transition-all duration-150">
                                 <div class="relative">
@@ -66,7 +66,7 @@
             <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6">
                 <!-- Students List - 2/3 width -->
                 <div class="lg:col-span-2">
-                    <div class="bbg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden 
+                    <div class="bbg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden
                             border border-gray-100 dark:border-gray-800
                             hover:shadow-md transition-all duration-150">
                         <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
@@ -80,7 +80,7 @@
                                 </span>
                             </div>
                         </div>
-                        
+
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-800">
@@ -154,7 +154,7 @@
                                     Pelajaran Saat Ini
                                 </h3>
                             </div>
-                            
+
                             @if($currentEntry)
                                 <div class="p-3 sm:p-5">
                                     <div class="space-y-2">
@@ -162,18 +162,18 @@
                                             <x-heroicon-o-clock class="w-4 h-4" />
                                             <span>{{ optional($currentEntry->period)->start_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->start_time)->format('H:i') : '-' }} - {{ optional($currentEntry->period)->end_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->end_time)->format('H:i') : '-' }}</span>
                                         </div>
-                                        
+
                                         <div>
                                             <p class="text-sm sm:text-base font-bold text-gray-900 dark:text-white">{{ $currentEntry->subject?->name ?? '-' }}</p>
                                         </div>
-                                        
+
                                         <div class="pt-3 border-t border-gray-100 dark:border-gray-700 space-y-2">
                                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                                                 <x-heroicon-o-user class="w-4 h-4" />
                                                 <span>{{ $currentEntry->teacher?->user?->name ?? '-' }}</span>
                                             </div>
                                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <x-heroicon-c-globe-asia-australia />
+                                                <x-heroicon-c-globe-asia-australia class="w-5 h-5" />
                                                 <span>{{ $currentEntry->roomHistory?->room?->name ?? '-' }}</span>
                                             </div>
                                         </div>
@@ -192,7 +192,7 @@
                             <div class="p-5 border-b border-gray-200 dark:border-gray-700">
                                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide">Jadwal Hari Ini</h3>
                             </div>
-                            
+
                             <div class="p-3 sm:p-5">
                                 @if($todayEntries->isNotEmpty())
                                     <div class="space-y-2 max-h-60 sm:max-h-96 overflow-y-auto">

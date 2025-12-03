@@ -26,7 +26,7 @@ return new class extends Migration
             DB::statement('CREATE UNIQUE INDEX IF NOT EXISTS unique_active_guardian_per_teacher ON guardian_class_history(teacher_id) WHERE ended_at IS NULL;');
 
             // Add trigger to prevent guardian assignments for teachers who are head_of_major or program_coordinator
-            DB::statement(<<<'SQL'
+            DB::unprepared(<<<'SQL'
 CREATE OR REPLACE FUNCTION check_guardian_not_head_or_pc()
 RETURNS trigger AS $$
 BEGIN
@@ -36,13 +36,10 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_check_guardian_role
-BEFORE INSERT OR UPDATE ON guardian_class_history
-FOR EACH ROW
-EXECUTE FUNCTION check_guardian_not_head_or_pc();
 SQL
             );
+
+            DB::statement('CREATE TRIGGER trg_check_guardian_role BEFORE INSERT OR UPDATE ON guardian_class_history FOR EACH ROW EXECUTE FUNCTION check_guardian_not_head_or_pc();');
         } else {
             // For other drivers we create unique index without partial support (set ended_at default null); best-effort
             try { Schema::table('guardian_class_history', function (Blueprint $table) { $table->unique(['teacher_id'], 'unique_active_guardian_per_teacher'); }); } catch (\Throwable $e) {}

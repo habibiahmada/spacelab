@@ -38,6 +38,6 @@ class ClassSeeder extends Seeder
 
         $total = $majors->count() * 3 * $rombelPerLevel;
 
-        $this->command->info("✅ Berhasil membuat {$total} kelas untuk {$majors->count()} jurusan (tiap level 10–12, {$rombelPerLevel} rombel).");
+        $this->command->info("✅ Berhasil membuat {$total} kelas untuk {$majors->count()} jurusan (tiap level 10-12, {$rombelPerLevel} rombel).");
     }
 }
