@@ -21,10 +21,10 @@ class UserSeeder extends Seeder
             'role_id' => $adminRole?->id,
         ]);
 
-        // ====== GURU (20 orang) ======
+        // ====== GURU (120 orang) ======
         // Use factory to generate names and emails
         User::factory()
-            ->count(20)
+            ->count(120)
             ->asTeacher()
             ->create([ 'password' => 'guru123' ]);
 

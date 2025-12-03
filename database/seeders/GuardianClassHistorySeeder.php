@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\GuardianClassHistory;
 use App\Models\Classroom;
+use App\Models\RoleAssignment;
 use App\Models\Teacher;
 
 class GuardianClassHistorySeeder extends Seeder
@@ -27,8 +28,8 @@ class GuardianClassHistorySeeder extends Seeder
         $teacherCount = $teachers->count();
         $index = 0;
 
-        $roleAssignedTeacherIds = \App\Models\RoleAssignment::pluck('head_of_major_id')
-                    ->merge(\App\Models\RoleAssignment::pluck('program_coordinator_id'))
+        $roleAssignedTeacherIds = RoleAssignment::pluck('head_of_major_id')
+                    ->merge(RoleAssignment::pluck('program_coordinator_id'))
                                 ->filter()
                                 ->unique()
                                 ->toArray();

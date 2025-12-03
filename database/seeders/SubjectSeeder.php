@@ -79,6 +79,33 @@ class SubjectSeeder extends Seeder
             ['code' => 'OTKP102', 'name' => 'Layanan Administrasi', 'type' => 'praktikum', 'description' => 'Praktik melayani tamu, surat-menyurat, dan agenda.'],
             ['code' => 'OTKP103', 'name' => 'Teknologi Perkantoran', 'type' => 'teori', 'description' => 'Penggunaan perangkat teknologi dalam kegiatan administrasi.'],
             ['code' => 'OTKP104', 'name' => 'Komunikasi Bisnis', 'type' => 'teori', 'description' => 'Kemampuan berkomunikasi efektif di lingkungan kerja.'],
+
+            // ============================
+            // BDP (Bisnis Daring dan Pemasaran)
+            // ============================
+            ['code' => 'BDP101', 'name' => 'E-Commerce Dasar', 'type' => 'praktikum', 'description' => 'Dasar platform e-commerce dan manajemen toko online.'],
+            ['code' => 'BDP102', 'name' => 'Digital Marketing', 'type' => 'teori', 'description' => 'Strategi pemasaran digital dan media sosial.'],
+            ['code' => 'BDP103', 'name' => 'Content Creation', 'type' => 'praktikum', 'description' => 'Pembuatan konten menarik untuk pemasaran online.'],
+            ['code' => 'BDP104', 'name' => 'SEO dan SEM', 'type' => 'teori', 'description' => 'Optimasi mesin pencari dan iklan berbayar.'],
+            ['code' => 'BDP105', 'name' => 'Customer Relationship Management', 'type' => 'praktikum', 'description' => 'Manajemen hubungan pelanggan dan penjualan online.'],
+
+            // ============================
+            // TPM (Teknik Pemesinan)
+            // ============================
+            ['code' => 'TPM101', 'name' => 'Dasar Mesin Perkakas', 'type' => 'praktikum', 'description' => 'Pengenalan dan operasi mesin perkakas dasar.'],
+            ['code' => 'TPM102', 'name' => 'Finishing dan Pengecatan', 'type' => 'praktikum', 'description' => 'Teknik finishing dan proteksi produk logam.'],
+            ['code' => 'TPM103', 'name' => 'Teknik Pengukuran dan Toleransi', 'type' => 'praktikum', 'description' => 'Pengukuran presisi dan standar toleransi industri.'],
+            ['code' => 'TPM104', 'name' => 'Mesin CNC', 'type' => 'praktikum', 'description' => 'Pemrograman dan operasi mesin CNC.'],
+            ['code' => 'TPM105', 'name' => 'Keselamatan dan K3 di Industri', 'type' => 'teori', 'description' => 'Standar keselamatan kerja dan kesehatan di pabrik.'],
+
+            // ============================
+            // TITL (Teknik Instalasi Tenaga Listrik)
+            // ============================
+            ['code' => 'TITL101', 'name' => 'Instalasi Listrik Dasar', 'type' => 'praktikum', 'description' => 'Instalasi listrik rumah tangga dan perumahan.'],
+            ['code' => 'TITL102', 'name' => 'Panel Listrik dan Distribusi', 'type' => 'praktikum', 'description' => 'Pemasangan dan konfigurasi panel distribusi listrik.'],
+            ['code' => 'TITL103', 'name' => 'Instalasi Sistem Grounding', 'type' => 'praktikum', 'description' => 'Pemasangan sistem pentanahan dan proteksi.'],
+            ['code' => 'TITL104', 'name' => 'Instalasi Industri Tegangan Tinggi', 'type' => 'teori', 'description' => 'Instalasi listrik industri dan tegangan tinggi.'],
+            ['code' => 'TITL105', 'name' => 'Pemeliharaan dan Troubleshooting Listrik', 'type' => 'praktikum', 'description' => 'Perawatan dan perbaikan sistem instalasi listrik.'],
         ];
 
         foreach ($subjects as $subject) {

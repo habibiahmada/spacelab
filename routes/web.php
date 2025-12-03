@@ -43,10 +43,10 @@
     Route::get('/redirect', function () {
         $role = Auth::user()->role->lower_name;
         return match ($role) {
-            'admin'    => redirect()->route('admin.dashboard'),
+            'admin'    => redirect()->route('admin.index'),
             'guru'     => redirect()->route('guru.index'),
             'siswa'    => redirect()->route('siswa.index'),
-            'staff'    => redirect()->route('staff.dashboard'),
+            'staff'    => redirect()->route('staff.index'),
             default    => abort(403, 'Unauthorized role'),
         };
     })->middleware('auth')->name('redirect');
@@ -67,7 +67,7 @@
     */
 
     Route::middleware(['auth', 'role:Admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('index');
         Route::get('/teachers', [AdminTeacherController::class, 'index'])->name('teachers.index');
         Route::get('/students', [AdminStudentController::class, 'index'])->name('students.index');
         Route::get('/classes', [AdminClassController::class, 'index'])->name('classes.index');
@@ -103,7 +103,7 @@
     });
 
     Route::middleware(['auth', 'role:Staff'])->group(function () {
-        Route::get('/staff/dashboard',fn () => view('staff.dashboard'))->name('staff.dashboard');
+        Route::get('/staff/dashboard',fn () => view('staff.dashboard'))->name('staff.index');
     });
 
     Route::middleware(['auth', 'role:Operator'])->group(function () {

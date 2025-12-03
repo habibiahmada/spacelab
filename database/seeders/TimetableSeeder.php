@@ -58,15 +58,14 @@ class TimetableSeeder extends Seeder
             return;
         }
 
-        // Filter only teaching periods (skip breaks) but keep full list if you want explicit break entries
-        $teachingPeriods = $periods->filter(fn($p) => ($p->is_teaching ?? true));
+        // gunakan is_teaching jika ada, fallback true jika tidak ada (tidak wajib menambah kolom)
+        $teachingPeriods = $periods->filter(fn($p) => ($p->is_teaching ?? true))->values();
 
         if ($teachingPeriods->isEmpty()) {
             $this->command->warn('⚠️ No teaching periods found (check is_teaching flags).');
             return;
         }
 
-        // Prepare room history map
         $roomHistory = RoomHistory::where('terms_id', $term->id)->get();
         $roomHistoryByClass = $roomHistory->keyBy('classes_id');
 
@@ -80,39 +79,60 @@ class TimetableSeeder extends Seeder
         $entriesCreated = 0;
         $entriesFailed = 0;
 
-        // For each template (class + block + version)
-        foreach ($templates as $template) {
+        // Pre-group teacherSubjects by teacher to ease conflict checks
+        $teacherSubjectList = $teacherSubjects->values();
+
+        foreach ($templates as $templateIndex => $template) {
             $classId = $template->class_id;
 
-            foreach ($daysOfWeek as $day) {
-                foreach ($periodIds as $periodId) {
+            // buat basis urutan teacherSubject yang acak untuk kelas ini
+            $baseList = $teacherSubjectList->shuffle()->values();
+
+            // Untuk menghindari pola yang sama tiap hari, kita akan merotasi daftar per hari
+            foreach ($daysOfWeek as $dayIndex => $day) {
+                // rotate offset tergantung hari (agar pattern berbeda tiap hari)
+                $offset = $dayIndex % $baseList->count();
+                $rotated = $baseList->slice($offset)->merge($baseList->slice(0, $offset))->values();
+
+                // jika jumlah period lebih besar dari jumlah teacherSubject, kita perlu membuat urutan panjang.
+                // aturan pengulangan: boleh ada pengulangan di dalam satu hari hanya jika periode berdampingan.
+                $assignments = [];
+                $tsCount = $rotated->count();
+
+                for ($i = 0; $i < count($periodIds); $i++) {
+                    // index dasar
+                    $idx = $i % $tsCount;
+                    $candidateTs = $rotated[$idx];
+
+                    // jika pada posisi ini sama dengan yang sebelumnya (di hari yang sama),
+                    // itu berarti akan jadi pengulangan adjacent (karena prev index = i-1). yang diperbolehkan.
+                    // kita tetap akan mencoba alternatif jika guru sudah sibuk di slot ini.
+                    $assignments[$periodIds[$i]] = $candidateTs;
+                }
+
+                // sekarang assign per period dengan pengecekan konflik guru/ruang
+                foreach ($periodIds as $pIndex => $periodId) {
                     $slotKey = "{$day}:{$periodId}";
 
-                    // find a teacherSubject not already teaching at this slot
-                    $candidate = $teacherSubjects->first(function($ts) use ($teacherSchedule, $slotKey) {
-                        $used = $teacherSchedule[$slotKey] ?? [];
-                        return ! in_array($ts->teacher_id, $used);
-                    });
+                    // start from planned candidate
+                    $planned = $assignments[$periodId];
+
+                    // find candidate yang tidak punya konflik di slot ini
+                    $candidate = $this->findAvailableTeacherSubject($planned, $rotated, $teacherSchedule, $slotKey);
 
                     if (! $candidate) {
-                        // no available teacher for this slot
                         $entriesFailed++;
                         continue;
                     }
 
-                    // find room history mapping for this class and term
+                    // find or create roomHistory untuk class
                     $roomHistEntry = $roomHistoryByClass->get($classId);
 
                     if ($roomHistEntry === null) {
-                        // pick a free classroom for this slot
                         $usedRooms = $roomSchedule[$slotKey] ?? [];
                         $availableRoom = $rooms->first(function($r) use ($usedRooms) {
                             return ! in_array($r->id, $usedRooms);
-                        });
-
-                        if (! $availableRoom) {
-                            $availableRoom = $rooms->first(); // fallback
-                        }
+                        }) ?? $rooms->first();
 
                         $teacherForRoom = $teachers->random();
 
@@ -133,11 +153,10 @@ class TimetableSeeder extends Seeder
                             ]
                         );
 
-                        // refresh map
                         $roomHistoryByClass->put($classId, $roomHistEntry);
                     }
 
-                    // ensure chosen room isn't used in slot; if used, try find alternative roomHistory
+                    // jika room yang dipilih sudah terpakai di slot ini, coba alternatif roomHistory untuk kelas ini
                     $usedRooms = $roomSchedule[$slotKey] ?? [];
                     if (in_array($roomHistEntry->room_id, $usedRooms)) {
                         $alternatives = RoomHistory::where('classes_id', $classId)->get();
@@ -148,14 +167,9 @@ class TimetableSeeder extends Seeder
                         if ($found) {
                             $roomHistEntry = $found;
                         } else {
-                            // pick another physical room and create new roomHistory if needed
                             $availableRoom = $rooms->first(function($r) use ($usedRooms) {
                                 return ! in_array($r->id, $usedRooms);
-                            });
-
-                            if (! $availableRoom) {
-                                $availableRoom = $rooms->first();
-                            }
+                            }) ?? $rooms->first();
 
                             $teacherForRoom = $teachers->random();
 
@@ -176,12 +190,11 @@ class TimetableSeeder extends Seeder
                                 ]
                             );
 
-                            // refresh map
                             $roomHistoryByClass->put($classId, $roomHistEntry);
                         }
                     }
 
-                    // Create timetable entry
+                    // buat timetable entry
                     try {
                         TimetableEntry::create([
                             'template_id'         => $template->id,
@@ -202,10 +215,45 @@ class TimetableSeeder extends Seeder
                         $entriesFailed++;
                         $this->command->warn("Error creating entry for template {$template->id}: {$e->getMessage()}");
                     }
-                }
+                } // end foreach period
+            } // end foreach day
+        } // end foreach template
+
+        $this->command->info("✅ TimetableEntrySeeder: Created {$entriesCreated} entries, {$entriesFailed} failed.");
+    }
+
+    /**
+     * Cari TeacherSubject yang available untuk slot (tidak scheduling conflict).
+     * Prioritas: gunakan $preferred jika available, jika tidak carilah di $pool.
+     *
+     * @param \App\Models\TeacherSubject $preferred
+     * @param \Illuminate\Support\Collection $pool
+     * @param array $teacherSchedule
+     * @param string $slotKey
+     * @return \App\Models\TeacherSubject|null
+     */
+    protected function findAvailableTeacherSubject($preferred, $pool, $teacherSchedule, $slotKey)
+    {
+        $usedTeachers = $teacherSchedule[$slotKey] ?? [];
+
+        // helper closure untuk cek apakah ts available
+        $isAvailable = function($ts) use ($usedTeachers) {
+            return ! in_array($ts->teacher_id, $usedTeachers);
+        };
+
+        if ($preferred && $isAvailable($preferred)) {
+            return $preferred;
+        }
+
+        // cari alternatif di pool
+        foreach ($pool as $ts) {
+            if ($isAvailable($ts)) {
+                return $ts;
             }
         }
 
-        $this->command->info("✅ TimetableEntrySeeder: Created {$entriesCreated} entries, {$entriesFailed} failed.");
+        // sebagai fallback, coba cari teacherSubject lain di DB yang mungkin tidak ada di pool
+        $alt = TeacherSubject::whereNotIn('teacher_id', $usedTeachers)->first();
+        return $alt;
     }
 }

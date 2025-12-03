@@ -27,12 +27,12 @@
                 @if (!request()->routeIs('login'))
                     <!-- Auth Links -->
                     @auth
-                        <a href="{{ route(Auth::user()->role->lower_name . '.index') }}" 
+                        <a href="{{ route(Auth::user()->role->lower_name . '.index') }}"
                         class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border text-[#1b1b18] dark:text-[#EDEDEC]">
                             Dashboard
                         </a>
                     @else
-                        <a href="{{ route('login') }}" 
+                        <a href="{{ route('login') }}"
                         class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border text-[#1b1b18] dark:text-[#EDEDEC]">
                             Masuk
                         </a>
@@ -40,16 +40,16 @@
                 @endif
 
                 <!-- Dark Mode Toggle -->
-                <button 
-                    x-data="{ 
-                        darkMode: localStorage.getItem('dark') 
-                            ? localStorage.getItem('dark') === 'true' 
-                            : window.matchMedia('(prefers-color-scheme: dark)').matches 
+                <button
+                    x-data="{
+                        darkMode: localStorage.getItem('dark')
+                            ? localStorage.getItem('dark') === 'true'
+                            : window.matchMedia('(prefers-color-scheme: dark)').matches
                     }"
                     x-init="$watch('darkMode', value => {
                         document.documentElement.classList.toggle('dark', value);
                         localStorage.setItem('dark', value);
-                    }); 
+                    });
                     // Set class sesuai initial value
                     document.documentElement.classList.toggle('dark', darkMode);"
                     @click="darkMode = !darkMode"

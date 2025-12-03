@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 use App\Models\ClassHistory;
 use App\Models\GuardianClassHistory;
 use App\Models\Term;
 use App\Models\TimetableEntry;
+use Carbon\Carbon;
 
 class ClassroomController extends Controller
 {
@@ -18,6 +18,7 @@ class ClassroomController extends Controller
         $user = Auth::user();
         $student = $user->student;
         $activeTerm = Term::where('is_active', true)->first();
+        $currentTime = Carbon::now();
 
         // Ambil class history user dengan relasi model
         $classHistory = null;
@@ -52,13 +53,15 @@ class ClassroomController extends Controller
                 ->with('teacher.user')
                 ->first();
 
-            // Ambil jadwal hari ini dengan relasi model
-            $dayOfWeek = Carbon::now()->dayOfWeek;
-            $dayOfWeek = $dayOfWeek === 0 ? 7 : $dayOfWeek;
-            $todayEntries = $classroom->timetableEntries()
+            // Ambil jadwal hari ini dengan relasi model (sama seperti DashboardController)
+            $dayOfWeek = (int) $currentTime->format('N');
+            $todayEntries = TimetableEntry::whereHas('template', function ($q) use ($classroom) {
+                    $q->where('class_id', $classroom->id);
+                })
                 ->where('day_of_week', $dayOfWeek)
                 ->with([
                     'period',
+                    'template.class.major',
                     'teacherSubject.subject',
                     'teacherSubject.teacher.user',
                     'roomHistory.room',
@@ -66,9 +69,9 @@ class ClassroomController extends Controller
                 ->orderBy('period_id', 'asc')
                 ->get();
 
-            $currentEntry = $todayEntries->first(fn($e) => method_exists($e, 'isOngoing') ? $e->isOngoing() : false);
+            $currentEntry = $todayEntries->first(fn($e) => method_exists($e, 'isOngoing') ? $e->isOngoing($currentTime) : false);
         }
 
-        return view('student.classroom', compact('classroom', 'students', 'guardian', 'todayEntries', 'currentEntry'));
+        return view('student.classroom', compact('classroom', 'students', 'guardian', 'todayEntries', 'currentEntry', 'currentTime'));
     }
 }

@@ -8,27 +8,27 @@
     <div class="py-12">
         <div>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="relative h-40 overflow-hidden rounded-2xl 
-                    bg-gradient-to-r from-gray-50 to-gray-100 
+                <div class="relative h-40 overflow-hidden rounded-2xl
+                    bg-gradient-to-r from-gray-50 to-gray-100
                     dark:from-gray-700 dark:to-gray-800
                     shadow-sm">
 
                     <!-- Soft top light -->
-                    <div class="absolute inset-0 bg-gradient-to-b 
-                        from-white/40 to-transparent 
+                    <div class="absolute inset-0 bg-gradient-to-b
+                        from-white/40 to-transparent
                         dark:from-white/10"></div>
 
                     <!-- Decorative blur circles -->
-                    <div class="absolute -top-10 -left-10 w-40 h-40 
-                        bg-white/50 dark:bg-white/5 
+                    <div class="absolute -top-10 -left-10 w-40 h-40
+                        bg-white/50 dark:bg-white/5
                         blur-3xl rounded-full"></div>
 
-                    <div class="absolute -bottom-10 -right-10 w-44 h-44 
-                        bg-gray-200/60 dark:bg-gray-600/40 
+                    <div class="absolute -bottom-10 -right-10 w-44 h-44
+                        bg-gray-200/60 dark:bg-gray-600/40
                         blur-3xl rounded-full"></div>
 
                     <!-- Subtle bottom border glow -->
-                    <div class="absolute bottom-0 left-0 right-0 h-px 
+                    <div class="absolute bottom-0 left-0 right-0 h-px
                         bg-gradient-to-r from-transparent via-gray-300 to-transparent
                         dark:via-gray-600"></div>
                 </div>
@@ -37,8 +37,8 @@
                         <!-- Avatar -->
                         <div class="relative mb-4 sm:mb-0">
                             @if(isset($teacher) && $teacher->avatar)
-                                <img src="{{ $teacher->avatar }}" 
-                                     alt="Avatar of {{ $user->name }}" 
+                                <img src="{{ $teacher->avatar }}"
+                                     alt="Avatar of {{ $user->name }}"
                                      class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg">
                             @else
                                 @php
@@ -67,7 +67,7 @@
 
                         <!-- Action Button -->
                         <div class="mt-4 sm:mt-0">
-                            <a href="{{ route('profile.edit') }}" 
+                            <a href="{{ route('profile.edit') }}"
                                class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-700 border border-transparent rounded-lg font-medium text-sm text-white hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 shadow-sm">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -156,6 +156,7 @@
                                         </div>
 
                                         <!-- Wali Kelas / Guardian Class -->
+                                        @if ($teacher->guardianClassHistories())
                                         <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-gray-300 dark:hover:border-gray-600 transition duration-150">
                                             <div class="flex items-start">
                                                 <div class="flex-shrink-0">
@@ -173,6 +174,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
                                         <!-- Role Assignments (Head or Coordinator) -->
                                         <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-gray-300 dark:hover:border-gray-600 transition duration-150 col-span-2">
