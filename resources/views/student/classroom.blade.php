@@ -156,6 +156,7 @@
                             </div>
 
                             @if($currentEntry)
+                                @php $curIsTeaching = $currentEntry->period?->is_teaching ?? true; @endphp
                                 <div class="p-3 sm:p-5">
                                     <div class="space-y-2">
                                         <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
@@ -164,14 +165,22 @@
                                         </div>
 
                                         <div>
-                                            <p class="text-sm sm:text-base font-bold text-gray-900 dark:text-white">{{ $currentEntry->subject?->name ?? '-' }}</p>
+                                            @if($curIsTeaching)
+                                                <p class="text-sm sm:text-base font-bold text-gray-900 dark:text-white">{{ $currentEntry->subject?->name ?? '-' }}</p>
+                                            @else
+                                                <div class="flex items-center gap-2">
+                                                    <p class="px-2 py-1 bg-yellow-200 dark:bg-yellow-700 text-yellow-900 rounded-full font-semibold text-xs">{{ $currentEntry->period?->ordinal ?? 'Pembiasaan' }}</p>
+                                                </div>
+                                            @endif
                                         </div>
 
                                         <div class="pt-3 border-t border-gray-100 dark:border-gray-700 space-y-2">
-                                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <x-heroicon-o-user class="w-4 h-4" />
-                                                <span>{{ $currentEntry->teacher?->user?->name ?? '-' }}</span>
-                                            </div>
+                                            @if($curIsTeaching)
+                                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                                    <x-heroicon-o-user class="w-4 h-4" />
+                                                    <span>{{ $currentEntry->teacher?->user?->name ?? '-' }}</span>
+                                                </div>
+                                            @endif
                                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                                                 <x-heroicon-c-globe-asia-australia class="w-5 h-5" />
                                                 <span>{{ $currentEntry->roomHistory?->room?->name ?? '-' }}</span>
@@ -197,11 +206,21 @@
                                 @if($todayEntries->isNotEmpty())
                                     <div class="space-y-2 max-h-60 sm:max-h-96 overflow-y-auto">
                                         @foreach($todayEntries as $entry)
-                                            <div class="p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-150">
+                                            @php $entryIsTeaching = $entry->period?->is_teaching ?? true; @endphp
+                                            <div class="p-3 sm:p-4 rounded-xl border transition-colors duration-150 {{ $entryIsTeaching ? 'bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600' : 'bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-700' }}">
                                                 <div class="flex justify-between items-start gap-3">
                                                     <div class="flex-1 min-w-0">
-                                                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $entry->subject?->name ?? '-' }}</p>
-                                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">{{ $entry->teacher?->user?->name ?? '-' }}</p>
+                                                        @if($entryIsTeaching)
+                                                            <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $entry->subject?->name ?? '-' }}</p>
+                                                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">{{ $entry->teacher?->user?->name ?? '-' }}</p>
+                                                        @else
+                                                            <div class="flex items-center gap-2">
+                                                                <p class="px-2 py-1 bg-yellow-200 dark:bg-yellow-700 text-yellow-900 rounded-full font-semibold text-xs">{{ $entry->period?->ordinal ?? 'Pembiasaan' }}</p>
+                                                            </div>
+                                                            @if($entry->period?->description)
+                                                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">{{ $entry->period->description }}</p>
+                                                            @endif
+                                                        @endif
                                                     </div>
                                                     <div class="flex-shrink-0">
                                                         <div class="text-xs font-medium text-gray-600 dark:text-gray-400 text-right">

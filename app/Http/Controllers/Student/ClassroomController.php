@@ -69,6 +69,63 @@ class ClassroomController extends Controller
                 ->orderBy('period_id', 'asc')
                 ->get();
 
+            // Include non-teaching periods as synthetic entries for today and sort by start_time
+            $nonTeachingPeriods = \App\Models\Period::where('is_teaching', false)
+                ->whereNotNull('start_time')
+                ->whereNotNull('end_time')
+                ->orderBy('start_time', 'asc')
+                ->get();
+
+            $periodEntries = $nonTeachingPeriods->map(function($p) use ($dayOfWeek) {
+                return new class($p, $dayOfWeek) {
+                    public $period;
+                    public $template;
+                    public $teacherSubject;
+                    public $teacher;
+                    public $roomHistory;
+                    public $is_period_only;
+                    public $day_of_week;
+
+                    public function __construct($period, $day)
+                    {
+                        $this->period = $period;
+                        $this->template = null;
+                        $this->teacherSubject = null;
+                        $this->teacher = null;
+                        $this->roomHistory = null;
+                        $this->is_period_only = true;
+                        $this->day_of_week = $day;
+                    }
+
+                    public function isOngoing($now = null)
+                    {
+                        return $this->period ? $this->period->isOngoing($now) : false;
+                    }
+
+                    public function isPast($now = null)
+                    {
+                        return $this->period ? $this->period->isPast($now) : false;
+                    }
+                };
+            });
+
+            $now = $currentTime;
+            $todayEntries = $todayEntries->concat($periodEntries)->sortBy(function($item) use ($now) {
+                $period = $item->period ?? null;
+                if (! $period) return PHP_INT_MAX;
+                $start = $period->start_time ?? ($period->start_date?->format('H:i:s') ?? null);
+                if ($start) {
+                    try {
+                        $c = Carbon::createFromFormat('H:i:s', $start, $now->getTimezone());
+                    } catch (\Exception $e) {
+                        try { $c = Carbon::parse($start, $now->getTimezone()); } catch (\Exception $e2) { $c = null; }
+                    }
+                    if ($c) return $c->timestamp;
+                }
+                if (isset($period->ordinal)) return (int) $period->ordinal * 1000;
+                return PHP_INT_MAX;
+            })->values();
+
             $currentEntry = $todayEntries->first(fn($e) => method_exists($e, 'isOngoing') ? $e->isOngoing($currentTime) : false);
         }
 

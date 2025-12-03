@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\ClassHistory;
 use App\Models\GuardianClassHistory;
+use App\Models\Period;
 use App\Models\Term;
 
 
@@ -51,8 +52,9 @@ class ClassroomController extends Controller
 
             $dayOfWeek = Carbon::now()->dayOfWeek;
             $dayOfWeek = $dayOfWeek === 0 ? 7 : $dayOfWeek;
+            $currentTime = Carbon::now();
 
-            $todayEntries = $classroom->timetableEntries()
+            $todayEntriesRaw = $classroom->timetableEntries()
                 ->where('day_of_week', $dayOfWeek)
                 ->with([
                     'period',
@@ -63,9 +65,93 @@ class ClassroomController extends Controller
                 ->orderBy('period_id', 'asc')
                 ->get();
 
-            $currentEntry = $todayEntries->first(fn($e) => $e->isOngoing());
+            // Ambil semua period yang is_teaching = false
+            $nonTeachingPeriods = Period::where('is_teaching', false)
+                ->whereNotNull('start_time')
+                ->whereNotNull('end_time')
+                ->orderBy('ordinal', 'asc')
+                ->get();
+
+            // Ambil semua period yang is_teaching = true untuk validasi kelengkapan
+            $teachingPeriods = Period::where('is_teaching', true)
+                ->whereNotNull('ordinal')
+                ->orderBy('ordinal', 'asc')
+                ->get();
+
+            $teachingOrdinals = $teachingPeriods->pluck('ordinal')->sort()->values();
+
+            // Cek kelengkapan ordinal
+            $existingOrdinals = $todayEntriesRaw->pluck('period.ordinal')->filter()->unique()->sort()->values();
+
+            $shouldShowPeriods = false;
+            if ($existingOrdinals->isNotEmpty() && $teachingOrdinals->isNotEmpty()) {
+                $shouldShowPeriods = $teachingOrdinals->diff($existingOrdinals)->isEmpty();
+            }
+
+            // Hanya tambahkan period entries jika jadwal lengkap
+            $periodEntriesForDay = collect();
+            if ($shouldShowPeriods) {
+                $periodEntriesForDay = $nonTeachingPeriods->map(function($p) use ($dayOfWeek) {
+                    return new class($p, $dayOfWeek) {
+                        public $period;
+                        public $template;
+                        public $teacherSubject;
+                        public $teacher;
+                        public $roomHistory;
+                        public $is_period_only;
+                        public $day_of_week;
+
+                        public function __construct($period, $day)
+                        {
+                            $this->period = $period;
+                            $this->template = null;
+                            $this->teacherSubject = null;
+                            $this->teacher = null;
+                            $this->roomHistory = null;
+                            $this->is_period_only = true;
+                            $this->day_of_week = $day;
+                        }
+
+                        public function isOngoing($now = null)
+                        {
+                            return $this->period ? $this->period->isOngoing($now) : false;
+                        }
+
+                        public function isPast($now = null)
+                        {
+                            return $this->period ? $this->period->isPast($now) : false;
+                        }
+                    };
+                });
+            }
+
+            // Merge dan sort by start_time
+            $now = $currentTime;
+            $todayEntries = $todayEntriesRaw->concat($periodEntriesForDay)->sortBy(function($item) use ($now) {
+                $period = $item->period ?? null;
+                if (! $period) return PHP_INT_MAX;
+
+                $start = $period->start_time ?? ($period->start_date?->format('H:i:s') ?? null);
+                if ($start) {
+                    try {
+                        $c = Carbon::createFromFormat('H:i:s', $start, $now->getTimezone());
+                    } catch (\Exception $e) {
+                        try {
+                            $c = Carbon::parse($start, $now->getTimezone());
+                        } catch (\Exception $e2) {
+                            $c = null;
+                        }
+                    }
+                    if ($c) return $c->timestamp;
+                }
+
+                if (isset($period->ordinal)) return (int) $period->ordinal * 1000;
+                return PHP_INT_MAX;
+            })->values();
+
+            $currentEntry = $todayEntries->first(fn($e) => method_exists($e, 'isOngoing') ? $e->isOngoing($currentTime) : false);
         }
 
-        return view('teacher.classroom', compact('classroom', 'students', 'guardian', 'todayEntries', 'currentEntry'));
+        return view('teacher.classroom', compact('classroom', 'students', 'guardian', 'todayEntries', 'currentEntry', 'currentTime'));
     }
 }

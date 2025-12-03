@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Schema;
 
 class ScheduleController extends Controller
 {
-    //
     public function index()
     {
         $user = Auth::user();
@@ -50,18 +49,108 @@ class ScheduleController extends Controller
                 'template.class.major',
                 'teacherSubject.subject',
                 'teacherSubject.teacher.user',
-                'roomHistory.room',
+                'roomHistory.room.building',
             ])
             ->orderBy('day_of_week', 'asc')
             ->orderBy('period_id', 'asc')
             ->get()
             ->groupBy('day_of_week');
 
-        // Pastikan setiap hari 1..7 disediakan, meskipun kosong
+        // Ambil semua period yang is_teaching = false
+        $nonTeachingPeriods = \App\Models\Period::where('is_teaching', false)
+            ->whereNotNull('start_time')
+            ->whereNotNull('end_time')
+            ->orderBy('ordinal', 'asc')
+            ->get();
+
+        // Ambil semua period yang is_teaching = true untuk validasi kelengkapan
+        $teachingPeriods = \App\Models\Period::where('is_teaching', true)
+            ->whereNotNull('ordinal')
+            ->orderBy('ordinal', 'asc')
+            ->get();
+
+        $teachingOrdinals = $teachingPeriods->pluck('ordinal')->sort()->values();
+
         $groupedOrdered = collect();
+
         for ($d = 1; $d <= 7; $d++) {
-            $groupedOrdered[$d] = $allSchedulesRaw->get($d, collect());
+            $dayCollection = $allSchedulesRaw->get($d, collect());
+
+            // Cek kelengkapan ordinal untuk hari ini
+            $existingOrdinals = $dayCollection->pluck('period.ordinal')->filter()->unique()->sort()->values();
+
+            $shouldShowPeriods = false;
+
+            if ($existingOrdinals->isNotEmpty() && $teachingOrdinals->isNotEmpty()) {
+                // Bandingkan ordinal yang ada dengan semua teaching ordinals
+                // Jika semua teaching ordinals ada di existing ordinals, maka lengkap
+                $shouldShowPeriods = $teachingOrdinals->diff($existingOrdinals)->isEmpty();
+            }
+
+            // Hanya tambahkan period entries jika jadwal lengkap
+            $periodEntriesForDay = collect();
+            if ($shouldShowPeriods) {
+                $periodEntriesForDay = $nonTeachingPeriods->map(function($p) use ($d) {
+                    return new class($p, $d) {
+                        public $period;
+                        public $template;
+                        public $teacherSubject;
+                        public $teacher;
+                        public $roomHistory;
+                        public $is_period_only;
+                        public $day_of_week;
+
+                        public function __construct($period, $day)
+                        {
+                            $this->period = $period;
+                            $this->template = null;
+                            $this->teacherSubject = null;
+                            $this->teacher = null;
+                            $this->roomHistory = null;
+                            $this->is_period_only = true;
+                            $this->day_of_week = $day;
+                        }
+
+                        public function isOngoing($now = null)
+                        {
+                            return $this->period ? $this->period->isOngoing($now) : false;
+                        }
+
+                        public function isPast($now = null)
+                        {
+                            return $this->period ? $this->period->isPast($now) : false;
+                        }
+                    };
+                });
+            }
+
+            // Merge and sort by start_time (fallback to ordinal)
+            $now = Carbon::now();
+            $merged = $dayCollection->concat($periodEntriesForDay)->sortBy(function($item) use ($now) {
+                $period = $item->period ?? null;
+                if (! $period) return PHP_INT_MAX;
+
+                $start = $period->start_time ?? ($period->start_date?->format('H:i:s') ?? null);
+                if ($start) {
+                    try {
+                        $c = Carbon::createFromFormat('H:i:s', $start, $now->getTimezone());
+                    } catch (\Exception $e) {
+                        try {
+                            $c = Carbon::parse($start, $now->getTimezone());
+                        } catch (\Exception $e2) {
+                            $c = null;
+                        }
+                    }
+                    if ($c) return $c->timestamp;
+                }
+
+                if (isset($period->ordinal)) return (int) $period->ordinal * 1000;
+                return PHP_INT_MAX;
+            })->values();
+
+            $groupedOrdered[$d] = $merged;
         }
+
         $allSchedules = $groupedOrdered;
 
         // Nama kelas siswa
@@ -75,5 +164,4 @@ class ScheduleController extends Controller
             'studentClassFullName' => $studentClassFullName,
         ]);
     }
-
 }

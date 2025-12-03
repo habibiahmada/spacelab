@@ -73,7 +73,7 @@
                                 </span>
                             </div>
                         </div>
-                        
+
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-700">
@@ -147,31 +147,64 @@
                                     Pelajaran Saat Ini
                                 </h3>
                             </div>
-                            
+
                             @if($currentEntry)
-                                <div class="p-3 sm:p-5">
-                                    <div class="space-y-2">
-                                        <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                            <x-heroicon-o-clock class="w-4 h-4" />
-                                            <span>{{ optional($currentEntry->period)->start_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->start_time)->format('H:i') : '-' }} - {{ optional($currentEntry->period)->end_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->end_time)->format('H:i') : '-' }}</span>
-                                        </div>
-                                        
-                                        <div>
-                                            <p class="text-sm sm:text-base font-bold text-gray-900 dark:text-white">{{ $currentEntry->subject?->name ?? '-' }}</p>
-                                        </div>
-                                        
-                                        <div class="pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2">
-                                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <x-heroicon-o-user class="w-4 h-4" />
-                                                <span>{{ $currentEntry->teacher?->user?->name ?? '-' }}</span>
+                                @php
+                                    $isPeriodOnly = isset($currentEntry->is_period_only) && $currentEntry->is_period_only;
+                                @endphp
+
+                                @if($isPeriodOnly)
+                                    {{-- Break Time --}}
+                                    <div class="p-3 sm:p-5">
+                                        <div class="space-y-2">
+                                            <div class="flex items-center justify-center">
+                                                <div class="bg-amber-200 dark:bg-amber-900 p-3 rounded-full">
+                                                    <svg class="w-6 h-6 text-amber-700 dark:text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                    </svg>
+                                                </div>
                                             </div>
-                                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <x-heroicon-c-globe-asia-australia />
-                                                <span>{{ $currentEntry->roomHistory?->room?->name ?? '-' }}</span>
+
+                                            <div class="text-center">
+                                                <p class="text-sm sm:text-base font-bold text-amber-700 dark:text-amber-300">{{ $currentEntry->period?->name ?? 'Istirahat' }}</p>
+                                            </div>
+
+                                            <div class="pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2 text-center">
+                                                <div class="flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                                    <span>{{ optional($currentEntry->period)->start_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->start_time)->format('H:i') : '-' }} - {{ optional($currentEntry->period)->end_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->end_time)->format('H:i') : '-' }}</span>
+                                                </div>
+                                                @if($currentEntry->period?->ordinal)
+                                                    <div class="text-xs text-gray-500 dark:text-gray-400">Jam ke {{ $currentEntry->period->ordinal }}</div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @else
+                                    {{-- Class Schedule --}}
+                                    <div class="p-3 sm:p-5">
+                                        <div class="space-y-2">
+                                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                                <x-heroicon-o-clock class="w-4 h-4" />
+                                                <span>{{ optional($currentEntry->period)->start_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->start_time)->format('H:i') : '-' }} - {{ optional($currentEntry->period)->end_time ? \Carbon\Carbon::parse(optional($currentEntry->period)->end_time)->format('H:i') : '-' }}</span>
+                                            </div>
+
+                                            <div>
+                                                <p class="text-sm sm:text-base font-bold text-gray-900 dark:text-white">{{ $currentEntry->teacherSubject?->subject?->name ?? '-' }}</p>
+                                            </div>
+
+                                            <div class="pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2">
+                                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                                    <x-heroicon-o-user class="w-4 h-4" />
+                                                    <span>{{ $currentEntry->teacherSubject?->teacher?->user?->name ?? '-' }}</span>
+                                                </div>
+                                                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                                    <x-heroicon-o-map-pin class="w-4 h-4" />
+                                                    <span>{{ $currentEntry->roomHistory?->room?->name ?? '-' }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             @else
                                 <div class="p-4 sm:p-6 text-center">
                                     <x-heroicon-o-x-circle class="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
@@ -185,25 +218,52 @@
                             <div class="p-5 border-b border-gray-100 dark:border-gray-800">
                                 <h3 class="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wide">Jadwal Hari Ini</h3>
                             </div>
-                            
+
                             <div class="p-3 sm:p-5">
                                 @if($todayEntries->isNotEmpty())
                                     <div class="space-y-2 max-h-60 sm:max-h-96 overflow-y-auto">
                                         @foreach($todayEntries as $entry)
-                                            <div class="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all duration-150">
-                                                <div class="flex justify-between items-start gap-3">
-                                                    <div class="flex-1 min-w-0">
-                                                        <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $entry->subject?->name ?? '-' }}</p>
-                                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">{{ $entry->teacher?->user?->name ?? '-' }}</p>
-                                                    </div>
-                                                    <div class="flex-shrink-0">
-                                                        <div class="text-xs font-medium text-gray-600 dark:text-gray-400 text-right">
-                                                            <div>{{ optional($entry->period)->start_time ? \Carbon\Carbon::parse(optional($entry->period)->start_time)->format('H:i') : '-' }}</div>
-                                                            <div>{{ optional($entry->period)->end_time ? \Carbon\Carbon::parse(optional($entry->period)->end_time)->format('H:i') : '-' }}</div>
+                                            @php
+                                                $isPeriodOnly = isset($entry->is_period_only) && $entry->is_period_only;
+                                            @endphp
+
+                                            @if($isPeriodOnly)
+                                                {{-- Break Time Item --}}
+                                                <div class="p-3 sm:p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border border-amber-200 dark:border-amber-800 hover:shadow-md transition-all duration-150">
+                                                    <div class="flex justify-between items-start gap-3">
+                                                        <div class="flex-1 min-w-0">
+                                                            <p class="text-sm font-semibold text-amber-700 dark:text-amber-300 truncate flex items-center gap-2">
+                                                                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                                </svg>
+                                                                {{ $entry->period?->name ?? 'Istirahat' }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <div class="text-xs font-medium text-amber-600 dark:text-amber-400 text-right">
+                                                                <div>{{ optional($entry->period)->start_time ? \Carbon\Carbon::parse(optional($entry->period)->start_time)->format('H:i') : '-' }}</div>
+                                                                <div>{{ optional($entry->period)->end_time ? \Carbon\Carbon::parse(optional($entry->period)->end_time)->format('H:i') : '-' }}</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                {{-- Class Schedule Item --}}
+                                                <div class="p-3 sm:p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all duration-150">
+                                                    <div class="flex justify-between items-start gap-3">
+                                                        <div class="flex-1 min-w-0">
+                                                            <p class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $entry->teacherSubject?->subject?->name ?? '-' }}</p>
+                                                            <p class="text-xs text-gray-600 dark:text-gray-400 mt-1 truncate">{{ $entry->template?->class?->full_name ?? '-' }}</p>
+                                                        </div>
+                                                        <div class="flex-shrink-0">
+                                                            <div class="text-xs font-medium text-gray-600 dark:text-gray-400 text-right">
+                                                                <div>{{ optional($entry->period)->start_time ? \Carbon\Carbon::parse(optional($entry->period)->start_time)->format('H:i') : '-' }}</div>
+                                                                <div>{{ optional($entry->period)->end_time ? \Carbon\Carbon::parse(optional($entry->period)->end_time)->format('H:i') : '-' }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         @endforeach
                                     </div>
                                 @else
