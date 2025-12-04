@@ -12,13 +12,16 @@ class Classroom extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $table = 'classes'; 
+    protected $table = 'classes';
 
     protected $fillable = [
         'level',
         'major_id',
         'rombel',
     ];
+
+    // Ensure the full_name accessor is included when the model is serialized to JSON
+    protected $appends = ['full_name'];
 
     public function major()
     {

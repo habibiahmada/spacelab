@@ -32,7 +32,10 @@
         ProfileController as TeacherProfileController,
     };
 
-    use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
+    use App\Http\Controllers\Staff\{
+        DashboardController as StaffDashboardController,
+        ScheduleController as StaffScheduleController
+    };
 
     Route::get('/', [PagesController::class, 'index'])->name('welcome');
 
@@ -104,12 +107,11 @@
         Route::get('/profile', [ StudentProfileController::class, 'index' ])->name('profile.index');
     });
 
-    Route::middleware(['auth', 'role:Staff'])->group(function () {
-        Route::get('/staff/dashboard', [StaffDashboardController::class, 'index'])->name('staff.index');
-    });
+    Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->group(function () {
+        Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('index');
 
-    Route::middleware(['auth', 'role:Operator'])->group(function () {
-        Route::get('/operator/dashboard',fn () => view('operator.dashboard'))->name('operator.dashboard');
+        Route::get('/schedules', [StaffScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/schedules/major/{majorId}', [StaffScheduleController::class, 'getMajorSchedules'])->name('schedules.major');
     });
 
     /*
