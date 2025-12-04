@@ -5,41 +5,46 @@
     Dashboard
 </a>
 
-<a href="#"
+<a href="{{ route('staff.terms.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-rectangle-stack class="w-5 h-5" />
     Tahun Ajaran
 </a>
 
-
-<a href="#"
+<a href="{{ route('staff.majors.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-squares-2x2 class="w-5 h-5" />
     Jurusan
 </a>
 
-<a href="#"
+<a href="{{ route('staff.classes.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-building-library class="w-5 h-5" />
     Kelas
 </a>
 
-<a href="#"
+<a href="{{ route('staff.students.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-users class="w-5 h-5" />
     Daftar Siswa
 </a>
 
-<a href="#"
+<a href="{{ route('staff.teachers.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-user-circle class="w-5 h-5" />
     Daftar Guru
 </a>
 
-<a href="#"
+<a href="{{ route('staff.rooms.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
     <x-heroicon-o-building-office class="w-5 h-5" />
     Gedung dan Ruangan
+</a>
+
+<a href="{{ route('staff.rooms.history') }}"
+   class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800">
+    <x-heroicon-o-document-text class="w-5 h-5" />
+    Riwayat Ruangan
 </a>
 
 <a href="{{ route('staff.schedules.index') }}"

@@ -17,7 +17,7 @@ class ScheduleController extends Controller
             ->orderBy('code')
             ->get();
 
-        return view('staff.schedules', [
+        return view('staff.schedules.index', [
             'majors' => $majors,
         ]);
     }

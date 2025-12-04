@@ -34,7 +34,14 @@
 
     use App\Http\Controllers\Staff\{
         DashboardController as StaffDashboardController,
-        ScheduleController as StaffScheduleController
+        ScheduleController as StaffScheduleController,
+        TermController as StaffTermController,
+        MajorController as StaffMajorController,
+        ClassroomController as StaffClassController,
+        TeacherController as StaffTeacherController,
+        StudentController as StaffStudentController,
+        RoomController as StaffRoomController,
+        RoomHistoryController as StaffRoomHistoryController
     };
 
     Route::get('/', [PagesController::class, 'index'])->name('welcome');
@@ -110,8 +117,25 @@
     Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->group(function () {
         Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('index');
 
+        Route::get('/terms', [StaffTermController::class, 'index'])->name('terms.index');
+
+        Route::get('/majors', [StaffMajorController::class, 'index'])->name('majors.index');
+
+        Route::get('/classes', [StaffClassController::class, 'index'])->name('classes.index');
+
+        Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
+
+        Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
+
+        Route::get('/rooms', [StaffRoomController::class, 'index'])->name('rooms.index');
+
+        Route::get('/rooms/history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
+
+
         Route::get('/schedules', [StaffScheduleController::class, 'index'])->name('schedules.index');
         Route::get('/schedules/major/{majorId}', [StaffScheduleController::class, 'getMajorSchedules'])->name('schedules.major');
+
+
     });
 
     /*
