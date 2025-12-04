@@ -32,6 +32,8 @@
         ProfileController as TeacherProfileController,
     };
 
+    use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
+
     Route::get('/', [PagesController::class, 'index'])->name('welcome');
 
     /*
@@ -103,7 +105,7 @@
     });
 
     Route::middleware(['auth', 'role:Staff'])->group(function () {
-        Route::get('/staff/dashboard',fn () => view('staff.dashboard'))->name('staff.index');
+        Route::get('/staff/dashboard', [StaffDashboardController::class, 'index'])->name('staff.index');
     });
 
     Route::middleware(['auth', 'role:Operator'])->group(function () {

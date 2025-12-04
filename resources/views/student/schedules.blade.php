@@ -178,7 +178,7 @@
                                     {{-- Status Badge --}}
                                     @if ($isOngoing)
                                         <div class="absolute top-3 right-3 z-10">
-                                            <div class="bg-gray-800 text-white px-3 py-1 rounded-full shadow flex items-center gap-2 animate-bounce">
+                                            <div class="bg-gray-800 text-white px-3 py-1 rounded-full shadow flex items-center gap-2 animate-bounce ">
                                                 <span class="relative flex h-2.5 w-2.5">
                                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                                                     <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>

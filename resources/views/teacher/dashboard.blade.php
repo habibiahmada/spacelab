@@ -180,7 +180,6 @@
                                                                 <div class="text-2xl font-bold text-slate-700 dark:text-slate-300">
                                                                     {{ $schedule->period?->start_time ? \Carbon\Carbon::createFromFormat('H:i:s', $schedule->period->start_time)->format('H:i') : '-' }}
                                                                 </div>
-                                                                <div class="text-xs opacity-70 mt-1">Mulai</div>
                                                             </div>
 
                                                             <div class="text-slate-400 dark:text-slate-500">—</div>
@@ -189,14 +188,13 @@
                                                                 <div class="text-2xl font-bold text-slate-700 dark:text-slate-300">
                                                                     {{ $schedule->period?->end_time ? \Carbon\Carbon::createFromFormat('H:i:s', $schedule->period->end_time)->format('H:i') : '-' }}
                                                                 </div>
-                                                                <div class="text-xs opacity-70 mt-1">Selesai</div>
                                                             </div>
                                                         </div>
 
                                                         @if($schedule->period?->ordinal)
                                                             <div class="mt-3 text-center lg:text-left">
                                                                 <span class="inline-block px-3 py-1 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-xs font-medium">
-                                                                    Jam ke {{ $schedule->period->ordinal }}
+                                                                    {{ $schedule->period->ordinal }}
                                                                 </span>
                                                             </div>
                                                         @endif

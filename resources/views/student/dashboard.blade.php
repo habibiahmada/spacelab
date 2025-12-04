@@ -133,7 +133,7 @@
                                 <div class="relative group">
                                     {{-- Ongoing Side Indicator --}}
                                     @if ($isOngoing)
-                                        <div class="absolute -left-6 top-0 bottom-0 w-1.5 bg-blue-300 rounded-full shadow animate-pulse"></div>
+                                        <div class="absolute -left-6 top-0 bottom-0 w-1.5 h-48 bg-blue-300 rounded-full shadow animate-pulse"></div>
                                     @endif
 
                                     <div class="
