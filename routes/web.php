@@ -132,6 +132,16 @@
 
         Route::get('/majors', [StaffMajorController::class, 'index'])->name('majors.index');
 
+        Route::get('/majors/create', [StaffMajorController::class, 'create'])->name('majors.create');
+
+        Route::post('/majors', [StaffMajorController::class, 'store'])->name('majors.store');
+
+        Route::get('/majors/{major}/edit', [StaffMajorController::class, 'edit'])->name('majors.edit');
+
+        Route::put('/majors/{major}', [StaffMajorController::class, 'update'])->name('majors.update');
+
+        Route::delete('/majors/{major}', [StaffMajorController::class, 'destroy'])->name('majors.destroy');
+
         Route::get('/classes', [StaffClassController::class, 'index'])->name('classes.index');
 
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');

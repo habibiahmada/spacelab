@@ -13,11 +13,10 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Manajemen Tahun Ajaran</h3>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Kelola tahun ajaran dan block semester</p>
                 </div>
-                <button onclick="openTermModal()"
-                    class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-lg font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+                <x-secondary-button onclick="openTermModal()">
                     <x-heroicon-o-plus class="w-5 h-5 mr-2" />
                     Tambah Tahun Ajaran
-                </button>
+                </x-secondary-button>
             </div>
 
             <!-- Success Message -->
@@ -186,128 +185,119 @@
     </div>
 
     <!-- Term Modal -->
-    <div id="termModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50">
-        <div class="fixed inset-0 z-50 overflow-y-auto">
-            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div
-                    class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                    <form id="termForm" method="POST" action="{{ route('staff.terms.store') }}">
-                        @csrf
-                        <input type="hidden" name="_method" id="termMethod" value="POST">
-                        <input type="hidden" name="term_id" id="termId">
-                        <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <h3 id="termModalTitle"
-                                class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100 mb-4">
-                                Tambah Tahun Ajaran
-                            </h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tahun
-                                        Ajaran</label>
-                                    <x-text-input name="tahun_ajaran" id="termTahunAjaran" required
-                                        placeholder="Contoh: 2024/2025" class="block w-full" />
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label
-                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
-                                            Mulai</label>
-                                        <x-date-input name="start_date" id="termStartDate" required />
-                                    </div>
-                                    <div>
-                                        <label
-                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
-                                            Selesai</label>
-                                        <x-date-input name="end_date" id="termEndDate" required />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jenis</label>
-                                    <x-select-input name="kind" id="termKind" required>
-                                        <option value="ganjil">Ganjil</option>
-                                        <option value="genap">Genap</option>
-                                    </x-select-input>
-                                </div>
-                                <div class="flex items-center">
-                                    <x-checkbox-input name="is_active" id="is_active" value="1" />
-                                    <label for="is_active"
-                                        class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Aktifkan tahun
-                                        ajaran ini</label>
-                                </div>
-                            </div>
+    <x-modal name="termModal" :show="false" focusable>
+        <form id="termForm" method="POST" action="{{ route('staff.terms.store') }}">
+            @csrf
+            <input type="hidden" name="_method" id="termMethod" value="POST">
+            <input type="hidden" name="term_id" id="termId">
+            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="termModalTitle" class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                        Tambah Tahun Ajaran
+                    </h3>
+                    <button type="button" x-on:click="$dispatch('close')"
+                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <x-heroicon-o-x-mark class="w-6 h-6" />
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tahun
+                            Ajaran</label>
+                        <x-text-input name="tahun_ajaran" id="termTahunAjaran" required
+                            placeholder="Contoh: 2024/2025" class="block w-full" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
+                                Mulai</label>
+                            <x-date-input name="start_date" id="termStartDate" required />
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit" id="termSubmitBtn"
-                                class="inline-flex w-full justify-center rounded-md bg-gray-800 dark:bg-gray-200 px-4 py-2 text-sm font-semibold text-white dark:text-gray-800 shadow-sm hover:bg-gray-700 dark:hover:bg-gray-300 sm:ml-3 sm:w-auto">
-                                Simpan
-                            </button>
-                            <button type="button" onclick="closeTermModal()"
-                                class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto">
-                                Batal
-                            </button>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
+                                Selesai</label>
+                            <x-date-input name="end_date" id="termEndDate" required />
                         </div>
-                    </form>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jenis</label>
+                        <x-select-input name="kind" id="termKind" required>
+                            <option value="ganjil">Ganjil</option>
+                            <option value="genap">Genap</option>
+                        </x-select-input>
+                    </div>
+                    <div class="flex items-center">
+                        <x-checkbox-input name="is_active" id="is_active" value="1" />
+                        <label for="is_active" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">Aktifkan
+                            tahun
+                            ajaran ini</label>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <button type="submit" id="termSubmitBtn"
+                    class="inline-flex w-full justify-center rounded-md bg-gray-800 dark:bg-gray-200 px-4 py-2 text-sm font-semibold text-white dark:text-gray-800 shadow-sm hover:bg-gray-700 dark:hover:bg-gray-300 sm:ml-3 sm:w-auto">
+                    Simpan
+                </button>
+                <button type="button" x-on:click="$dispatch('close')"
+                    class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </x-modal>
 
     <!-- Block Modal -->
-    <div id="blockModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-50">
-        <div class="fixed inset-0 z-50 overflow-y-auto">
-            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div
-                    class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                    <form id="blockForm" method="POST" action="{{ route('staff.blocks.store') }}">
-                        @csrf
-                        <input type="hidden" name="_method" id="blockMethod" value="POST">
-                        <input type="hidden" name="terms_id" id="block_terms_id">
-                        <input type="hidden" name="block_id" id="blockId">
-                        <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                            <h3 id="blockModalTitle"
-                                class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100 mb-4">
-                                Tambah Block
-                            </h3>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama
-                                        Block</label>
-                                    <x-text-input name="name" id="blockName" required
-                                        placeholder="Contoh: Semester 1" class="block w-full" />
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label
-                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
-                                            Mulai</label>
-                                        <x-date-input name="start_date" id="blockStartDate" required />
-                                    </div>
-                                    <div>
-                                        <label
-                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
-                                            Selesai</label>
-                                        <x-date-input name="end_date" id="blockEndDate" required />
-                                    </div>
-                                </div>
-                            </div>
+    <x-modal name="blockModal" :show="false" focusable>
+        <form id="blockForm" method="POST" action="{{ route('staff.blocks.store') }}">
+            @csrf
+            <input type="hidden" name="_method" id="blockMethod" value="POST">
+            <input type="hidden" name="terms_id" id="block_terms_id">
+            <input type="hidden" name="block_id" id="blockId">
+            <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="blockModalTitle"
+                        class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100 mb-4">
+                        Tambah Block
+                    </h3>
+                    <button type="button" x-on:click="$dispatch('close')"
+                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <x-heroicon-o-x-mark class="w-6 h-6" />
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama
+                            Block</label>
+                        <x-text-input name="name" id="blockName" required placeholder="Contoh: Semester 1"
+                            class="block w-full" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
+                                Mulai</label>
+                            <x-date-input name="start_date" id="blockStartDate" required />
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                            <button type="submit"
-                                class="inline-flex w-full justify-center rounded-md bg-gray-800 dark:bg-gray-200 px-4 py-2 text-sm font-semibold text-white dark:text-gray-800 shadow-sm hover:bg-gray-700 dark:hover:bg-gray-300 sm:ml-3 sm:w-auto">
-                                Simpan
-                            </button>
-                            <button type="button" onclick="closeBlockModal()"
-                                class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto">
-                                Batal
-                            </button>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
+                                Selesai</label>
+                            <x-date-input name="end_date" id="blockEndDate" required />
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <button type="submit"
+                    class="inline-flex w-full justify-center rounded-md bg-gray-800 dark:bg-gray-200 px-4 py-2 text-sm font-semibold text-white dark:text-gray-800 shadow-sm hover:bg-gray-700 dark:hover:bg-gray-300 sm:ml-3 sm:w-auto">
+                    Simpan
+                </button>
+                <button type="button" x-on:click="$dispatch('close')"
+                    class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </x-modal>
 
     <script>
         // Configure routes for JavaScript

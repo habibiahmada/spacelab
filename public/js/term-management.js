@@ -24,11 +24,12 @@ document.addEventListener('DOMContentLoaded', function () {
 // Term Modal Functions
 function openTermModal() {
     resetTermModal();
-    document.getElementById('termModal').classList.remove('hidden');
+    resetTermModal();
+    window.dispatchEvent(new CustomEvent('open-modal', { detail: 'termModal' }));
 }
 
 function closeTermModal() {
-    document.getElementById('termModal').classList.add('hidden');
+    window.dispatchEvent(new CustomEvent('close-modal', { detail: 'termModal' }));
     resetTermModal();
 }
 
@@ -61,7 +62,8 @@ function editTerm(termId) {
             document.getElementById('termSubmitBtn').textContent = 'Update';
 
             // Open modal
-            document.getElementById('termModal').classList.remove('hidden');
+            // Open modal
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'termModal' }));
         })
         .catch(error => {
             console.error('Error:', error);
@@ -84,11 +86,11 @@ function deleteTerm(termId) {
 function openBlockModal(termId) {
     resetBlockModal();
     document.getElementById('block_terms_id').value = termId;
-    document.getElementById('blockModal').classList.remove('hidden');
+    window.dispatchEvent(new CustomEvent('open-modal', { detail: 'blockModal' }));
 }
 
 function closeBlockModal() {
-    document.getElementById('blockModal').classList.add('hidden');
+    window.dispatchEvent(new CustomEvent('close-modal', { detail: 'blockModal' }));
     resetBlockModal();
 }
 
@@ -118,7 +120,8 @@ function editBlock(blockId) {
             document.getElementById('blockModalTitle').textContent = 'Edit Block';
 
             // Open modal
-            document.getElementById('blockModal').classList.remove('hidden');
+            // Open modal
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'blockModal' }));
         })
         .catch(error => {
             console.error('Error:', error);
