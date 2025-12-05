@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClassHistory;
 use App\Models\Major;
+use App\Models\RoleAssignment;
+use App\Models\Teacher;
+use App\Models\TeacherSubject;
+use App\Models\Company;
+use App\Models\CompanyRelation;
+use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -21,6 +28,134 @@ class MajorController extends Controller
 
         return view('staff.major.index', [
             'majors' => $majors,
+            'title' => 'Jurusan',
+            'description' => 'Halaman manajemen jurusan',
+        ]);
+    }
+
+    public function show(Major $major)
+    {
+        // $major is already injected via route binding
+
+        $activeTerm = Term::where('is_active', true)->first();
+
+        // Initialize variables based on the requested $major
+
+        // 1. Classes
+        $classQuery = $major->classes();
+        if ($activeTerm) {
+            // We can eager load student count filtered by active term
+            $classQuery->withCount(['classHistories as students_count' => function ($q) use ($activeTerm) {
+                $q->where('terms_id', $activeTerm->id);
+            }]);
+        } else {
+            // If no active term, still count students but without term filter
+            $classQuery->withCount(['classHistories as students_count']);
+        }
+        $classes = $classQuery->paginate(10, ['*'], 'classes_page');
+
+        // 2. Teachers (Head, Coordinator, and Subject Teachers)
+        // Fetch Assignment for this Major (Head & Coordinator)
+        $assignmentQuery = RoleAssignment::with(['head.user', 'programCoordinator.user'])
+            ->where('major_id', $major->id);
+
+        if ($activeTerm) {
+            $assignmentQuery->where('terms_id', $activeTerm->id);
+        } else {
+            $assignmentQuery->latest();
+        }
+        $assignment = $assignmentQuery->first();
+
+        // Fetch Subject Teachers
+        $majorSubjects = $major->majorSubjects()->with('subject')->get();
+        $subjectIds = $majorSubjects->pluck('subject_id')->all();
+
+        $teacherIds = [];
+        if (!empty($subjectIds)) {
+            $teacherIds = TeacherSubject::whereIn('subject_id', $subjectIds)->pluck('teacher_id')->unique()->all();
+        }
+
+        // Add Head and Coordinator to teacher list
+        if ($assignment) {
+            if ($assignment->head) $teacherIds[] = $assignment->head->id;
+            if ($assignment->programCoordinator) $teacherIds[] = $assignment->programCoordinator->id;
+        }
+        $teacherIds = array_values(array_unique($teacherIds));
+        $teacherCount = count($teacherIds);
+
+        $teachers = collect();
+        if (!empty($teacherIds)) {
+            $teachers = Teacher::whereIn('id', $teacherIds)->with('user')->paginate(10, ['*'], 'teachers_page');
+        }
+
+        // 3. Stats
+        $stats = [
+            'class_count' => $major->classes()->count(),
+            'room_count' => 0, // Logic for room count seems redundant in original code (same as classes), keeping it simple or fixing it?
+            // Original: $stats['room_count'] = $major->classes()->count();
+            // Let's keep it consistent with original for now but maybe it refers to homerooms?
+            // Actually major doesn't directly own rooms usually, accessing rooms via classes -> room relation would be better but let's stick to original behavior for now validation.
+            'student_count' => 0,
+        ];
+
+        // Correct Room Count Logic? If classes have specific rooms.
+        // Original code was just counting classes again. Let's leave it as is to avoid breaking expectations, or arguably it meant unique rooms used by classes?
+        $stats['room_count'] = $major->classes()->count();
+
+        // Student Count
+        $classIds = $major->classes()->pluck('id')->all();
+        if (!empty($classIds)) {
+            $studentQuery = ClassHistory::whereIn('class_id', $classIds);
+            if ($activeTerm) {
+                $studentQuery->where('terms_id', $activeTerm->id);
+            }
+            $stats['student_count'] = $studentQuery->count();
+        }
+
+        // 4. Companies (Existing Relations)
+        $companies = $major->companyRelations()->with('company')->get();
+
+        // 5. All Companies (For Dropdown)
+        $allCompanies = Company::orderBy('name')->get();
+
+        $subjectCount = $majorSubjects->count();
+
+        // 6. Eligible Teachers for Roles
+        // Logic: Teachers NOT assigned as Head or Coordinator in ANY major for the active term
+        // EXCEPT the ones currently assigned to THIS major (so they appear in dropdown)
+        $eligibleTeachers = Teacher::with('user');
+
+        if ($activeTerm) {
+            $busyTeacherIds = RoleAssignment::where('terms_id', $activeTerm->id)
+                ->where('major_id', '!=', $major->id) // Ignore assignments for THIS major
+                ->get()
+                ->flatMap(function ($assignment) {
+                    return [$assignment->head_of_major_id, $assignment->program_coordinator_id];
+                })
+                ->filter()
+                ->unique()
+                ->all();
+
+            if (!empty($busyTeacherIds)) {
+                $eligibleTeachers->whereNotIn('id', $busyTeacherIds);
+            }
+        }
+        $eligibleTeachers = $eligibleTeachers->get()->sortBy('user.name');
+
+
+        return view('staff.major.show', [
+            'major' => $major,
+            'assignment' => $assignment,
+            'classes' => $classes,
+            'teachers' => $teachers,
+            'stats' => $stats,
+            'activeTerm' => $activeTerm,
+            'companies' => $companies,
+            'allCompanies' => $allCompanies,
+            'eligibleTeachers' => $eligibleTeachers,
+            'majorSubjects' => $majorSubjects,
+            'teacherCount' => $teacherCount,
+            'subjectCount' => $subjectCount,
             'title' => 'Jurusan',
             'description' => 'Halaman manajemen jurusan',
         ]);
@@ -95,8 +230,106 @@ class MajorController extends Controller
 
         $major->update($validated);
 
-        return redirect()->route('staff.majors.index')
+        return redirect()->back()
             ->with('success', 'Jurusan berhasil diperbarui');
+    }
+
+    /**
+     * Store a new company relation.
+     */
+    public function storeCompanyRelation(Request $request, Major $major)
+    {
+        $validated = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'partnership_type' => 'nullable|string|max:255',
+            'status' => 'required|in:active,inactive,pending',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'document_link' => 'nullable|url',
+        ]);
+
+        $major->companyRelations()->create($validated);
+
+        return redirect()->back()->with('success', 'Mitra perusahaan berhasil ditambahkan.');
+    }
+
+    /**
+     * Update an existing company relation.
+     */
+    public function updateCompanyRelation(Request $request, Major $major, CompanyRelation $companyRelation)
+    {
+        // Ensure the company relation belongs to this major
+        if ($companyRelation->major_id !== $major->id) {
+            return redirect()->back()->with('error', 'Relasi perusahaan tidak valid untuk jurusan ini.');
+        }
+
+        $validated = $request->validate([
+            'company_id' => 'required|exists:companies,id',
+            'partnership_type' => 'nullable|string|max:255',
+            'status' => 'required|in:active,inactive,pending',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'document_link' => 'nullable|url',
+        ]);
+
+        try {
+            $companyRelation->update($validated);
+            return redirect()->back()->with('success', 'Mitra perusahaan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete a company relation.
+     */
+    public function destroyCompanyRelation(Major $major, CompanyRelation $companyRelation)
+    {
+        // Ensure the company relation belongs to this major
+        if ($companyRelation->major_id !== $major->id) {
+            return redirect()->back()->with('error', 'Relasi perusahaan tidak valid untuk jurusan ini.');
+        }
+
+        try {
+            $companyRelation->delete();
+            return redirect()->back()->with('success', 'Mitra perusahaan berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Update role assignment (Head/Coordinator).
+     */
+    public function updateRoleAssignment(Request $request, Major $major)
+    {
+        $request->validate([
+            'role_type' => 'required|in:head,coordinator',
+            'teacher_id' => 'nullable|exists:teachers,id',
+        ]);
+
+        $activeTerm = Term::where('is_active', true)->first();
+        if (!$activeTerm) {
+            return redirect()->back()->with('error', 'Tidak ada tahun ajaran aktif.');
+        }
+
+        $assignment = RoleAssignment::firstOrNew([
+            'major_id' => $major->id,
+            'terms_id' => $activeTerm->id,
+        ]);
+
+        if ($request->role_type === 'head') {
+            $assignment->head_of_major_id = $request->teacher_id;
+        } else {
+            $assignment->program_coordinator_id = $request->teacher_id;
+        }
+
+        try {
+            $assignment->save();
+            return redirect()->back()->with('success', 'Penugasan berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 
     /**

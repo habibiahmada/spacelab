@@ -40,6 +40,12 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/majors/{major}', [StaffMajorController::class, 'update'])->name('majors.update');
         Route::delete('/majors/{major}', [StaffMajorController::class, 'destroy'])->name('majors.destroy');
 
+        Route::get('/majors/{major}', [StaffMajorController::class, 'show'])->name('majors.show');
+        Route::post('/majors/{major}/company-relation', [StaffMajorController::class, 'storeCompanyRelation'])->name('majors.company-relation.store');
+        Route::put('/majors/{major}/company-relation/{companyRelation}', [StaffMajorController::class, 'updateCompanyRelation'])->name('majors.company-relation.update');
+        Route::delete('/majors/{major}/company-relation/{companyRelation}', [StaffMajorController::class, 'destroyCompanyRelation'])->name('majors.company-relation.destroy');
+        Route::put('/majors/{major}/role-assignment', [StaffMajorController::class, 'updateRoleAssignment'])->name('majors.role-assignment.update');
+
         Route::get('/classes', [StaffClassController::class, 'index'])->name('classes.index');
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
         Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
