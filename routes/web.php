@@ -91,33 +91,44 @@
     Route::middleware(['auth', 'role:Guru'])->prefix('teacher')->name('guru.')->group(function () {
         Route::get('/dashboard', [TeacherDashboardController::class, 'index'])->name('index');
 
-        Route::get('/schedules', [ TeacherScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/schedules', [TeacherScheduleController::class, 'index'])->name('schedules.index');
 
-        Route::get('/class', [ TeacherClassroomController::class, 'index'])->name('classroom.index');
+        Route::get('/class', [TeacherClassroomController::class, 'index'])->name('classroom.index');
 
-        Route::get('/major/major-head', [TeacherMajorHeadController::class, 'Index' ])->name('major.majorhead.index');
+        Route::get('/major/major-head', [TeacherMajorHeadController::class, 'Index'])->name('major.majorhead.index');
 
-        Route::get('/major/program-coordinator', [TeacherProgramCoordinatorController::class, 'Index' ])->name('major.majorprogram.index');
+        Route::get('/major/program-coordinator', [TeacherProgramCoordinatorController::class, 'Index'])->name('major.majorprogram.index');
 
-        Route::get('/profile', [ TeacherProfileController::class, 'index' ])->name('profile.index');
+        Route::get('/profile', [TeacherProfileController::class, 'index'])->name('profile.index');
     });
 
     Route::middleware(['auth', 'role:Siswa'])->prefix('student')->name('siswa.')->group(function () {
-        Route::get('/dashboard',[StudentDashboardController::class, 'index'])->name('index');
+        Route::get('/dashboard', [StudentDashboardController::class, 'index'])->name('index');
 
-        Route::get('/schedules', [ StudentScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/schedules', [StudentScheduleController::class, 'index'])->name('schedules.index');
 
-        Route::get('/rooms', [ StudentRoomController::class, 'index'])->name('rooms.index');
+        Route::get('/rooms', [StudentRoomController::class, 'index'])->name('rooms.index');
 
-        Route::get('/classes', [ StudentClassroomController::class, 'index'])->name('classroom.index');
+        Route::get('/classes', [StudentClassroomController::class, 'index'])->name('classroom.index');
 
-        Route::get('/profile', [ StudentProfileController::class, 'index' ])->name('profile.index');
+        Route::get('/profile', [StudentProfileController::class, 'index'])->name('profile.index');
     });
 
     Route::middleware(['auth', 'role:Staff'])->prefix('staff')->name('staff.')->group(function () {
         Route::get('/dashboard', [StaffDashboardController::class, 'index'])->name('index');
 
+        // Terms Management
         Route::get('/terms', [StaffTermController::class, 'index'])->name('terms.index');
+        Route::post('/terms', [StaffTermController::class, 'store'])->name('terms.store');
+        Route::get('/terms/{term}/edit', [StaffTermController::class, 'edit'])->name('terms.edit');
+        Route::put('/terms/{term}', [StaffTermController::class, 'update'])->name('terms.update');
+        Route::delete('/terms/{term}', [StaffTermController::class, 'destroy'])->name('terms.destroy');
+
+        // Blocks Management
+        Route::post('/blocks', [StaffTermController::class, 'storeBlock'])->name('blocks.store');
+        Route::get('/blocks/{block}/edit', [StaffTermController::class, 'editBlock'])->name('blocks.edit');
+        Route::put('/blocks/{block}', [StaffTermController::class, 'updateBlock'])->name('blocks.update');
+        Route::delete('/blocks/{block}', [StaffTermController::class, 'destroyBlock'])->name('blocks.destroy');
 
         Route::get('/majors', [StaffMajorController::class, 'index'])->name('majors.index');
 
@@ -134,8 +145,6 @@
 
         Route::get('/schedules', [StaffScheduleController::class, 'index'])->name('schedules.index');
         Route::get('/schedules/major/{majorId}', [StaffScheduleController::class, 'getMajorSchedules'])->name('schedules.major');
-
-
     });
 
     /*

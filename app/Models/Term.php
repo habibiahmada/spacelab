@@ -24,7 +24,7 @@ class Term extends Model
     {
         return $this->hasMany(Block::class, 'terms_id');
     }
-    
+
     public function timetableTemplates()
     {
         return $this->hasManyThrough(
