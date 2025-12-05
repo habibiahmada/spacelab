@@ -35,7 +35,9 @@ class ScheduleController extends Controller
             return view('student.schedules', [
                 'student' => $user,
                 'allSchedules' => collect(),
-                'studentClassFullName' => '-'
+                'studentClassFullName' => '-',
+                'title' => 'Jadwal',
+                'description' => 'Halaman jadwal',
             ]);
         }
 
@@ -162,6 +164,8 @@ class ScheduleController extends Controller
             'student'              => $student,
             'allSchedules'         => $allSchedules,
             'studentClassFullName' => $studentClassFullName,
+            'title' => 'Jadwal',
+            'description' => 'Halaman jadwal',
         ]);
     }
 }

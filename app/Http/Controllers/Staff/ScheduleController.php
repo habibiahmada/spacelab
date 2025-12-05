@@ -19,6 +19,8 @@ class ScheduleController extends Controller
 
         return view('staff.schedules.index', [
             'majors' => $majors,
+            'title' => 'Jadwal',
+            'description' => 'Halaman jadwal',
         ]);
     }
 

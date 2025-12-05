@@ -129,6 +129,15 @@ class ClassroomController extends Controller
             $currentEntry = $todayEntries->first(fn($e) => method_exists($e, 'isOngoing') ? $e->isOngoing($currentTime) : false);
         }
 
-        return view('student.classroom', compact('classroom', 'students', 'guardian', 'todayEntries', 'currentEntry', 'currentTime'));
+        return view('student.classroom', [
+            'classroom' => $classroom,
+            'students' => $students,
+            'guardian' => $guardian,
+            'todayEntries' => $todayEntries,
+            'currentEntry' => $currentEntry,
+            'currentTime' => $currentTime,
+            'title' => 'Kelas',
+            'description' => 'Halaman kelas',
+        ]);
     }
 }

@@ -14,7 +14,11 @@ class TermController extends Controller
     public function index()
     {
         $terms = Term::with('blocks')->orderBy('start_date', 'desc')->get();
-        return view('staff.term.index', compact('terms'));
+        return view('staff.term.index', [
+            'terms' => $terms,
+            'title' => 'Tahun Ajaran',
+            'description' => 'Halaman tahun ajaran',
+        ]);
     }
 
     public function store(Request $request)

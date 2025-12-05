@@ -10,6 +10,9 @@ class RoomHistoryController extends Controller
     //
     public function index()
     {
-        return view('staff.roomhistory.index');
+        return view('staff.roomhistory.index', [
+            'title' => 'Riwayat Ruangan',
+            'description' => 'Halaman riwayat ruangan',
+        ]);
     }
 }

@@ -150,6 +150,8 @@ class DashboardController extends Controller
             'currentTime'    => $currentTime,
             'currentDayIndex'=> $dayIndex,
             'studentClassFullName' => $studentClassFullName,
+            'title' => 'Dashboard',
+            'description' => 'Halaman dashboard',
         ]);
     }
 }

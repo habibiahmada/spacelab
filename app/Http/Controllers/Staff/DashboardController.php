@@ -127,6 +127,8 @@ class DashboardController extends Controller
             'activeTerm' => $activeTerm,
             'termLabel' => $termLabel,
             'termPeriod' => $termPeriod,
+            'title' => 'Dashboard',
+            'description' => 'Halaman dashboard',
         ]);
     }
 }

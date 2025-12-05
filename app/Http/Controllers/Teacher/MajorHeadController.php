@@ -87,8 +87,19 @@ class MajorHeadController extends Controller
             }
         }
 
-        return view('teacher.major.headofmajor', compact(
-            'major', 'assignment', 'classes', 'teachers', 'stats', 'activeTerm', 'companies', 'majorSubjects', 'teacherCount', 'subjectCount'
-        ));
+        return view('teacher.major.headofmajor', [
+            'major' => $major,
+            'assignment' => $assignment,
+            'classes' => $classes,
+            'teachers' => $teachers,
+            'stats' => $stats,
+            'activeTerm' => $activeTerm,
+            'companies' => $companies,
+            'majorSubjects' => $majorSubjects,
+            'teacherCount' => $teacherCount,
+            'subjectCount' => $subjectCount,
+            'title' => 'Kepala Jurusan',
+            'description' => 'Halaman kepala jurusan',
+        ]);
     }
 }

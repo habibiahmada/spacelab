@@ -39,6 +39,8 @@ class ProfileController extends Controller
             'teacher' => $teacher,
             'guardian' => $guardian,
             'term' => $activeTerm,
+            'title' => 'Profil',
+            'description' => 'Halaman profil',
         ]);
     }
 }

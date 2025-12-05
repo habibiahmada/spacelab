@@ -10,6 +10,9 @@ class ClassroomController extends Controller
     //
     public function index()
     {
-        return view('staff.classroom.index');
+        return view('staff.classroom.index', [
+            'title' => 'Kelas',
+            'description' => 'Halaman kelas',
+        ]);
     }
 }

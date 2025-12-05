@@ -10,6 +10,9 @@ class RoomController extends Controller
     //
     public function index()
     {
-        return view('staff.room.index');
+        return view('staff.room.index', [
+            'title' => 'Ruangan',
+            'description' => 'Halaman ruangan',
+        ]);
     }
 }

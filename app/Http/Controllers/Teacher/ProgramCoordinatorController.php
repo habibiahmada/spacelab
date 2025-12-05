@@ -90,8 +90,19 @@ class ProgramCoordinatorController extends Controller
 
         // Remove debug dump and render view normally
 
-        return view('teacher.major.programcoordinator', compact(
-            'major', 'assignment', 'classes', 'teachers', 'stats', 'activeTerm', 'companies', 'majorSubjects', 'teacherCount', 'subjectCount'
-        ));
+        return view('teacher.major.programcoordinator', [
+            'major' => $major,
+            'assignment' => $assignment,
+            'classes' => $classes,
+            'teachers' => $teachers,
+            'stats' => $stats,
+            'activeTerm' => $activeTerm,
+            'companies' => $companies,
+            'majorSubjects' => $majorSubjects,
+            'teacherCount' => $teacherCount,
+            'subjectCount' => $subjectCount,
+            'title' => 'Koordinator Program',
+            'description' => 'Halaman koordinator program',
+        ]);
     }
 }

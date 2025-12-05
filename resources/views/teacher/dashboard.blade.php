@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout :title="$title" :description="$description">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-black dark:text-white leading-tight">
             Dashboard Guru

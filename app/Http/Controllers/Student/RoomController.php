@@ -70,6 +70,17 @@ class RoomController extends Controller
             ->paginate(6)
             ->withQueryString();
 
-        return view('student.room', compact('rooms', 'todayEntries', 'todayRooms', 'q', 'filter', 'totalRooms', 'todayRoomsCount', 'todaySubjectsCount'));
+        return view('student.room', [
+            'rooms' => $rooms,
+            'todayEntries' => $todayEntries,
+            'todayRooms' => $todayRooms,
+            'q' => $q,
+            'filter' => $filter,
+            'totalRooms' => $totalRooms,
+            'todayRoomsCount' => $todayRoomsCount,
+            'todaySubjectsCount' => $todaySubjectsCount,
+            'title' => 'Ruangan',
+            'description' => 'Halaman ruangan',
+        ]);
     }
 }

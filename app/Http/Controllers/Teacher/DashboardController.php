@@ -28,6 +28,8 @@ class DashboardController extends Controller
                 'lessonsCount' => 0,
                 'roomsCount' => 0,
                 'uniqueSubjectsCount' => 0,
+                'title' => 'Dashboard Guru',
+                'description' => 'Halaman dashboard guru',
             ]);
         }
 
@@ -193,14 +195,16 @@ class DashboardController extends Controller
         $uniqueSubjectsCount = $schedulesTodayRaw->pluck('teacherSubject.subject.id')->filter()->unique()->count();
         $roomsCount = $schedulesTodayRaw->pluck('roomHistory.room.id')->filter()->unique()->count();
 
-        return view('teacher.dashboard', compact(
-            'teacher',
-            'schedulesToday',
-            'currentTime',
-            'currentDayIndex',
-            'lessonsCount',
-            'roomsCount',
-            'uniqueSubjectsCount'
-        ));
+        return view('teacher.dashboard', [
+            'teacher' => $teacher,
+            'schedulesToday' => $schedulesToday,
+            'currentTime' => $currentTime,
+            'currentDayIndex' => $currentDayIndex,
+            'lessonsCount' => $lessonsCount,
+            'roomsCount' => $roomsCount,
+            'uniqueSubjectsCount' => $uniqueSubjectsCount,
+            'title' => 'Dashboard Guru',
+            'description' => 'Halaman dashboard guru',
+        ]);
     }
 }
