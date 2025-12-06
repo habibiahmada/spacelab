@@ -129,6 +129,10 @@
                                                                 </p>
                                                             </div>
                                                             <div class="flex space-x-1">
+                                                                <a href="{{ route('staff.classrooms.json', $classroom->id) }}"
+                                                                    class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
+                                                                    <x-heroicon-o-eye class="w-4 h-4" />
+                                                                </a>
                                                                 <button onclick="editClassroom('{{ $classroom->id }}')"
                                                                     class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                                                                     <x-heroicon-o-pencil class="w-4 h-4" />
@@ -196,7 +200,8 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Level</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Level</label>
                             <x-select-input name="level" id="classroomLevel" required>
                                 <option value="">Pilih Level</option>
                                 <option value="10">10</option>
@@ -235,7 +240,7 @@
     <script>
         // Configure routes for JavaScript
         window.classroomRoutes = {
-            base: '/staff/classrooms',
+            base: '/staff/classroomsjson',
             store: '{{ route('staff.classrooms.store') }}'
         };
         window.csrfToken = '@csrf';

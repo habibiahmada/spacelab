@@ -46,12 +46,15 @@ Route::middleware(['auth', 'role:Staff'])
         Route::delete('/majors/{major}/company-relation/{companyRelation}', [StaffMajorController::class, 'destroyCompanyRelation'])->name('majors.company-relation.destroy');
         Route::put('/majors/{major}/role-assignment', [StaffMajorController::class, 'updateRoleAssignment'])->name('majors.role-assignment.update');
 
-        Route::get('/classes', [StaffClassController::class, 'index'])->name('classes.index');
         Route::get('/classrooms', [StaffClassController::class, 'index'])->name('classrooms.index');
+        Route::get('/classroomsjson/{id}', [StaffClassController::class, 'showJson'])->name('classrooms.json');
         Route::post('/classrooms', [StaffClassController::class, 'store'])->name('classrooms.store');
         Route::get('/classrooms/{id}', [StaffClassController::class, 'show'])->name('classrooms.show');
         Route::put('/classrooms/{id}', [StaffClassController::class, 'update'])->name('classrooms.update');
         Route::delete('/classrooms/{id}', [StaffClassController::class, 'destroy'])->name('classrooms.destroy');
+        Route::post('/classrooms/{id}/guardian', [StaffClassController::class, 'updateGuardian'])->name('classrooms.guardian.update');
+        Route::post('/classrooms/{id}/students', [StaffClassController::class, 'storeStudent'])->name('classrooms.students.store');
+        Route::delete('/classrooms/{id}/students/{studentId}', [StaffClassController::class, 'destroyStudent'])->name('classrooms.students.destroy');
 
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
         Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
