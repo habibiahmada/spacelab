@@ -21,7 +21,7 @@
 
 <a href="{{ route('staff.classes.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
-   {{ request()->routeIs('staff.classes.index') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
+   {{ request()->routeIs('staff.classes.*') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
     <x-heroicon-o-building-library class="w-5 h-5" />
     Kelas
 </a>

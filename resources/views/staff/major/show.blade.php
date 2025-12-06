@@ -109,7 +109,6 @@
     {{-- Statistik Ringkas --}}
     <div class="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-4">
 
-        <!-- Card 1: Pelajaran Hari Ini -->
         <article role="article" aria-label="Pelajaran Hari Ini"
             class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 p-4 md:p-5 hover:shadow-md transition-all duration-150">
             <div class="flex items-center justify-between gap-4">
@@ -117,7 +116,6 @@
                     <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-1">Total Kelas</p>
                     <h3 class="text-sm md:text-2xl font-extrabold text-gray-900 dark:text-white">
                         {{ $stats['class_count'] ?? 0 }}</h3>
-                    {{-- <p class="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 mt-2"></p> --}}
                 </div>
                 <div
                     class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex items-center justify-center border border-gray-100 dark:border-gray-700">
@@ -128,7 +126,6 @@
             </div>
         </article>
 
-        {{-- Card 2: Total Siswa di jurusan --}}
         <article role="article" aria-label="Pelajaran Hari Ini"
             class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 p-4 md:p-5 hover:shadow-md transition-all duration-150">
             <div class="flex items-center justify-between gap-4">
@@ -147,7 +144,6 @@
             </div>
         </article>
 
-        <!-- Card 3: Jumlah Ruangan -->
         <article role="article" aria-label="Jumlah Ruangan"
             class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 p-4 md:p-5 hover:shadow-md transition-all duration-150">
             <div class="flex items-center justify-between gap-4">
@@ -166,7 +162,6 @@
             </div>
         </article>
 
-        <!-- Card 5: Total Pelajaran Jurusan -->
         <article role="article" aria-label="Total Pelajaran Jurusan"
             class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 p-4 md:p-5 hover:shadow-md transition-all duration-150">
             <div class="flex items-center justify-between gap-4">
@@ -185,7 +180,6 @@
             </div>
         </article>
 
-        <!-- Card 6: Jumlah Guru Jurusan -->
         <article role="article" aria-label="Jumlah Guru Jurusan"
             class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 p-4 md:p-5 hover:shadow-md transition-all duration-150">
             <div class="flex items-center justify-between gap-4">

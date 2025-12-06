@@ -47,6 +47,12 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/majors/{major}/role-assignment', [StaffMajorController::class, 'updateRoleAssignment'])->name('majors.role-assignment.update');
 
         Route::get('/classes', [StaffClassController::class, 'index'])->name('classes.index');
+        Route::get('/classrooms', [StaffClassController::class, 'index'])->name('classrooms.index');
+        Route::post('/classrooms', [StaffClassController::class, 'store'])->name('classrooms.store');
+        Route::get('/classrooms/{id}', [StaffClassController::class, 'show'])->name('classrooms.show');
+        Route::put('/classrooms/{id}', [StaffClassController::class, 'update'])->name('classrooms.update');
+        Route::delete('/classrooms/{id}', [StaffClassController::class, 'destroy'])->name('classrooms.destroy');
+
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
         Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
         Route::get('/rooms', [StaffRoomController::class, 'index'])->name('rooms.index');
