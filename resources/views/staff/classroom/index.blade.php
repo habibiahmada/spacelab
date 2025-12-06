@@ -129,7 +129,7 @@
                                                                 </p>
                                                             </div>
                                                             <div class="flex space-x-1">
-                                                                <a href="{{ route('staff.classrooms.json', $classroom->id) }}"
+                                                                <a href="{{ route('staff.classrooms.show', $classroom->id) }}"
                                                                     class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                                                                     <x-heroicon-o-eye class="w-4 h-4" />
                                                                 </a>

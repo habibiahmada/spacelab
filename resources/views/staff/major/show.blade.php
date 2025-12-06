@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
     <div>
-        <a href="{{ route('staff.majors.index') }}"
+        <a href="{{ redirect()->back()->getTargetUrl() }}"
             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
                 bg-gradient-to-r from-gray-800 to-gray-700
                 dark:from-gray-700 dark:to-gray-600
@@ -228,7 +228,7 @@
                                                     {{ $class->students_count ?? 0 }}</div>
                                             </div>
                                             <div class="flex-shrink-0 text-xs text-gray-400">
-                                                <a href="#">Lihat Detail</a>
+                                                <a href="{{ route('staff.classrooms.show', $class->id) }}">Lihat Detail</a>
                                             </div>
                                         </li>
                                     @endforeach

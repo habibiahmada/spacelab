@@ -31,83 +31,7 @@ class StudentController extends Controller
         ]);
     }
 
-    public function fetchStudents(Request $request)
-    {
-        // Get active term
-        $activeTerm = Term::where('is_active', true)->first();
-        if (!$activeTerm) {
-            return response()->json([
-                'students' => [],
-                'total' => 0,
-                'showing' => 0
-            ]);
-        }
 
-        // Start building query
-        $query = ClassHistory::where('terms_id', $activeTerm->id)
-            ->with(['student.user', 'classroom.major']);
-
-        // Apply filters
-        if ($request->filled('major_id')) {
-            $query->whereHas('classroom', function ($q) use ($request) {
-                $q->where('major_id', $request->major_id);
-            });
-        }
-
-        if ($request->filled('class_id')) {
-            $query->where('class_id', $request->class_id);
-        }
-
-        if ($request->filled('search')) {
-            $search = strtolower($request->search);
-            $query->whereHas('student.user', function ($q) use ($search) {
-                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(email) LIKE ?', ["%{$search}%"]);
-            })->orWhereHas('student', function ($q) use ($search) {
-                $q->whereRaw('LOWER(nis) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(nisn) LIKE ?', ["%{$search}%"]);
-            });
-        }
-
-        // Get total count before pagination
-        $total = $query->count();
-
-        // Apply pagination
-        $perPage = 50;
-        $students = $query->orderBy('id')
-            ->paginate($perPage);
-
-        // Format data for response
-        $formattedStudents = $students->map(function ($classHistory) {
-            if (!$classHistory->student || !$classHistory->student->user) {
-                return null;
-            }
-
-            return [
-                'id' => $classHistory->student->id,
-                'name' => $classHistory->student->user->name,
-                'email' => $classHistory->student->user->email,
-                'avatar' => $classHistory->student->avatar,
-                'nis' => $classHistory->student->nis ?? '-',
-                'nisn' => $classHistory->student->nisn,
-                'major_name' => $classHistory->classroom->major->name ?? '-',
-                'major_code' => $classHistory->classroom->major->code ?? '-',
-                'major_id' => $classHistory->classroom->major->id ?? null,
-                'major_logo' => $classHistory->classroom->major->logo ?? null,
-                'class_name' => $classHistory->classroom->full_name ?? '-',
-                'class_id' => $classHistory->classroom->id ?? null,
-            ];
-        })->filter()->values();
-
-        return response()->json([
-            'students' => $formattedStudents,
-            'total' => $total,
-            'showing' => $formattedStudents->count(),
-            'current_page' => $students->currentPage(),
-            'last_page' => $students->lastPage(),
-            'per_page' => $perPage
-        ]);
-    }
 
     public function store(Request $request)
     {
@@ -162,96 +86,7 @@ class StudentController extends Controller
         }
     }
 
-    public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:csv,txt',
-        ]);
 
-        $file = $request->file('file');
-        $handle = fopen($file->getPathname(), 'r');
-        $header = fgetcsv($handle); // Skip header
-
-        // Expected header: name, email, nis, nisn, classroom_name (e.g. "10 IPA 1") or classroom_id?
-        // Let's use classroom name for better UX, or just exact match.
-
-        try {
-            DB::beginTransaction();
-            $activeTerm = Term::where('is_active', true)->firstOrFail();
-            $role = Role::where('name', 'Student')->firstOrFail();
-            $rowNumber = 1;
-
-            while (($row = fgetcsv($handle)) !== false) {
-                $rowNumber++;
-                if (count($row) < 5) continue; // Skip invalid rows
-
-                [$name, $email, $nis, $nisn, $classroomName] = $row;
-
-                // Simple validation check
-                if (User::where('email', $email)->exists() || Student::where('nisn', $nisn)->exists()) {
-                    continue; // Skip duplicates or handle error
-                }
-
-                // Find Class
-                // Try to find class by matching full name construction or just exact match if we had a name field.
-                // Since Classroom model appends 'full_name', we can't query it directly easily.
-                // For now, let's assume the CSV contains the numeric ID or we iterate to find.
-                // Better approach for CSV: Provide ID in template or precise match logic.
-                // Let's rely on finding a class where we join major.
-                // For simplicity in this first pass, let's look up all classes and match in PHP or require ID?
-                // User said "pastikan semuanya lengkap", let's try to match by name components if possible, or just require ID.
-                // Let's try to parse the name: "10 PPLG 1".
-                // Decompose: Level=10, Major=PPLG, Rombel=1.
-
-                $parts = explode(' ', $classroomName);
-                if (count($parts) >= 3) {
-                    $level = $parts[0];
-                    $majorCode = $parts[1];
-                    $rombel = $parts[2];
-
-                    $class = Classroom::where('level', $level)
-                        ->where('rombel', $rombel)
-                        ->whereHas('major', function ($q) use ($majorCode) {
-                            $q->where('code', $majorCode);
-                        })->first();
-                } else {
-                    $class = null;
-                }
-
-                if (!$class) {
-                    // Fallback or log error for this row
-                    continue;
-                }
-
-                $user = User::create([
-                    'name' => $name,
-                    'email' => $email,
-                    'password' => $nisn,
-                    'role_id' => $role->id,
-                ]);
-
-                $student = Student::create([
-                    'users_id' => $user->id,
-                    'nis' => $nis,
-                    'nisn' => $nisn,
-                ]);
-
-                ClassHistory::create([
-                    'student_id' => $student->id,
-                    'class_id' => $class->id,
-                    'terms_id' => $activeTerm->id,
-                ]);
-            }
-
-            DB::commit();
-            fclose($handle);
-            return redirect()->back()->with('success', 'Students imported successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            if (isset($handle)) fclose($handle);
-            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
-        }
-    }
 
     public function show($id)
     {
@@ -362,30 +197,5 @@ class StudentController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menghapus siswa: ' . $e->getMessage());
         }
-    }
-
-    public function downloadTemplate()
-    {
-        $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=students_template.csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
-
-        $columns = ['Name', 'Email', 'NIS', 'NISN', 'Classroom (e.g. 10 PPLG 1)'];
-
-        $callback = function () use ($columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-
-            // Add example row
-            fputcsv($file, ['John Doe', 'john@example.com', '12345', '0012345678', '10 PPLG 1']);
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
     }
 }

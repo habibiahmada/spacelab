@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="mb-6">
-        <a href="{{ route('staff.classrooms.index') }}"
+        <a href="{{ redirect()->back()->getTargetUrl() }}"
             class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
                 bg-gradient-to-r from-gray-800 to-gray-700">
             <x-heroicon-o-arrow-left class="w-5 h-5 text-gray-100" />
