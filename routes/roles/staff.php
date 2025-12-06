@@ -55,6 +55,13 @@ Route::middleware(['auth', 'role:Staff'])
 
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
         Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
+        Route::get('/students/fetch', [StaffStudentController::class, 'fetchStudents'])->name('students.fetch');
+        Route::get('/students/{id}', [StaffStudentController::class, 'show'])->name('students.show');
+        Route::post('/students', [StaffStudentController::class, 'store'])->name('students.store');
+        Route::put('/students/{id}', [StaffStudentController::class, 'update'])->name('students.update');
+        Route::delete('/students/{id}', [StaffStudentController::class, 'destroy'])->name('students.destroy');
+        Route::post('/students/import', [StaffStudentController::class, 'import'])->name('students.import');
+        Route::get('/students/template', [StaffStudentController::class, 'downloadTemplate'])->name('students.template');
         Route::get('/rooms', [StaffRoomController::class, 'index'])->name('rooms.index');
         Route::get('/rooms/history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
 
