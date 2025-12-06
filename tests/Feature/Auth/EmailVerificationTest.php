@@ -30,7 +30,7 @@ test('email can be verified', function () {
     expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
     $response->assertSessionHasNoErrors();
     $role = $user->role->lower_name;
-    $response->assertRedirect(route($role . '.dashboard', absolute: false).'?verified=1');
+    $response->assertRedirect(route($role . '.index', absolute: false).'?verified=1');
 });
 
 test('email is not verified with invalid hash', function () {

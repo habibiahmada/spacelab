@@ -14,8 +14,15 @@ return new class extends Migration
             $table->renameColumn('end_date', 'end_time');
         });
 
-        DB::statement("ALTER TABLE periods ALTER COLUMN start_time TYPE time USING start_time::time;");
-        DB::statement("ALTER TABLE periods ALTER COLUMN end_time TYPE time USING end_time::time;");
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE periods ALTER COLUMN start_time TYPE time USING start_time::time;");
+            DB::statement("ALTER TABLE periods ALTER COLUMN end_time TYPE time USING end_time::time;");
+        } else {
+            Schema::table('periods', function (Blueprint $table) {
+                $table->time('start_time')->change();
+                $table->time('end_time')->change();
+            });
+        }
     }
 
     public function down(): void
@@ -25,7 +32,14 @@ return new class extends Migration
             $table->renameColumn('end_time', 'end_date');
         });
 
-        DB::statement("ALTER TABLE periods ALTER COLUMN start_date TYPE timestamp USING start_date::timestamp;");
-        DB::statement("ALTER TABLE periods ALTER COLUMN end_date TYPE timestamp USING end_date::timestamp;");
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement("ALTER TABLE periods ALTER COLUMN start_date TYPE timestamp USING start_date::timestamp;");
+            DB::statement("ALTER TABLE periods ALTER COLUMN end_date TYPE timestamp USING end_date::timestamp;");
+        } else {
+            Schema::table('periods', function (Blueprint $table) {
+                $table->timestamp('start_date')->nullable()->change();
+                $table->timestamp('end_date')->nullable()->change();
+            });
+        }
     }
 };

@@ -30,6 +30,6 @@ class ConfirmablePasswordController extends Controller
 
         $role = FacadesAuth::user()->role->lower_name;
 
-        return redirect()->intended(route($role . '.dashboard'));
+        return redirect()->intended(route($role . '.index'));
     }
 }

@@ -37,7 +37,6 @@ class UserFactory extends Factory
                 if (! $role) {
                     $role = Role::create([
                         'name' => 'Siswa',
-                        'permissions' => json_encode(['view_schedule']),
                     ]);
                 }
 
@@ -51,9 +50,7 @@ class UserFactory extends Factory
         return $this->state(function () {
             $role = \App\Models\Role::firstOrCreate(
                 ['name' => 'Siswa'],
-                [
-                    'permissions' => json_encode(['view_schedule']),
-                ]
+                []
             );
 
             return ['role_id' => $role->id];
@@ -65,7 +62,7 @@ class UserFactory extends Factory
         return $this->state(function () {
             $role = \App\Models\Role::firstOrCreate(
                 ['name' => 'Guru'],
-                ['permissions' => json_encode(['view_schedule'])]
+                []
             );
 
             return ['role_id' => $role->id];
@@ -77,7 +74,7 @@ class UserFactory extends Factory
         return $this->state(function () {
             $role = \App\Models\Role::firstOrCreate(
                 ['name' => 'Admin'],
-                ['permissions' => json_encode(['manage_users', 'manage_schedule', 'view_reports'])]
+                []
             );
 
             return ['role_id' => $role->id];
@@ -89,7 +86,7 @@ class UserFactory extends Factory
         return $this->state(function () {
             $role = \App\Models\Role::firstOrCreate(
                 ['name' => 'Staff'],
-                ['permissions' => json_encode(['view_schedule', 'manage_class', 'view_reports'])]
+                []
             );
 
             return ['role_id' => $role->id];
@@ -101,7 +98,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

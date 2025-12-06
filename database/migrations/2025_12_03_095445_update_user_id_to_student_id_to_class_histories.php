@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('classhistories', function (Blueprint $table) {
-            // Rename user_id to student_id and change foreign key
-            $table->renameColumn('user_id', 'student_id');
+            // Drop foreign key first
             $table->dropForeign(['user_id']);
+            // Then rename
+            $table->renameColumn('user_id', 'student_id');
+            // Then add new foreign key
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
         });
     }

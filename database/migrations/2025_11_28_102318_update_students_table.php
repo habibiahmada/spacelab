@@ -27,6 +27,8 @@ return new class extends Migration
             }
 
             if (Schema::hasColumn('students', 'class_id')) {
+                // Drop FK explicitly
+                $table->dropForeign(['class_id']);
                 $table->dropColumn('class_id');
             }
             if (Schema::hasColumn('students', 'guardian_name')) {
@@ -67,5 +69,4 @@ return new class extends Migration
             }
         });
     }
-
 };

@@ -20,6 +20,6 @@ class VerifyEmailController extends Controller
 
         $role = $request->user()->role->lower_name;
 
-        return redirect()->intended(route($role . '.dashboard') . '?verified=1');
+        return redirect()->intended(route($role . '.index') . '?verified=1');
     }
 }

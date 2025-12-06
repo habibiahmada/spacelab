@@ -24,6 +24,9 @@ return new class extends Migration
 
             foreach (['staff_id', 'name', 'email', 'subjects', 'available_hours', 'image'] as $col) {
                 if (Schema::hasColumn('teachers', $col)) {
+                    if ($col === 'staff_id') {
+                        $table->dropUnique(['staff_id']);
+                    }
                     $table->dropColumn($col);
                 }
             }

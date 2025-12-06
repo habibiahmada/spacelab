@@ -23,8 +23,14 @@ return new class extends Migration {
             $table->uuid('term_id')->nullable()->after('major_id');
         });
 
-        // Karena PostgreSQL tidak mendukung change(), ubah tipe level manual
-        DB::statement('ALTER TABLE classes ALTER COLUMN level TYPE INTEGER USING level::integer;');
+        // Karena PostgreSQL kadang bermasalah dengan change(), kita bedakan penanganannya
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE classes ALTER COLUMN level TYPE INTEGER USING level::integer;');
+        } else {
+            Schema::table('classes', function (Blueprint $table) {
+                $table->integer('level')->change();
+            });
+        }
 
         // Tambahkan foreign key setelah kolom dibuat
         Schema::table('classes', function (Blueprint $table) {
@@ -55,6 +61,12 @@ return new class extends Migration {
         });
 
         // Ubah tipe level kembali ke string jika rollback
-        DB::statement('ALTER TABLE classes ALTER COLUMN level TYPE VARCHAR(16) USING level::varchar;');
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('ALTER TABLE classes ALTER COLUMN level TYPE VARCHAR(16) USING level::varchar;');
+        } else {
+            Schema::table('classes', function (Blueprint $table) {
+                $table->string('level', 16)->change();
+            });
+        }
     }
 };

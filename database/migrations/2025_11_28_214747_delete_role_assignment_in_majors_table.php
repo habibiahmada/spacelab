@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::table('majors', function (Blueprint $table) {
             //
-            $table->dropColumn('head_of_major_id');
-            $table->dropColumn('program_coordinator_id');
+            if (Schema::hasColumn('majors', 'head_of_major_id')) {
+                $table->dropForeign(['head_of_major_id']);
+                $table->dropColumn('head_of_major_id');
+            }
+            if (Schema::hasColumn('majors', 'program_coordinator_id')) {
+                $table->dropForeign(['program_coordinator_id']);
+                $table->dropColumn('program_coordinator_id');
+            }
         });
     }
 

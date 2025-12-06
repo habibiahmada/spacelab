@@ -14,9 +14,12 @@ return new class extends Migration
         //
         Schema::table('classes', function (Blueprint $table) {
             if (Schema::hasColumn('classes', 'homeroom_teacher_id')) {
+                // Drop FK explicitly to avoid sqlite errors during rebuild
+                $table->dropForeign(['homeroom_teacher_id']);
                 $table->dropColumn('homeroom_teacher_id');
             }
             if (Schema::hasColumn('classes', 'term_id')) {
+                $table->dropForeign(['term_id']);
                 $table->dropColumn('term_id');
             }
         });

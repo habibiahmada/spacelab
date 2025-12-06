@@ -76,7 +76,10 @@ jobs:
           DB_DATABASE: spacelab
           DB_USERNAME: root
           DB_PASSWORD: root
-        run: php artisan migrate --force
+        run: |
+          rm database/schema/pgsql-schema.sql
+          php artisan migrate --force
+          php artisan db:seed
 
       - name: Build Assets
         run: npm run build
