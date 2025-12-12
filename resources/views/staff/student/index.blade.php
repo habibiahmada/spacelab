@@ -202,7 +202,7 @@
                 </button>
             </div>
 
-            <form method="POST" action="{{ route('staff.students.store') }}" class="space-y-4">
+            <form method="POST" action="{{ route('staff.students.store') }}" enctype="multipart/form-data" class="space-y-4">
                 @csrf
 
                 <div>
@@ -245,6 +245,25 @@
                         @endforeach
                     </x-select-input>
                     <x-input-error class="mt-2" :messages="$errors->get('classroom_id')" />
+                </div>
+
+                <!-- Avatar -->
+                <div>
+                    <x-input-label for="addAvatar" value="Avatar" />
+                    <input type="file" name="avatar" id="addAvatar" accept="image/*"
+                        class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-md file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-gray-100 file:text-gray-700
+                            hover:file:bg-gray-200
+                            dark:file:bg-gray-700 dark:file:text-gray-300
+                            dark:hover:file:bg-gray-600">
+                    <div id="addAvatarPreview" class="mt-2 hidden">
+                        <img id="addAvatarPreviewImg" src="" alt="Preview"
+                            class="h-20 w-20 rounded object-cover">
+                    </div>
+                    <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
                 </div>
 
                 <div
@@ -345,7 +364,7 @@
                 </button>
             </div>
 
-            <form id="editStudentForm" method="POST" class="space-y-4">
+            <form id="editStudentForm" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 @method('PUT')
                 <input type="hidden" id="editStudentId" name="student_id">
@@ -370,6 +389,25 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">NISN</label>
                         <x-text-input id="editNisn" name="nisn" type="text" class="block w-full" required />
                     </div>
+                </div>
+
+                <!-- Avatar -->
+                <div>
+                    <x-input-label for="avatar" value="Avatar" />
+                    <input type="file" name="avatar" id="avatar" accept="image/*"
+                        class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-md file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-gray-100 file:text-gray-700
+                            hover:file:bg-gray-200
+                            dark:file:bg-gray-700 dark:file:text-gray-300
+                            dark:hover:file:bg-gray-600">
+                    <div id="avatarPreview" class="mt-2 hidden">
+                        <img id="avatarPreviewImg" src="" alt="Preview"
+                            class="h-20 w-20 rounded object-cover">
+                    </div>
+                    <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
                 </div>
 
                 <div>

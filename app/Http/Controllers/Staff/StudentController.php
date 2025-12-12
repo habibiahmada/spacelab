@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\Major;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -31,8 +32,6 @@ class StudentController extends Controller
         ]);
     }
 
-
-
     public function store(Request $request)
     {
         $request->validate([
@@ -41,6 +40,19 @@ class StudentController extends Controller
             'nis' => 'nullable|string|unique:students,nis',
             'nisn' => 'required|string|unique:students,nisn',
             'classroom_id' => 'required|exists:classes,id',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            'name.required' => 'Nama siswa wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'nisn.required' => 'NISN wajib diisi',
+            'nisn.unique' => 'NISN sudah digunakan',
+            'classroom_id.required' => 'Kelas wajib dipilih',
+            'classroom_id.exists' => 'Kelas yang dipilih tidak valid',
+            'avatar.image' => 'File harus berupa gambar',
+            'avatar.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau svg',
+            'avatar.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         try {
@@ -62,11 +74,16 @@ class StudentController extends Controller
             ]);
 
             // 3. Create Student
+            $avatar = null;
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar')->store('students/avatars', 'public');
+            }
+
             $student = Student::create([
                 'users_id' => $user->id,
                 'nis' => $request->nis,
                 'nisn' => $request->nisn,
-                'avatar' => null,
+                'avatar' => $avatar,
             ]);
 
             // 4. Assign to Class (ClassHistory)
@@ -132,6 +149,19 @@ class StudentController extends Controller
             'nis' => 'nullable|string|unique:students,nis,' . $id,
             'nisn' => 'required|string|unique:students,nisn,' . $id,
             'classroom_id' => 'required|exists:classes,id',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            'name.required' => 'Nama siswa wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.unique' => 'Email sudah digunakan',
+            'nisn.required' => 'NISN wajib diisi',
+            'nisn.unique' => 'NISN sudah digunakan',
+            'classroom_id.required' => 'Kelas wajib dipilih',
+            'classroom_id.exists' => 'Kelas yang dipilih tidak valid',
+            'avatar.image' => 'File harus berupa gambar',
+            'avatar.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau svg',
+            'avatar.max' => 'Ukuran gambar maksimal 2MB',
         ]);
 
         try {
@@ -146,10 +176,21 @@ class StudentController extends Controller
                 'email' => $request->email,
             ]);
 
+            // Handle avatar upload
+            $avatar = $student->avatar;
+            if ($request->hasFile('avatar')) {
+                // Delete old avatar if exists
+                if ($student->avatar && Storage::disk('public')->exists($student->avatar)) {
+                    Storage::disk('public')->delete($student->avatar);
+                }
+                $avatar = $request->file('avatar')->store('students/avatars', 'public');
+            }
+
             // Update student
             $student->update([
                 'nis' => $request->nis,
                 'nisn' => $request->nisn,
+                'avatar' => $avatar
             ]);
 
             // Update class history if classroom changed

@@ -20,7 +20,9 @@ use App\Http\Controllers\Staff\Classroom\GuardianController as StaffClassGuardia
 use App\Http\Controllers\Staff\Classroom\StudentController as StaffClassStudentController;
 use App\Http\Controllers\Staff\Student\FetchController as StaffStudentFetchController;
 use App\Http\Controllers\Staff\Student\ImportController as StaffStudentImportController;
+use App\Http\Controllers\Staff\Major\ImportController as StaffMajorImportController;
 use App\Http\Controllers\Staff\Student\TemplateController as StaffStudentTemplateController;
+use App\Http\Controllers\Staff\Major\TemplateController as StaffMajorTemplateController;
 
 Route::middleware(['auth', 'role:Staff'])
     ->prefix('staff')
@@ -43,6 +45,7 @@ Route::middleware(['auth', 'role:Staff'])
         Route::delete('/blocks/{block}', [StaffBlockController::class, 'destroy'])->name('blocks.destroy');
 
         Route::get('/majors', [StaffMajorController::class, 'index'])->name('majors.index');
+        Route::get('/majors/template', StaffMajorTemplateController::class)->name('majors.template');
         Route::get('/majors/create', [StaffMajorController::class, 'create'])->name('majors.create');
         Route::post('/majors', [StaffMajorController::class, 'store'])->name('majors.store');
         Route::get('/majors/{major}/edit', [StaffMajorController::class, 'edit'])->name('majors.edit');
@@ -54,6 +57,7 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/majors/{major}/company-relation/{companyRelation}', [StaffCompanyRelationController::class, 'update'])->name('majors.company-relation.update');
         Route::delete('/majors/{major}/company-relation/{companyRelation}', [StaffCompanyRelationController::class, 'destroy'])->name('majors.company-relation.destroy');
         Route::put('/majors/{major}/role-assignment', [StaffRoleAssignmentController::class, 'update'])->name('majors.role-assignment.update');
+        Route::post('/majors/import', StaffMajorImportController::class)->name('majors.import');
 
         Route::get('/classrooms', [StaffClassController::class, 'index'])->name('classrooms.index');
         Route::get('/classroomsjson/{id}', StaffClassJsonController::class)->name('classrooms.json');
@@ -67,13 +71,13 @@ Route::middleware(['auth', 'role:Staff'])
 
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
         Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
+        Route::get('/students/template', StaffStudentTemplateController::class)->name('students.template');
         Route::get('/students/fetch', StaffStudentFetchController::class)->name('students.fetch');
         Route::get('/students/{id}', [StaffStudentController::class, 'show'])->name('students.show');
         Route::post('/students', [StaffStudentController::class, 'store'])->name('students.store');
         Route::put('/students/{id}', [StaffStudentController::class, 'update'])->name('students.update');
         Route::delete('/students/{id}', [StaffStudentController::class, 'destroy'])->name('students.destroy');
         Route::post('/students/import', StaffStudentImportController::class)->name('students.import');
-        Route::get('/students/template', StaffStudentTemplateController::class)->name('students.template');
         Route::get('/rooms', [StaffRoomController::class, 'index'])->name('rooms.index');
         Route::get('/rooms/history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
 

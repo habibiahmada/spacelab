@@ -200,6 +200,7 @@ class MajorController extends Controller
      */
     public function update(Request $request, Major $major)
     {
+
         $validated = $request->validate([
             'code' => ['required', 'string', 'max:10', Rule::unique('majors', 'code')->ignore($major->id)],
             'name' => 'required|string|max:255',

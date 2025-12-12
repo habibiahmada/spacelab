@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         Lihat
                     </button>
                     <button onclick="editStudent('${student.id}')"
-                        class="inline-flex items-center px-3 py-1.5 bg-yellow-600 hover:bg-yellow-700 text-white text-xs font-medium rounded-md transition-colors">
+                        class="inline-flex items-center px-3 py-1.5 bg-yellow-600 hover:bg-yellow-700 dark:text-white text-xs font-medium rounded-md transition-colors">
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                         Edit
                     </button>
@@ -314,6 +314,17 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('editNisn').value = student.nisn;
             document.getElementById('editClassroom').value = student.classroom_id;
 
+            const avatarPreview = document.getElementById('avatarPreview');
+
+            if (student.avatar) {
+                if (avatarPreview) {
+                    avatarPreview.classList.remove('hidden');
+                    document.getElementById('avatarPreviewImg').src = `/storage/${student.avatar}`;
+                }
+            } else {
+                if (avatarPreview) avatarPreview.classList.add('hidden');
+            }
+
             // Set form action
             document.getElementById('editStudentForm').action = `/staff/students/${student.id}`;
 
@@ -332,5 +343,43 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('deleteStudentForm').action = `/staff/students/${studentId}`;
 
         window.dispatchEvent(new CustomEvent('open-modal', { detail: 'delete-student-modal' }));
+    }
+
+    // preview avatar
+    const avatarInput = document.getElementById('avatar');
+    if (avatarInput) {
+        avatarInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const avatarPreview = document.getElementById('avatarPreview');
+                        if (avatarPreview) {
+                            avatarPreview.classList.remove('hidden');
+                            document.getElementById('avatarPreviewImg').src = e.target.result;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+    }
+
+    // preview avatar for add student form
+    const addAvatarInput = document.getElementById('addAvatar');
+    if (addAvatarInput) {
+        addAvatarInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const avatarPreview = document.getElementById('addAvatarPreview');
+                    if (avatarPreview) {
+                        avatarPreview.classList.remove('hidden');
+                        document.getElementById('addAvatarPreviewImg').src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     }
 });

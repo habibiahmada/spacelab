@@ -13,7 +13,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
                 <!-- Total Siswa -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                             <x-heroicon-o-users class="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -26,7 +26,7 @@
                 </div>
 
                 <!-- Total Guru -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                             <x-heroicon-o-academic-cap class="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -39,7 +39,7 @@
                 </div>
 
                 <!-- Total Kelas -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
                             <x-heroicon-o-building-office class="w-6 h-6 text-purple-600 dark:text-purple-400" />
@@ -52,7 +52,7 @@
                 </div>
 
                 <!-- Total Ruangan -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:shadow-lg transition-all duration-200">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg">
                             <x-heroicon-o-home class="w-6 h-6 text-amber-600 dark:text-amber-400" />
@@ -70,7 +70,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
                 <!-- Jadwal Hari Ini -->
-                <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
                     <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
@@ -87,7 +87,7 @@
                     <div class="p-6">
                         <div class="space-y-4">
                             @forelse(($todayEntries ?? []) as $entry)
-                                <div class="flex items-start gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                <div class="flex items-start gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                                     <div class="flex-shrink-0 text-center">
                                         <div class="text-sm font-semibold text-gray-900 dark:text-white">{{ $entry['start'] ?? '-' }}</div>
                                         <div class="text-xs text-gray-500 dark:text-gray-400">{{ $entry['end'] ?? '' }}</div>
@@ -129,7 +129,7 @@
                 <div class="space-y-6">
 
                     <!-- Quick Actions -->
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Aksi Cepat</h3>
                         <div class="space-y-2">
                             <button class="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-left">
@@ -160,7 +160,7 @@
                     </div>
 
                     <!-- Activity Log -->
-                    <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                    <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Aktivitas Terbaru</h3>
                         <div class="space-y-4">
                             @forelse(($recentActivities ?? []) as $activity)
@@ -187,7 +187,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 <!-- Mata Pelajaran -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-lg">
                             <x-heroicon-o-book-open class="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
@@ -201,7 +201,7 @@
                 </div>
 
                 <!-- Semester Aktif -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                     <div class="flex items-center justify-between mb-4">
                         <div class="bg-cyan-50 dark:bg-cyan-900/20 p-3 rounded-lg">
                             <x-heroicon-o-calendar-days class="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
