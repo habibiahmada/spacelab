@@ -18,6 +18,8 @@ use App\Http\Controllers\Staff\Major\RoleAssignmentController as StaffRoleAssign
 use App\Http\Controllers\Staff\Classroom\JsonController as StaffClassJsonController;
 use App\Http\Controllers\Staff\Classroom\GuardianController as StaffClassGuardianController;
 use App\Http\Controllers\Staff\Classroom\StudentController as StaffClassStudentController;
+use App\Http\Controllers\Staff\Classroom\ImportController as StaffClassroomImportController;
+use App\Http\Controllers\Staff\Classroom\TemplateController as StaffClassroomTemplateController;
 use App\Http\Controllers\Staff\Student\FetchController as StaffStudentFetchController;
 use App\Http\Controllers\Staff\Student\ImportController as StaffStudentImportController;
 use App\Http\Controllers\Staff\Major\ImportController as StaffMajorImportController;
@@ -61,6 +63,8 @@ Route::middleware(['auth', 'role:Staff'])
 
         Route::get('/classrooms', [StaffClassController::class, 'index'])->name('classrooms.index');
         Route::get('/classroomsjson/{id}', StaffClassJsonController::class)->name('classrooms.json');
+        Route::get('/classrooms/template', StaffClassroomTemplateController::class)->name('classrooms.template');
+        Route::post('/classrooms/import', StaffClassroomImportController::class)->name('classrooms.import');
         Route::post('/classrooms', [StaffClassController::class, 'store'])->name('classrooms.store');
         Route::get('/classrooms/{id}', [StaffClassController::class, 'show'])->name('classrooms.show');
         Route::put('/classrooms/{id}', [StaffClassController::class, 'update'])->name('classrooms.update');

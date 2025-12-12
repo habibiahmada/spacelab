@@ -13,10 +13,12 @@
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Manajemen Kelas</h3>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Kelola kelas berdasarkan jurusan</p>
                 </div>
-                <x-secondary-button onclick="openClassroomModal()">
-                    <x-heroicon-o-plus class="w-5 h-5 mr-2" />
-                    Tambah Kelas
-                </x-secondary-button>
+                <div>
+                    <x-secondary-button onclick="openClassroomModal()">
+                        <x-heroicon-o-plus class="w-5 h-5 mr-2" />
+                        Tambah Kelas
+                    </x-secondary-button>
+                </div>
             </div>
 
             <!-- Success Message -->
@@ -65,7 +67,8 @@
                 <div class="p-6">
                     <div class="space-y-4">
                         @forelse($majors as $major)
-                            <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                            <div id="major-{{ $major->id }}"`
+                                class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                                 <!-- Major Header -->
                                 <div class="bg-gray-50 dark:bg-gray-900 px-6 py-4 flex items-center justify-between">
                                     <div class="flex items-center space-x-4">
@@ -104,11 +107,18 @@
                                     <div class="px-6 py-4 bg-white dark:bg-gray-800">
                                         <div class="flex justify-between items-center mb-4">
                                             <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300">Kelas</h5>
-                                            <button onclick="openClassroomModal('{{ $major->id }}')"
-                                                class="inline-flex items-center px-3 py-1.5 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                                                <x-heroicon-o-plus class="w-3 h-3 mr-1" />
-                                                Tambah Kelas
-                                            </button>
+                                            <div>
+                                                <x-secondary-button
+                                                    onclick="openClassroomModal('{{ $major->id }}')">
+                                                    <x-heroicon-o-plus class="w-5 h-5 mr-2" />
+                                                    Tambah Kelas
+                                                </x-secondary-button>
+                                                <x-secondary-button type="button"
+                                                    onclick="openImportClassroomModal('{{ $major->id }}')">
+                                                    <x-heroicon-o-arrow-up-tray class="w-5 h-5 mr-2" />
+                                                    Import CSV
+                                                </x-secondary-button>
+                                            </div>
                                         </div>
 
                                         @if ($major->classes->count() > 0)
@@ -237,13 +247,92 @@
         </form>
     </x-modal>
 
+    {{-- Import Modal --}}
+
+    <!-- Import Major Modal -->
+    <x-modal name="import-classroom-modal" focusable>
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    {{ __('Import Kelas via CSV') }}
+                </h2>
+                <button type="button" x-on:click="$dispatch('close')"
+                    class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <x-heroicon-o-x-mark class="w-6 h-6" />
+                </button>
+            </div>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Pastikan CSV mengikuti struktur template. Duplikat kelas atau kode jurusan akan dilewati.
+            </p>
+
+            <div class="mb-4">
+                <a href="{{ route('staff.classrooms.template') }}" target="_blank" id="importTemplateLink"
+                    class="inline-flex items-center px-3 py-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <x-heroicon-o-arrow-down-tray class="w-4 h-4 mr-2" />
+                    Download Template
+                </a>
+            </div>
+
+            <form method="POST" action="{{ route('staff.classrooms.import') }}" enctype="multipart/form-data"
+                class="space-y-4">
+                @csrf
+
+                <div>
+                    <input type="hidden" name="major_id" id="importClassroomMajorId">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">File CSV</label>
+                    <input type="file" name="file" accept=".csv, .txt" required
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                    <x-input-error class="mt-2" :messages="$errors->get('file')" />
+                </div>
+
+                <div
+                    class="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 -mx-6 -mb-6 mt-6">
+                    <button type="submit"
+                        class="inline-flex w-full justify-center rounded-md bg-gray-800 dark:bg-gray-200 px-4 py-2 text-sm font-semibold text-white dark:text-gray-800 shadow-sm hover:bg-gray-700 dark:hover:bg-gray-300 sm:ml-3 sm:w-auto">
+                        Import
+                    </button>
+                    <button type="button" x-on:click="$dispatch('close')"
+                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </x-modal>
+
     <script>
         // Configure routes for JavaScript
         window.classroomRoutes = {
             base: '/staff/classroomsjson',
-            store: '{{ route('staff.classrooms.store') }}'
+            store: '{{ route('staff.classrooms.store') }}',
+            delete: '/staff/classrooms'
         };
         window.csrfToken = '@csrf';
     </script>
     <script src="{{ asset('js/classroom-management.js') }}"></script>
+    <script>
+        // Inline function to guarantee availability
+        window.openImportClassroomModal = function(majorId = null) {
+            try {
+                if (majorId) {
+                    const input = document.getElementById('importClassroomMajorId');
+                    if (input) input.value = majorId;
+
+                    const templateLink = document.getElementById('importTemplateLink');
+                    if (templateLink) {
+                        const url = new URL(templateLink.href);
+                        url.searchParams.set('major_id', majorId);
+                        templateLink.href = url.toString();
+                    }
+                }
+            } catch (e) {
+                console.error('Error in openImportClassroomModal:', e);
+            }
+
+            window.dispatchEvent(new CustomEvent('open-modal', {
+                detail: 'import-classroom-modal'
+            }));
+        }
+    </script>
 </x-app-layout>

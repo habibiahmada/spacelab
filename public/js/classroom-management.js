@@ -97,7 +97,7 @@ function deleteClassroom(id) {
     if (confirm('Apakah Anda yakin ingin menghapus kelas ini?')) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `${window.classroomRoutes.base}/${id}`;
+        form.action = `${window.classroomRoutes.delete}/${id}`;
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
         if (csrfToken) {

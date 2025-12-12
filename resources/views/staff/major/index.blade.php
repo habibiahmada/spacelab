@@ -21,8 +21,8 @@
                     <x-secondary-button x-data=""
                     x-on:click.prevent="$dispatch('open-modal', 'import-major-modal')">
                     <x-heroicon-o-arrow-up-tray class="w-5 h-5 mr-2" />
-                    Import CSV
-                </x-secondary-button>
+                        Import CSV
+                    </x-secondary-button>
                 </div>
             </div>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
