@@ -25,6 +25,8 @@ use App\Http\Controllers\Staff\Student\ImportController as StaffStudentImportCon
 use App\Http\Controllers\Staff\Major\ImportController as StaffMajorImportController;
 use App\Http\Controllers\Staff\Student\TemplateController as StaffStudentTemplateController;
 use App\Http\Controllers\Staff\Major\TemplateController as StaffMajorTemplateController;
+use App\Http\Controllers\Staff\Teacher\ImportController as StaffTeacherImportController;
+use App\Http\Controllers\Staff\Teacher\TemplateController as StaffTeacherTemplateController;
 
 Route::middleware(['auth', 'role:Staff'])
     ->prefix('staff')
@@ -74,6 +76,8 @@ Route::middleware(['auth', 'role:Staff'])
         Route::delete('/classrooms/{id}/students/{studentId}', [StaffClassStudentController::class, 'destroy'])->name('classrooms.students.destroy');
 
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
+        Route::get('/teachers/template', StaffTeacherTemplateController::class)->name('teachers.template');
+        Route::post('/teachers/import', StaffTeacherImportController::class)->name('teachers.import');
         Route::post('/teachers', [StaffTeacherController::class, 'store'])->name('teachers.store');
         Route::get('/teachers/{id}', [StaffTeacherController::class, 'show'])->name('teachers.show');
         Route::put('/teachers/{id}', [StaffTeacherController::class, 'update'])->name('teachers.update');
