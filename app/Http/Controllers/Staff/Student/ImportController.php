@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Staff\Student;
 
 use App\Http\Controllers\Controller;
+use App\Models\Block;
 use App\Models\ClassHistory;
 use App\Models\Classroom;
 use App\Models\Role;
@@ -25,49 +26,95 @@ class ImportController extends Controller
 
         $file = $request->file('file');
         $handle = fopen($file->getPathname(), 'r');
-        $header = fgetcsv($handle); // Skip header
+
+        // Detect delimiter
+        $firstLine = fgets($handle);
+        rewind($handle);
+        $delimiter = substr_count($firstLine, ';') > substr_count($firstLine, ',') ? ';' : ',';
+
+        // Skip header
+        fgetcsv($handle, 0, $delimiter);
+
+        DB::beginTransaction();
 
         try {
-            DB::beginTransaction();
             $activeTerm = Term::where('is_active', true)->firstOrFail();
-            $role = Role::where('name', 'Student')->firstOrFail();
-            $rowNumber = 1;
+            $role = Role::where('name', 'Siswa')->firstOrFail();
 
-            while (($row = fgetcsv($handle)) !== false) {
-                $rowNumber++;
-                if (count($row) < 5) continue; // Skip invalid rows
+            // Find the current active block based on today's date
+            $today = now()->toDateString();
+            $activeBlock = Block::where('terms_id', $activeTerm->id)
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->first();
 
-                [$name, $email, $nis, $nisn, $classroomName] = $row;
+            // If no active block found, get the first block of the term
+            if (!$activeBlock) {
+                $activeBlock = Block::where('terms_id', $activeTerm->id)
+                    ->orderBy('start_date')
+                    ->first();
+            }
 
-                // Simple validation check
-                if (User::where('email', $email)->exists() || Student::where('nisn', $nisn)->exists()) {
-                    continue; // Skip duplicates or handle error
+            if (!$activeBlock) {
+                throw new \Exception('Tidak ada blok yang tersedia untuk term aktif. Silakan buat blok terlebih dahulu.');
+            }
+
+            $imported = 0;
+            $skipped = 0;
+
+            while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
+
+                if (count($row) < 6) {
+                    $skipped++;
+                    continue;
                 }
 
-                // Find Class
-                $parts = explode(' ', $classroomName);
-                if (count($parts) >= 3) {
-                    $level = $parts[0];
-                    $majorCode = $parts[1];
-                    $rombel = $parts[2];
+                [
+                    $name,
+                    $email,
+                    $password,
+                    $nis,
+                    $nisn,
+                    $classroomName
+                ] = array_map('trim', $row);
 
-                    $class = Classroom::where('level', $level)
-                        ->where('rombel', $rombel)
-                        ->whereHas('major', function ($q) use ($majorCode) {
-                            $q->where('code', $majorCode);
-                        })->first();
-                } else {
-                    $class = null;
+                // Clean weird triple quotes
+                $classroomName = trim($classroomName);
+                $classroomName = preg_replace('/^"+|"+$/', '', $classroomName);
+
+                // Skip duplicate
+                if (
+                    User::where('email', $email)->exists() ||
+                    Student::where('nisn', $nisn)->exists()
+                ) {
+                    $skipped++;
+                    continue;
                 }
+
+                // Parse classroom: "10 RPL 1"
+                $parts = preg_split('/\s+/', $classroomName);
+
+                if (count($parts) < 3) {
+                    $skipped++;
+                    continue;
+                }
+
+                [$level, $majorCode, $rombel] = $parts;
+
+                $class = Classroom::where('level', $level)
+                    ->where('rombel', $rombel)
+                    ->whereHas('major', fn ($q) => $q->where('code', $majorCode))
+                    ->first();
 
                 if (!$class) {
+                    $skipped++;
                     continue;
                 }
 
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
-                    'password' => $nisn,
+                    'password_hash' => bcrypt($password),
                     'role_id' => $role->id,
                 ]);
 
@@ -81,16 +128,26 @@ class ImportController extends Controller
                     'student_id' => $student->id,
                     'class_id' => $class->id,
                     'terms_id' => $activeTerm->id,
+                    'block_id' => $activeBlock->id,
                 ]);
+
+                $imported++;
             }
 
             DB::commit();
             fclose($handle);
-            return redirect()->back()->with('success', 'Students imported successfully.');
-        } catch (\Exception $e) {
+
+            return back()->with(
+                'success',
+                "Import selesai. Berhasil: {$imported}, Dilewati: {$skipped}"
+            );
+
+        } catch (\Throwable $e) {
             DB::rollBack();
-            if (isset($handle)) fclose($handle);
-            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+            fclose($handle);
+
+            return back()->with('error', 'Import gagal: ' . $e->getMessage());
         }
     }
+
 }

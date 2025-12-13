@@ -19,14 +19,14 @@ class TemplateController extends Controller
             "Expires"             => "0"
         ];
 
-        $columns = ['Name', 'Email', 'NIS', 'NISN', 'Classroom (e.g. 10 PPLG 1)'];
+        $columns = ['Name', 'Email', 'Password', 'NIS', 'NISN', 'Classroom (e.g. 10 PPLG 1)'];
 
         $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             // Add example row
-            fputcsv($file, ['John Doe', 'john@example.com', '12345', '0012345678', '10 PPLG 1']);
+            fputcsv($file, ['John Doe', 'john@example.com', '1234567890', '2324567890', '0012345678', '10 PPLG 1']);
 
             fclose($file);
         };

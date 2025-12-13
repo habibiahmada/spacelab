@@ -45,6 +45,33 @@ document.addEventListener('DOMContentLoaded', function () {
         fetchStudents();
     });
 
+    // Handle import modal major-classroom dependency
+    const importMajorSelect = document.getElementById('importMajorSelect');
+    const importClassroomSelect = document.getElementById('importClassroomSelect');
+
+    if (importMajorSelect && importClassroomSelect) {
+        importMajorSelect.addEventListener('change', function () {
+            const selectedMajor = this.value;
+
+            // Reset classroom select
+            importClassroomSelect.innerHTML = '<option value="">Pilih Kelas</option>';
+
+            if (selectedMajor && classroomsByMajor[selectedMajor]) {
+                // Enable classroom select and populate options
+                importClassroomSelect.disabled = false;
+                classroomsByMajor[selectedMajor].forEach(classroom => {
+                    const option = document.createElement('option');
+                    option.value = classroom.id;
+                    option.textContent = classroom.name;
+                    importClassroomSelect.appendChild(option);
+                });
+            } else {
+                // Disable classroom select if no major selected
+                importClassroomSelect.disabled = true;
+            }
+        });
+    }
+
     // Fetch students from API
     async function fetchStudents() {
         const searchTerm = searchInput.value.trim();
@@ -349,19 +376,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const avatarInput = document.getElementById('avatar');
     if (avatarInput) {
         avatarInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const avatarPreview = document.getElementById('avatarPreview');
-                        if (avatarPreview) {
-                            avatarPreview.classList.remove('hidden');
-                            document.getElementById('avatarPreviewImg').src = e.target.result;
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const avatarPreview = document.getElementById('avatarPreview');
+                    if (avatarPreview) {
+                        avatarPreview.classList.remove('hidden');
+                        document.getElementById('avatarPreviewImg').src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     }
 
     // preview avatar for add student form

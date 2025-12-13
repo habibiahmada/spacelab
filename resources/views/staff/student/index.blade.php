@@ -85,14 +85,14 @@
                         <div class="flex gap-2">
                             <select id="majorFilter"
                                 class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-gray-500 dark:focus:border-gray-400 focus:ring-gray-500 dark:focus:ring-gray-400 text-sm">
-                                <option value="">Semua Jurusan</option>
+                                <option value="">Pilih Jurusan</option>
                                 @foreach ($majors as $major)
                                     <option value="{{ $major->id }}">{{ $major->code }}</option>
                                 @endforeach
                             </select>
                             <select id="classFilter"
                                 class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-gray-500 dark:focus:border-gray-400 focus:ring-gray-500 dark:focus:ring-gray-400 text-sm">
-                                <option value="">Semua Kelas</option>
+                                <option value="">Pilih Kelas</option>
                             </select>
                         </div>
                     </div>
@@ -202,7 +202,8 @@
                 </button>
             </div>
 
-            <form method="POST" action="{{ route('staff.students.store') }}" enctype="multipart/form-data" class="space-y-4">
+            <form method="POST" action="{{ route('staff.students.store') }}" enctype="multipart/form-data"
+                class="space-y-4">
                 @csrf
 
                 <div>
@@ -309,6 +310,30 @@
             <form method="POST" action="{{ route('staff.students.import') }}" enctype="multipart/form-data"
                 class="space-y-4">
                 @csrf
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jurusan</label>
+                    <select id="importMajorSelect" name="major_id" required
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                        <option value="">Pilih Jurusan</option>
+                        @foreach ($majors as $major)
+                            <option value="{{ $major->id }}"
+                                {{ old('major_id') == $major->id ? 'selected' : '' }}>
+                                {{ $major->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <x-input-error class="mt-2" :messages="$errors->get('major_id')" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kelas</label>
+                    <select id="importClassroomSelect" name="classroom_id" required disabled
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <option value="">Pilih Kelas</option>
+                    </select>
+                    <x-input-error class="mt-2" :messages="$errors->get('classroom_id')" />
+                </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">File CSV</label>
