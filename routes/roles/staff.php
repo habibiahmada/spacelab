@@ -10,6 +10,7 @@ use App\Http\Controllers\Staff\{
     TeacherController as StaffTeacherController,
     StudentController as StaffStudentController,
     RoomController as StaffRoomController,
+    BuildingController as StaffBuildingController,
     RoomHistoryController as StaffRoomHistoryController
 };
 use App\Http\Controllers\Staff\Term\BlockController as StaffBlockController;
@@ -91,9 +92,22 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/students/{id}', [StaffStudentController::class, 'update'])->name('students.update');
         Route::delete('/students/{id}', [StaffStudentController::class, 'destroy'])->name('students.destroy');
         Route::post('/students/import', StaffStudentImportController::class)->name('students.import');
+
+        // Buildings
+        Route::post('/buildings', [StaffBuildingController::class, 'store'])->name('buildings.store');
+        Route::get('/buildings/{building}', [StaffBuildingController::class, 'show'])->name('buildings.show');
+        Route::put('/buildings/{building}', [StaffBuildingController::class, 'update'])->name('buildings.update');
+        Route::delete('/buildings/{building}', [StaffBuildingController::class, 'destroy'])->name('buildings.destroy');
+
+        // Rooms
         Route::get('/rooms', [StaffRoomController::class, 'index'])->name('rooms.index');
+        Route::post('/rooms', [StaffRoomController::class, 'store'])->name('rooms.store');
+        Route::get('/rooms/{room}', [StaffRoomController::class, 'show'])->name('rooms.show');
+        Route::put('/rooms/{room}', [StaffRoomController::class, 'update'])->name('rooms.update');
+        Route::delete('/rooms/{room}', [StaffRoomController::class, 'destroy'])->name('rooms.destroy');
         Route::get('/rooms/history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
 
         Route::get('/schedules', [StaffScheduleController::class, 'index'])->name('schedules.index');
         Route::get('/schedules/major/{majorId}', [StaffScheduleController::class, 'getMajorSchedules'])->name('schedules.major');
     });
+
