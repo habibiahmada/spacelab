@@ -74,6 +74,11 @@ Route::middleware(['auth', 'role:Staff'])
         Route::delete('/classrooms/{id}/students/{studentId}', [StaffClassStudentController::class, 'destroy'])->name('classrooms.students.destroy');
 
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
+        Route::post('/teachers', [StaffTeacherController::class, 'store'])->name('teachers.store');
+        Route::get('/teachers/{id}', [StaffTeacherController::class, 'show'])->name('teachers.show');
+        Route::put('/teachers/{id}', [StaffTeacherController::class, 'update'])->name('teachers.update');
+        Route::delete('/teachers/{id}', [StaffTeacherController::class, 'destroy'])->name('teachers.destroy');
+
         Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
         Route::get('/students/template', StaffStudentTemplateController::class)->name('students.template');
         Route::get('/students/fetch', StaffStudentFetchController::class)->name('students.fetch');
