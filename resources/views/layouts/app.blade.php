@@ -34,7 +34,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-x-0"
         x-transition:leave-end="opacity-0 -translate-x-full"
-        class="fixed lg:static inset-y-0 left-0 w-64 border-e border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 flex flex-col z-30 transition-all duration-200"
+        class="fixed lg:static inset-y-0 left-0 w-64 border-e border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900 flex flex-col z-50 transition-all duration-200"
     >
         <!-- Sidebar scroll area -->
         <div class="flex-1 overflow-y-auto">
@@ -58,13 +58,29 @@
         <!-- User dropdown -->
         <div class="border-t border-slate-200 dark:border-slate-700 p-4 transition-all duration-200">
             <div class="flex items-center gap-3">
-                <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg">
-                    <img
-                        src="{{ auth()->user()->student->avatar ?? auth()->user()->teacher->avatar ?? asset('assets/images/avatar/default-profile.png') }}"
-                        alt="{{ auth()->user()->name }}"
-                        class="h-full w-full object-cover"
-                    />
-                </div>
+                    @php
+                        $user = auth()->user();
+
+                        $avatar = null;
+
+                        if ($user->role->lower_name === 'student') {
+                            $avatar = optional($user->student)->avatar;
+                        } elseif ($user->role->lower_name === 'teacher') {
+                            $avatar = optional($user->teacher)->avatar;
+                        }
+
+                        $avatarUrl = $avatar
+                            ? Storage::url($avatar)
+                            : asset('assets/images/avatar/default-profile.png');
+                    @endphp
+
+                    <div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-lg">
+                        <img
+                            src="{{ $avatarUrl }}"
+                            alt="{{ $user->name }}"
+                            class="h-full w-full object-cover"
+                        />
+                    </div>
 
                 <div class="flex-1">
                     <div class="text-sm font-semibold">{{ auth()->user()->name }}</div>

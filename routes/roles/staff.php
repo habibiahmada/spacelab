@@ -100,12 +100,15 @@ Route::middleware(['auth', 'role:Staff'])
         Route::delete('/buildings/{building}', [StaffBuildingController::class, 'destroy'])->name('buildings.destroy');
 
         // Rooms
+        Route::get('/room-history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
+        Route::post('/room-history', [StaffRoomHistoryController::class, 'store'])->name('rooms.history.store');
+        Route::put('/room-history/{id}', [StaffRoomHistoryController::class, 'update'])->name('rooms.history.update');
+        Route::delete('/room-history/{id}', [StaffRoomHistoryController::class, 'destroy'])->name('rooms.history.destroy');
         Route::get('/rooms', [StaffRoomController::class, 'index'])->name('rooms.index');
         Route::post('/rooms', [StaffRoomController::class, 'store'])->name('rooms.store');
         Route::get('/rooms/{room}', [StaffRoomController::class, 'show'])->name('rooms.show');
         Route::put('/rooms/{room}', [StaffRoomController::class, 'update'])->name('rooms.update');
         Route::delete('/rooms/{room}', [StaffRoomController::class, 'destroy'])->name('rooms.destroy');
-        Route::get('/rooms/history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
 
         Route::get('/schedules', [StaffScheduleController::class, 'index'])->name('schedules.index');
         Route::get('/schedules/major/{majorId}', [StaffScheduleController::class, 'getMajorSchedules'])->name('schedules.major');

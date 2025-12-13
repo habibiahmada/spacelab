@@ -57,7 +57,7 @@
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex-shrink-0 flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
-                            <img src="{{ $student->student->avatar ?? asset('images/default-student.png') }}"
+                            <img src="{{ Storage::url($student->student->avatar) ?? asset('images/default-student.png') }}"
                                 alt="Avatar Siswa"
                                 class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 shadow
                                         border-gray-200 dark:border-gray-700">
@@ -223,7 +223,7 @@
                                                         @if($isTeaching)
                                                             {{-- Teacher --}}
                                                             <div class="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-lg p-3 shadow border border-gray-100 dark:border-gray-800">
-                                                                <img src="{{ $schedule->teacher->avatar ?? asset('images/default-teacher.png') }}"
+                                                                <img src="{{ Storage::url($schedule->teacher->avatar) ?? asset('images/default-teacher.png') }}"
                                                                     alt="Guru"
                                                                     class="w-11 h-11 rounded-full object-cover border-2 shadow
                                                                     {{ $isOngoing ? 'border-blue-300 ring-2 ring-blue-100 dark:ring-blue-400' : 'border-gray-200 dark:border-gray-700' }}">

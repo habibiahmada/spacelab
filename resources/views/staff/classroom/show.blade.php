@@ -94,7 +94,7 @@
                         <div
                             class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 sm:p-6 bg-gray-50 dark:bg-gray-900/30 rounded-lg">
                             @if ($guardian->teacher->avatar)
-                                <img src="{{ $guardian->teacher->avatar }}" alt="{{ $guardian->teacher->user->name }}"
+                                <img src="{{ Storage::url($guardian->teacher->avatar) }}" alt="{{ $guardian->teacher->user->name }}"
                                     class="h-14 w-14 sm:h-16 sm:w-16 object-cover rounded-lg flex-shrink-0">
                             @else
                                 <div
@@ -150,7 +150,7 @@
                                                 {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</div>
                                             @if ($student->avatar)
                                                 <img class="h-12 w-12 object-cover rounded-lg flex-shrink-0"
-                                                    src="{{ $student->avatar }}" alt="">
+                                                    src="{{ Storage::url($student->avatar) }}" alt="">
                                             @else
                                                 <div
                                                     class="h-12 w-12 bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 text-sm font-medium rounded-lg flex-shrink-0">
@@ -196,7 +196,7 @@
                                         <div class="flex items-center gap-4 flex-1 min-w-0">
                                             @if ($student->avatar)
                                                 <img class="h-12 w-12 object-cover rounded-lg flex-shrink-0"
-                                                    src="{{ $student->avatar }}" alt="">
+                                                    src="{{ Storage::url($student->avatar) }}" alt="">
                                             @else
                                                 <div
                                                     class="h-12 w-12 bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-400 text-sm font-medium rounded-lg flex-shrink-0">

@@ -17,7 +17,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Rekayasa Perangkat Lunak',
                 'description' => 'Fokus pada pengembangan perangkat lunak berbasis desktop, web, dan mobile.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=RPL',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -25,7 +25,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Teknik Komputer dan Jaringan',
                 'description' => 'Mempelajari instalasi, konfigurasi, dan administrasi jaringan komputer.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=TKJ',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -33,7 +33,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Desain Komunikasi Visual',
                 'description' => 'Fokus pada desain grafis, multimedia, dan komunikasi visual kreatif.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=DKV',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -41,7 +41,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Teknik dan Bisnis Sepeda Motor',
                 'description' => 'Menyiapkan peserta didik untuk menguasai perawatan dan servis sepeda motor.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=TSM',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -49,7 +49,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Teknik Kendaraan Ringan Otomotif',
                 'description' => 'Mempelajari sistem mesin, chasis, dan kelistrikan kendaraan roda empat.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=TKR',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -57,7 +57,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Akuntansi dan Keuangan Lembaga',
                 'description' => 'Fokus pada pencatatan, analisis, dan pelaporan keuangan.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=AKL',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -65,7 +65,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Otomatisasi dan Tata Kelola Perkantoran',
                 'description' => 'Mengajarkan administrasi, manajemen, dan pelayanan perkantoran modern.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=OTKP',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -73,7 +73,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Bisnis Daring dan Pemasaran',
                 'description' => 'Fokus pada strategi pemasaran digital dan e-commerce.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=BDP',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -81,7 +81,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Teknik Pemesinan',
                 'description' => 'Mempelajari teknik produksi dan pengoperasian mesin industri.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=TPM',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
             [
@@ -89,7 +89,7 @@ class MajorSeeder extends Seeder
                 'name' => 'Teknik Instalasi Tenaga Listrik',
                 'description' => 'Fokus pada instalasi listrik rumah tangga dan industri.',
                 'logo' => 'https://api.dicebear.com/7.x/notionists/svg?seed=TITL',
-                'website' => 'https://https://smkn1karawang.sch.id/majors/4/3',
+                'website' => 'https://smkn1karawang.sch.id/majors/4/3',
                 'slogan' => 'Be Adaptive Creative and Innovative',
             ],
         ];

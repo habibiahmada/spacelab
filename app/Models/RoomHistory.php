@@ -18,7 +18,7 @@ class RoomHistory extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'room_id', 'event_type', 'classes_id', 'terms_id', 'teacher_id', 'user_id'
+        'room_id', 'event_type', 'classes_id', 'terms_id', 'teacher_id', 'user_id', 'start_time', 'end_time'
     ];
 
     public function room(): BelongsTo

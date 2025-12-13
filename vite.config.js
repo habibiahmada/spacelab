@@ -9,6 +9,8 @@ export default defineConfig({
                 'resources/js/app.js',
 
                 'resources/js/staff/student-index.js',
+                'resources/js/staff/teacher-index.js',
+                'resources/js/staff/room-index.js',
                 'resources/css/home-animations.css',
                 'resources/js/home-interactions.js',
             ],
