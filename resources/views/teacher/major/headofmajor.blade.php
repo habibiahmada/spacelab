@@ -8,17 +8,17 @@
         <div>
             <!-- Header Card with Avatar -->
             <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-md transition-all duration-150 mb-6">
-                <div class="relative h-40 overflow-hidden rounded-xl 
-                    bg-gradient-to-r from-gray-50 to-gray-100 
+                <div class="relative h-40 overflow-hidden rounded-xl
+                    bg-gradient-to-r from-gray-50 to-gray-100
                     dark:from-gray-700 dark:to-gray-800
                     shadow-sm">
 
-                    <div class="absolute -bottom-10 -right-10 w-44 h-44 
-                        bg-gray-200/60 dark:bg-gray-600/40 
+                    <div class="absolute -bottom-10 -right-10 w-44 h-44
+                        bg-gray-200/60 dark:bg-gray-600/40
                         blur-3xl rounded-full"></div>
 
                     <!-- Subtle bottom border glow -->
-                    <div class="absolute bottom-0 left-0 right-0 h-px 
+                    <div class="absolute bottom-0 left-0 right-0 h-px
                         bg-gradient-to-r from-transparent via-gray-300 to-transparent
                         dark:via-gray-600"></div>
                 </div>
@@ -26,8 +26,8 @@
                     <div class="flex flex-col sm:flex-row items-center sm:items-end -mt-16 sm:-mt-12">
                         <!-- Avatar -->
                         <div class="relative mb-4 sm:mb-0">
-                                  <img src="{{ $major && $major->logo ? asset($major->logo) : asset('assets/images/avatar/default-profile.png') }}" 
-                                     alt="Avatar of username" 
+                                  <img src="{{ Storage::url($major && $major->logo) ? asset($major->logo) : asset('assets/images/avatar/default-profile.png') }}"
+                                     alt="Avatar of username"
                                      class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg">
                         </div>
 
@@ -48,14 +48,14 @@
 
                         <!-- Action Button -->
                         <div class="mt-4 sm:mt-0">
-                            <a href="#" 
+                            <a href="#"
                                class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-700 border border-transparent rounded-lg font-medium text-sm text-white hover:bg-gray-700 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150 shadow-sm">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                                 Edit Profile
                             </a>
-                        </div>  
+                        </div>
                     </div>
                     <div class="mt-6">
                         <p class="mt-6 text-gray-600 dark:text-gray-300 text-justify">
@@ -222,7 +222,7 @@
                                     @foreach($teachers as $t)
                                         <li class="py-3 flex items-center justify-between">
                                             <div class="flex items-center gap-3">
-                                                <img src="{{ $t->teacher?->avatar ?? $t->avatar ?? asset('assets/images/avatar/default-profile.png') }}" alt="{{ $t->user?->name ?? 'Guru' }}" class="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-700 shadow-sm" />
+                                                <img src="{{ Storage::url($t->teacher?->avatar) ?? asset($t->avatar) ?? asset('assets/images/avatar/default-profile.png') }}" alt="{{ $t->user?->name ?? 'Guru' }}" class="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-gray-700 shadow-sm" />
                                                 <div class="min-w-0">
                                                     <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $t->user?->name ?? '—' }}</div>
                                                     <div class="text-xs text-gray-500 dark:text-gray-400">{{ $t->code ?? '' }}</div>
@@ -240,7 +240,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="lg:col-span-1">
@@ -271,11 +271,11 @@
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="bg-gray-50 dark:bg-gray-800 p-1 md:p-2 rounded-full border border-gray-100 dark:border-gray-700">
-                                    <img src="{{ $major && $major->logo ? asset($major->logo) : asset('assets/images/avatar/default-profile.png') }}" alt="Avatar Guru" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover shadow" />
+                                    <img src="{{ Storage::url($major && $major->logo) ? asset($major->logo) : asset('assets/images/avatar/default-profile.png') }}" alt="Avatar Guru" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover shadow" />
                                 </div>
                             </div>
                         </div>
-                    </article>        
+                    </article>
                     <article role="article" aria-label="Kepala Jurusan"
                         class="bg-white dark:bg-gray-900 shadow-sm rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 p-4 md:p-5 hover:shadow-md transition-all duration-150">
                         <div class="flex items-center justify-between gap-4">
@@ -286,7 +286,7 @@
                             </div>
                             <div class="flex-shrink-0">
                                 <div class="bg-gray-50 dark:bg-gray-800 p-1 md:p-2 rounded-full border border-gray-100 dark:border-gray-700">
-                                    <img src="{{ $major && $major->logo ? asset($major->logo) : asset('assets/images/avatar/default-profile.png') }}" alt="Avatar Guru" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover shadow" />
+                                    <img src="{{ Storage::url($major && $major->logo) ? asset($major->logo) : asset('assets/images/avatar/default-profile.png') }}" alt="Avatar Guru" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover shadow" />
                                 </div>
                             </div>
                         </div>

@@ -40,6 +40,13 @@
     Daftar Guru
 </a>
 
+<a href="{{ route('staff.subjects.index') }}"
+   class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
+   {{ request()->routeIs('staff.subjects.index') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">
+    <x-heroicon-o-book-open class="w-5 h-5" />
+    Daftar Mata Pelajaran
+</a>
+
 <a href="{{ route('staff.rooms.index') }}"
    class="flex items-center gap-3 px-4 py-2 text-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-800
    {{ request()->routeIs('staff.rooms.index') ? 'bg-slate-200 dark:bg-slate-800 font-semibold' : '' }}">

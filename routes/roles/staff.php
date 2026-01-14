@@ -28,6 +28,7 @@ use App\Http\Controllers\Staff\Student\TemplateController as StaffStudentTemplat
 use App\Http\Controllers\Staff\Major\TemplateController as StaffMajorTemplateController;
 use App\Http\Controllers\Staff\Teacher\ImportController as StaffTeacherImportController;
 use App\Http\Controllers\Staff\Teacher\TemplateController as StaffTeacherTemplateController;
+use App\Http\Controllers\Staff\SubjectController as StaffSubjectController;
 
 Route::middleware(['auth', 'role:Staff'])
     ->prefix('staff')
@@ -49,6 +50,7 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/blocks/{block}', [StaffBlockController::class, 'update'])->name('blocks.update');
         Route::delete('/blocks/{block}', [StaffBlockController::class, 'destroy'])->name('blocks.destroy');
 
+        // Majors
         Route::get('/majors', [StaffMajorController::class, 'index'])->name('majors.index');
         Route::get('/majors/template', StaffMajorTemplateController::class)->name('majors.template');
         Route::get('/majors/create', [StaffMajorController::class, 'create'])->name('majors.create');
@@ -64,6 +66,7 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/majors/{major}/role-assignment', [StaffRoleAssignmentController::class, 'update'])->name('majors.role-assignment.update');
         Route::post('/majors/import', StaffMajorImportController::class)->name('majors.import');
 
+        // Classrooms
         Route::get('/classrooms', [StaffClassController::class, 'index'])->name('classrooms.index');
         Route::get('/classroomsjson/{id}', StaffClassJsonController::class)->name('classrooms.json');
         Route::get('/classrooms/template', StaffClassroomTemplateController::class)->name('classrooms.template');
@@ -76,6 +79,7 @@ Route::middleware(['auth', 'role:Staff'])
         Route::post('/classrooms/{id}/students', [StaffClassStudentController::class, 'store'])->name('classrooms.students.store');
         Route::delete('/classrooms/{id}/students/{studentId}', [StaffClassStudentController::class, 'destroy'])->name('classrooms.students.destroy');
 
+        // Teachers
         Route::get('/teachers', [StaffTeacherController::class, 'index'])->name('teachers.index');
         Route::get('/teachers/template', StaffTeacherTemplateController::class)->name('teachers.template');
         Route::post('/teachers/import', StaffTeacherImportController::class)->name('teachers.import');
@@ -84,6 +88,7 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/teachers/{id}', [StaffTeacherController::class, 'update'])->name('teachers.update');
         Route::delete('/teachers/{id}', [StaffTeacherController::class, 'destroy'])->name('teachers.destroy');
 
+        // Students
         Route::get('/students', [StaffStudentController::class, 'index'])->name('students.index');
         Route::get('/students/template', StaffStudentTemplateController::class)->name('students.template');
         Route::get('/students/fetch', StaffStudentFetchController::class)->name('students.fetch');
@@ -92,6 +97,15 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/students/{id}', [StaffStudentController::class, 'update'])->name('students.update');
         Route::delete('/students/{id}', [StaffStudentController::class, 'destroy'])->name('students.destroy');
         Route::post('/students/import', StaffStudentImportController::class)->name('students.import');
+
+        // Subjects
+        Route::get('/subjects/fetch', [StaffSubjectController::class, 'fetch'])->name('subjects.fetch');
+        Route::get('/subjects', [StaffSubjectController::class, 'index'])->name('subjects.index');
+        Route::post('/subjects', [StaffSubjectController::class, 'store'])->name('subjects.store');
+        Route::put('/subjects/{subject}', [StaffSubjectController::class, 'update'])->name('subjects.update');
+        Route::delete('/subjects/{subject}', [StaffSubjectController::class, 'destroy'])->name('subjects.destroy');
+        Route::put('/subjects/{subject}/majors', [StaffSubjectController::class, 'updateMajors'])->name('subjects.majors.update');
+        Route::put('/subjects/{subject}/teachers', [StaffSubjectController::class, 'updateTeachers'])->name('subjects.teachers.update');
 
         // Buildings
         Route::post('/buildings', [StaffBuildingController::class, 'store'])->name('buildings.store');

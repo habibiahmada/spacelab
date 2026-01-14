@@ -36,7 +36,7 @@
                                 <div class="relative">
                                     <div class="w-15 h-15 sm:w-16 sm:h-16 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-200 font-semibold ring-2 ring-gray-100 dark:ring-gray-700">
                                         @if($guardian->teacher->avatar ?? false)
-                                            <img src="{{ $guardian->teacher->avatar }}" alt="Wali Kelas" class="w-full h-full object-cover"/>
+                                            <img src="{{ Storage::url($guardian->teacher->avatar) }}" alt="Wali Kelas" class="w-full h-full object-cover"/>
                                         @else
                                             <span class="text-lg">{{ $guardian->teacher->initials() }}</span>
                                         @endif
@@ -92,7 +92,7 @@
                                                 <div class="flex items-center gap-4">
                                                     <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-200 font-semibold text-sm shadow-sm">
                                                         @if($student->student?->avatar)
-                                                            <img src="{{ $student->student->avatar }}" alt="avatar" class="w-full h-full object-cover" />
+                                                            <img src="{{ Storage::url($student->student->avatar) }}" alt="avatar" class="w-full h-full object-cover" />
                                                         @else
                                                             {{ $student->initials() }}
                                                         @endif

@@ -70,7 +70,7 @@
                         </div>
                         <div class="flex-shrink-0">
                             <div class="bg-gray-50 dark:bg-gray-800 p-1 md:p-2 rounded-full border border-gray-100 dark:border-gray-700">
-                                <img src="{{ optional($teacher)->avatar ?? asset('images/default-teacher.png') }}" alt="Avatar Guru" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover shadow" />
+                                <img src="{{ Storage::url(optional($teacher)->avatar) ?? asset('images/default-teacher.png') }}" alt="Avatar Guru" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover shadow" />
                             </div>
                         </div>
                     </div>
@@ -294,7 +294,7 @@
 
                                                             {{-- Teacher (who teaches this) --}}
                                                             <div class="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-lg p-3 shadow border border-gray-100 dark:border-gray-800">
-                                                                <img src="{{ optional(optional($schedule->teacherSubject)->teacher)->user?->avatar ?? optional(optional($schedule->teacherSubject)->teacher)?->avatar ?? asset('images/default-teacher.png') }}"
+                                                                <img src="{{ Storage::url(optional(optional($schedule->teacherSubject)->teacher)->user?->avatar) ?? Storage::url(optional(optional($schedule->teacherSubject)->teacher)?->avatar) ?? asset('images/default-teacher.png') }}"
                                                                     alt="Guru"
                                                                     class="w-11 h-11 rounded-full object-cover border-2 shadow
                                                                     {{ $isOngoing ? 'border-blue-300 ring-2 ring-blue-100 dark:ring-blue-400' : 'border-gray-200 dark:border-gray-700' }}">

@@ -171,7 +171,6 @@
                             </div>
                         @empty
                             <div class="text-center py-12">
-                                <x-heroicon-o-ellipsis-horizontal class="w-12 h-12 text-gray-400" />
                                 <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Belum ada tahun
                                     ajaran</h3>
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Mulai dengan menambahkan tahun

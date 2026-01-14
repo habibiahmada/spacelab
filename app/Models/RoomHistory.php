@@ -18,7 +18,12 @@ class RoomHistory extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'room_id', 'event_type', 'classes_id', 'terms_id', 'teacher_id', 'user_id', 'start_time', 'end_time'
+        'room_id', 'event_type', 'classes_id', 'terms_id', 'teacher_id', 'user_id', 'start_date', 'end_date'
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
     ];
 
     public function room(): BelongsTo
@@ -49,5 +54,12 @@ class RoomHistory extends Model
     public function timetableEntries(): HasMany
     {
         return $this->hasMany(TimetableEntry::class, 'room_history_id');
+    }
+
+    public function scopeActive($query, $date = null)
+    {
+        $date = $date ?? now();
+        return $query->whereDate('start_date', '<=', $date)
+                     ->whereDate('end_date', '>=', $date);
     }
 }

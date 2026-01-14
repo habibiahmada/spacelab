@@ -54,7 +54,7 @@ class Teacher extends Model
      */
     public function directTimetableEntries(): HasMany
     {
-        return $this->hasMany(\App\Models\TimetableEntry::class, 'teacher_id');
+        return $this->hasMany(TimetableEntry::class, 'teacher_id');
     }
 
     public function teacherSubjects(): HasMany
@@ -65,10 +65,11 @@ class Teacher extends Model
     public function subjects()
     {
         return $this->belongsToMany(Subject::class, 'teacher_subjects', 'teacher_id', 'subject_id')
+            ->using(TeacherSubject::class)
             ->withTimestamps()
             ->withPivot(['started_at', 'ended_at']);
     }
-    
+
     public function guardianClassHistories(): HasMany
     {
         return $this->hasMany(GuardianClassHistory::class, 'teacher_id');

@@ -214,11 +214,11 @@
                                                                                 <span class="truncate"
                                                                                     x-text="item.teacher_subject?.teacher?.user?.name || '-'"></span>
                                                                             </div>
-                                                                            <span x-show="item.room"
+                                                                            <span x-show="item.room_history?.room"
                                                                                 class="bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 px-2 py-1 rounded-md font-semibold whitespace-nowrap flex items-center gap-1 flex-shrink-0">
                                                                                 <x-heroicon-o-building-office
                                                                                     class="w-3 h-3" />
-                                                                                <span x-text="item.room?.name"></span>
+                                                                                <span x-text="item.room_history?.room?.name"></span>
                                                                             </span>
                                                                         </div>
                                                                     </div>

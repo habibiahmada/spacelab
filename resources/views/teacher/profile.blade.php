@@ -37,7 +37,7 @@
                         <!-- Avatar -->
                         <div class="relative mb-4 sm:mb-0">
                             @if(isset($teacher) && $teacher->avatar)
-                                <img src="{{ $teacher->avatar }}"
+                                <img src="{{ Storage::url($teacher->avatar) }}"
                                      alt="Avatar of {{ $user->name }}"
                                      class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg">
                             @else

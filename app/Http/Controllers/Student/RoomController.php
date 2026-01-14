@@ -20,7 +20,7 @@ class RoomController extends Controller
         $roomsQuery = Room::query()
             ->with(['building', 'timetableEntries' => function ($query) use ($todayDay) {
                 $query->where('day_of_week', $todayDay)
-                    ->with(['period', 'teacherSubject.teacher', 'teacherSubject.subject', 'roomHistory']);
+                    ->with(['period', 'teacherSubject.teacher', 'teacherSubject.subject', 'roomHistory', 'template.class.major']);
             }])
             ->withCount(['timetableEntries as todays_entries_count' => function ($query) use ($todayDay) {
                 $query->where('day_of_week', $todayDay);
@@ -49,7 +49,7 @@ class RoomController extends Controller
         $rooms = $roomsQuery->paginate(52)->withQueryString();
 
         // Today's timetable entries
-        $todayEntries = TimetableEntry::with(['roomHistory.room.building', 'period', 'teacherSubject.teacher', 'teacherSubject.subject'])
+        $todayEntries = TimetableEntry::with(['roomHistory.room.building', 'period', 'teacherSubject.teacher', 'teacherSubject.subject', 'template.class.major'])
             ->where('day_of_week', $todayDay)
             ->get()
             ->sortBy(fn ($entry) => $entry->period?->start_time ?? '00:00:00');
@@ -61,7 +61,7 @@ class RoomController extends Controller
         $todayRooms = Room::query()
             ->with(['building', 'timetableEntries' => function ($query) use ($todayDay) {
                 $query->where('day_of_week', $todayDay)
-                    ->with(['period', 'teacherSubject.teacher', 'teacherSubject.subject', 'roomHistory']);
+                    ->with(['period', 'teacherSubject.teacher', 'teacherSubject.subject', 'roomHistory', 'template.class.major']);
             }])
             ->whereHas('timetableEntries', function ($query) use ($todayDay) {
                 $query->where('day_of_week', $todayDay);
@@ -69,6 +69,12 @@ class RoomController extends Controller
             ->orderBy('name')
             ->paginate(6)
             ->withQueryString();
+
+        $emptyRoomsCount = Room::query()
+            ->whereDoesntHave('timetableEntries', function ($query) use ($todayDay) {
+                $query->where('day_of_week', $todayDay);
+            })
+            ->count();
 
         return view('student.room', [
             'rooms' => $rooms,
@@ -79,6 +85,7 @@ class RoomController extends Controller
             'totalRooms' => $totalRooms,
             'todayRoomsCount' => $todayRoomsCount,
             'todaySubjectsCount' => $todaySubjectsCount,
+            'emptyRoomsCount' => $emptyRoomsCount,
             'title' => 'Ruangan',
             'description' => 'Halaman ruangan',
         ]);

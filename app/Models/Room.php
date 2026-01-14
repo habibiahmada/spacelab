@@ -22,7 +22,7 @@ class Room extends Model
 
     public function timetableEntries(): HasManyThrough
     {
-        // TimetableEntry is related to Room via RoomHistory.room_id => room_history.room_id
+        // TimetableEntry is related to Room via RoomHistory
         return $this->hasManyThrough(
             TimetableEntry::class,
             RoomHistory::class,
@@ -36,11 +36,6 @@ class Room extends Model
     public function scheduleEntries(): HasManyThrough
     {
         return $this->timetableEntries();
-    }
-
-    public function directTimetableEntries(): HasMany
-    {
-        return $this->hasMany(\App\Models\TimetableEntry::class, 'room_id');
     }
 
     public function building()

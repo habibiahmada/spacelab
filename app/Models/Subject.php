@@ -28,6 +28,7 @@ class Subject extends Model
     public function teachers()
     {
         return $this->belongsToMany(Teacher::class, 'teacher_subjects', 'subject_id', 'teacher_id')
+            ->using(TeacherSubject::class)
             ->withTimestamps()
             ->withPivot(['started_at', 'ended_at']);
     }
@@ -41,10 +42,11 @@ class Subject extends Model
     {
         return $this->hasMany(SubjectMajorAllowed::class, 'subject_id');
     }
-    
+
     public function majors() // existing many-to-many through major_subject
     {
         return $this->belongsToMany(Major::class, 'major_subject', 'subject_id', 'major_id')
+                    ->using(MajorSubject::class)
                     ->withTimestamps()
                     ->withPivot(['notes']);
     }

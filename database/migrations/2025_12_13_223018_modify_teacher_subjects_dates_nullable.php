@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('room_history', function (Blueprint $table) {
-            $table->date('start_date')->nullable()->after('event_type');
-            $table->date('end_date')->nullable()->after('start_date');
+        Schema::table('teacher_subjects', function (Blueprint $table) {
+            $table->timestamp('started_at')->nullable()->change();
+            $table->timestamp('ended_at')->nullable()->change();
         });
     }
 
@@ -22,9 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('room_history', function (Blueprint $table) {
-            $table->dropColumn('start_date');
-            $table->dropColumn('end_date');
+        Schema::table('teacher_subjects', function (Blueprint $table) {
         });
     }
 };

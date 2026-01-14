@@ -46,8 +46,8 @@ class RoomHistorySeeder extends Seeder
                             'terms_id'   => $term->id,
                             'teacher_id' => $teacher->id,
                             'user_id'    => $teacher->user_id,
-                            'start_time' => now(),
-                            'end_time'   => now()->addHours(2),
+                            'start_date' => $term->start_date ?? now(),
+                            'end_date'   => $term->end_date ?? now()->addMonths(6),
                         ]);
                         $created++;
                     }

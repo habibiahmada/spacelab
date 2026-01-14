@@ -9,17 +9,16 @@ use App\Models\RoomHistory;
 use App\Models\Classroom;
 use App\Models\Teacher;
 use App\Models\Term;
+use Illuminate\Support\Facades\Auth; // Perbaikan di sini
 use Illuminate\Support\Carbon;
-use Illuminate\Validation\ValidationException;
 
 class RoomHistoryController extends Controller
 {
 
     public function index()
     {
-        $dayOfWeek = Carbon::now()->dayOfWeekIso; // 1 = Mon, 7 = Sun
+        $dayOfWeek = Carbon::now()->dayOfWeekIso;
 
-        // Fetch rooms with today's schedule to determine status
         $rooms = Room::with(['timetableEntries' => function ($query) use ($dayOfWeek) {
             $query->where('day_of_week', $dayOfWeek)
                   ->whereHas('template', function ($q) {
@@ -28,7 +27,6 @@ class RoomHistoryController extends Controller
                   ->with(['period', 'teacherSubject.subject', 'teacherSubject.teacher', 'roomHistory.classroom']);
         }])->get();
 
-        // Process rooms to determine current status
         $rooms = $rooms->map(function ($room) {
             $now = Carbon::now();
             $currentEntry = $room->timetableEntries->first(function ($entry) use ($now) {
@@ -47,10 +45,10 @@ class RoomHistoryController extends Controller
         $teachers = Teacher::all();
         $classrooms = Classroom::all();
         $terms = Term::all();
-        $allRooms = Room::all(); // For dropdown
+        $allRooms = Room::all();
 
         return view('staff.roomhistory.index', [
-            'title' => 'Riwayat Ruangan',
+            'title' => 'Riwayat Status Ruangan',
             'description' => 'Halaman riwayat ruangan dan penggunaan saat ini',
             'rooms' => $rooms,
             'histories' => $histories,
@@ -69,9 +67,19 @@ class RoomHistoryController extends Controller
             'teacher_id' => 'nullable|exists:teachers,id',
             'terms_id' => 'required|exists:terms,id',
             'event_type' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
 
-        $validated['user_id'] = auth()->id();
+        // Perbaikan di sini
+        $validated['user_id'] = Auth::id();
+
+        // Normalize empty strings to null for optional fields
+        foreach (['classes_id', 'teacher_id', 'event_type', 'start_date', 'end_date'] as $key) {
+            if (array_key_exists($key, $validated) && $validated[$key] === '') {
+                $validated[$key] = null;
+            }
+        }
 
         RoomHistory::create($validated);
 
@@ -88,7 +96,16 @@ class RoomHistoryController extends Controller
             'teacher_id' => 'nullable|exists:teachers,id',
             'terms_id' => 'required|exists:terms,id',
             'event_type' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
+
+        // Normalize empty strings to null for optional fields
+        foreach (['classes_id', 'teacher_id', 'event_type', 'start_date', 'end_date'] as $key) {
+            if (array_key_exists($key, $validated) && $validated[$key] === '') {
+                $validated[$key] = null;
+            }
+        }
 
         $history->update($validated);
 

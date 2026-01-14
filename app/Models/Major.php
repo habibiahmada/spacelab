@@ -46,10 +46,11 @@ class Major extends Model
     {
         return $this->hasMany(SubjectMajorAllowed::class, 'major_id');
     }
-    
+
     public function subjects() // existing many-to-many through major_subject
     {
         return $this->belongsToMany(Subject::class, 'major_subject', 'major_id', 'subject_id')
+                    ->using(MajorSubject::class)
                     ->withTimestamps()
                     ->withPivot(['notes']);
     }

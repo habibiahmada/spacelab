@@ -54,4 +54,9 @@ class Classroom extends Model
     {
         return "{$this->level} {$this->major->code} {$this->rombel}";
     }
+
+    public function getNameAttribute()
+    {
+        return $this->full_name;
+    }
 }

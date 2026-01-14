@@ -45,7 +45,7 @@ class ScheduleController extends Controller
                               'entries.period',
                               'entries.teacherSubject.subject',
                               'entries.teacherSubject.teacher.user',
-                              'entries.room',
+                              'entries.roomHistory.room',
                           ]);
                 }
             ])

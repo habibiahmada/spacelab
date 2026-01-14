@@ -57,10 +57,12 @@
                         </div>
                         <div class="bg-gray-50 dark:bg-gray-800 p-2 md:p-3 rounded-lg flex-shrink-0 flex items-center justify-center
                                     border border-gray-100 dark:border-gray-700">
-                            <img src="{{ Storage::url($student->student->avatar) ?? asset('images/default-student.png') }}"
+                            <img
+                                src="{{ $student->student?->avatar ? Storage::url($student->student->avatar) : asset('images/default-student.png') }}"
                                 alt="Avatar Siswa"
                                 class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 shadow
-                                        border-gray-200 dark:border-gray-700">
+                                    border-gray-200 dark:border-gray-700"
+                            />
                         </div>
                     </div>
                 </div>

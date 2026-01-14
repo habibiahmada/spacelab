@@ -150,6 +150,8 @@ class TimetableSeeder extends Seeder
                                 'event_type' => 'initial',
                                 'teacher_id' => $teacherForRoom->id,
                                 'user_id' => $teacherForRoom->user_id ?? null,
+                                'start_date' => $term->start_date ?? now(),
+                                'end_date' => $term->end_date ?? now()->addMonths(6),
                             ]
                         );
 
@@ -187,6 +189,8 @@ class TimetableSeeder extends Seeder
                                     'event_type' => 'initial',
                                     'teacher_id' => $teacherForRoom->id,
                                     'user_id' => $teacherForRoom->user_id ?? null,
+                                    'start_date' => $term->start_date ?? now(),
+                                    'end_date' => $term->end_date ?? now()->addMonths(6),
                                 ]
                             );
 
@@ -203,7 +207,6 @@ class TimetableSeeder extends Seeder
                             'teacher_subject_id'  => $candidate->id,
                             'room_history_id'     => $roomHistEntry->id,
                             'teacher_id'          => $candidate->teacher_id,
-                            'room_id'             => $roomHistEntry->room_id,
                         ]);
 
                         // mark teacher and room used in this slot
