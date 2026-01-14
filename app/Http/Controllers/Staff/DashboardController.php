@@ -28,7 +28,7 @@ class DashboardController extends Controller
             'teacherSubject.subject',
             'teacherSubject.teacher.user',
             'teacher.user',
-            'room',
+            'roomHistory.room',
             'template.class',
         ])
             ->where('day_of_week', $dayOfWeek)
@@ -62,8 +62,8 @@ class DashboardController extends Controller
             // Ambil class name dari template.class
             $className = $entry->template?->class?->name ?? null;
 
-            // Ambil room name
-            $room = $entry->room?->name ?? null;
+            // Ambil room name via roomHistory
+            $room = $entry->roomHistory?->room?->name ?? null;
 
             return [
                 'start' => $startFormatted,

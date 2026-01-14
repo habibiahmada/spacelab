@@ -79,6 +79,11 @@ class TimetableEntry extends Model
         return $this->template?->class;
     }
 
+    public function getRoomAttribute()
+    {
+        return $this->roomHistory?->room;
+    }
+
     public function isOngoing(?Carbon $now = null): bool
     {
         $now = $now ?? Carbon::now();

@@ -22,21 +22,6 @@ class DashboardController extends Controller
         $currentTime = Carbon::now();
         $currentDayIndex = (int) $currentTime->format('N');
 
-        // Jika user bukan guru
-        if (! $teacher) {
-            return view('teacher.dashboard', [
-                'teacher' => null,
-                'schedulesToday' => collect(),
-                'currentTime' => $currentTime,
-                'currentDayIndex' => $currentDayIndex,
-                'lessonsCount' => 0,
-                'roomsCount' => 0,
-                'uniqueSubjectsCount' => 0,
-                'title' => 'Dashboard Guru',
-                'description' => 'Halaman dashboard guru',
-            ]);
-        }
-
         // =========================
         // Ambil jadwal mengajar hari ini
         // =========================
@@ -55,35 +40,9 @@ class DashboardController extends Controller
             ->get();
 
         // =========================
-        // CEK KELENGKAPAN ORDINAL
+        // JIKA TIDAK ADA JADWAL → LIBUR
         // =========================
-        $teachingPeriods = Period::where('is_teaching', true)
-            ->whereNotNull('ordinal')
-            ->orderBy('ordinal', 'asc')
-            ->get();
-
-        $teachingOrdinals = $teachingPeriods
-            ->pluck('ordinal')
-            ->sort()
-            ->values();
-
-        $existingOrdinals = $schedulesTodayRaw
-            ->pluck('period.ordinal')
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values();
-
-        $isComplete = false;
-
-        if ($existingOrdinals->isNotEmpty() && $teachingOrdinals->isNotEmpty()) {
-            $isComplete = $teachingOrdinals->diff($existingOrdinals)->isEmpty();
-        }
-
-        // =========================
-        // JIKA TIDAK LENGKAP → LIBUR
-        // =========================
-        if (! $isComplete) {
+        if ($schedulesTodayRaw->isEmpty()) {
             return view('teacher.dashboard', [
                 'teacher' => $teacher,
                 'schedulesToday' => collect(),
