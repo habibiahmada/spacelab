@@ -19,8 +19,6 @@ class StudentController extends Controller
 {
     public function index(Request $request)
     {
-        // Only load majors and classrooms for filter dropdowns
-        // No student data is loaded by default for better performance
         $majors = Major::orderBy('name')->get();
         $classrooms = Classroom::with('major')->get()->sortBy('full_name');
 
