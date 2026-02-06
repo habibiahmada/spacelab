@@ -1,25 +1,142 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Staff\{
+    DashboardController as StaffDashboardController,
+    ScheduleController as StaffScheduleController,
+    TermController as StaffTermController,
+    MajorController as StaffMajorController,
+    ClassroomController as StaffClassController,
+    TeacherController as StaffTeacherController,
+    StudentController as StaffStudentController,
+    RoomController as StaffRoomController,
+    BuildingController as StaffBuildingController,
+    RoomHistoryController as StaffRoomHistoryController
+};
 use App\Http\Controllers\Admin\{
     DashboardController as AdminDashboardController,
+    ScheduleController as AdminScheduleController,
+    TermController as AdminTermController,
+    MajorController as AdminMajorController,
+    ClassroomController as AdminClassController,
     TeacherController as AdminTeacherController,
     StudentController as AdminStudentController,
-    ClassController as AdminClassController,
-    MajorController as AdminMajorController,
     RoomController as AdminRoomController,
-    ScheduleController as AdminScheduleController
+    BuildingController as AdminBuildingController,
+    RoomHistoryController as AdminRoomHistoryController
 };
+use App\Http\Controllers\Admin\Term\BlockController as AdminBlockController;
+use App\Http\Controllers\Admin\Major\CompanyRelationController as AdminCompanyRelationController;
+use App\Http\Controllers\Admin\Major\RoleAssignmentController as AdminRoleAssignmentController;
+use App\Http\Controllers\Admin\Classroom\JsonController as AdminClassJsonController;
+use App\Http\Controllers\Admin\Classroom\GuardianController as AdminClassGuardianController;
+use App\Http\Controllers\Admin\Classroom\StudentController as AdminClassStudentController;
+use App\Http\Controllers\Admin\Classroom\ImportController as AdminClassroomImportController;
+use App\Http\Controllers\Admin\Classroom\TemplateController as AdminClassroomTemplateController;
+use App\Http\Controllers\Admin\Student\FetchController as AdminStudentFetchController;
+use App\Http\Controllers\Admin\Student\ImportController as AdminStudentImportController;
+use App\Http\Controllers\Admin\Major\ImportController as AdminMajorImportController;
+use App\Http\Controllers\Admin\Student\TemplateController as AdminStudentTemplateController;
+use App\Http\Controllers\Admin\Major\TemplateController as AdminMajorTemplateController;
+use App\Http\Controllers\Admin\Teacher\ImportController as AdminTeacherImportController;
+use App\Http\Controllers\Admin\Teacher\TemplateController as AdminTeacherTemplateController;
+use App\Http\Controllers\Admin\SubjectController as AdminSubjectController;
 
 Route::middleware(['auth', 'role:Admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('index');
-        Route::get('/teachers', [AdminTeacherController::class, 'index'])->name('teachers.index');
-        Route::get('/students', [AdminStudentController::class, 'index'])->name('students.index');
-        Route::get('/classes', [AdminClassController::class, 'index'])->name('classes.index');
+
+        // Terms
+        Route::get('/terms', [AdminTermController::class, 'index'])->name('terms.index');
+        Route::post('/terms', [AdminTermController::class, 'store'])->name('terms.store');
+        Route::get('/terms/{term}/edit', [AdminTermController::class, 'edit'])->name('terms.edit');
+        Route::put('/terms/{term}', [AdminTermController::class, 'update'])->name('terms.update');
+        Route::delete('/terms/{term}', [AdminTermController::class, 'destroy'])->name('terms.destroy');
+
+        // Blocks
+        Route::post('/blocks', [AdminBlockController::class, 'store'])->name('blocks.store');
+        Route::get('/blocks/{block}/edit', [AdminBlockController::class, 'show'])->name('blocks.edit');
+        Route::put('/blocks/{block}', [AdminBlockController::class, 'update'])->name('blocks.update');
+        Route::delete('/blocks/{block}', [AdminBlockController::class, 'destroy'])->name('blocks.destroy');
+
+        // Majors
         Route::get('/majors', [AdminMajorController::class, 'index'])->name('majors.index');
+        Route::get('/majors/template', AdminMajorTemplateController::class)->name('majors.template');
+        Route::get('/majors/create', [AdminMajorController::class, 'create'])->name('majors.create');
+        Route::post('/majors', [AdminMajorController::class, 'store'])->name('majors.store');
+        Route::get('/majors/{major}/edit', [AdminMajorController::class, 'edit'])->name('majors.edit');
+        Route::put('/majors/{major}', [AdminMajorController::class, 'update'])->name('majors.update');
+        Route::delete('/majors/{major}', [AdminMajorController::class, 'destroy'])->name('majors.destroy');
+
+        Route::get('/majors/{major}', [ AdminMajorController::class, 'show'])->name('majors.show');
+        Route::post('/majors/{major}/company-relation', [AdminCompanyRelationController::class, 'store'])->name('majors.company-relation.store');
+        Route::put('/majors/{major}/company-relation/{companyRelation}', [AdminCompanyRelationController::class, 'update'])->name('majors.company-relation.update');
+        Route::delete('/majors/{major}/company-relation/{companyRelation}', [AdminCompanyRelationController::class, 'destroy'])->name('majors.company-relation.destroy');
+        Route::put('/majors/{major}/role-assignment', [AdminRoleAssignmentController::class, 'update'])->name('majors.role-assignment.update');
+        Route::post('/majors/import', AdminMajorImportController::class)->name('majors.import');
+
+        // Classrooms
+        Route::get('/classrooms', [AdminClassController::class, 'index'])->name('classrooms.index');
+        Route::get('/classroomsjson/{id}', AdminClassJsonController::class)->name('classrooms.json');
+        Route::get('/classrooms/template', AdminClassroomTemplateController::class)->name('classrooms.template');
+        Route::post('/classrooms/import', AdminClassroomImportController::class)->name('classrooms.import');
+        Route::post('/classrooms', [AdminClassController::class, 'store'])->name('classrooms.store');
+        Route::get('/classrooms/{id}', [AdminClassController::class, 'show'])->name('classrooms.show');
+        Route::put('/classrooms/{id}', [AdminClassController::class, 'update'])->name('classrooms.update');
+        Route::delete('/classrooms/{id}', [AdminClassController::class, 'destroy'])->name('classrooms.destroy');
+        Route::post('/classrooms/{id}/guardian', [AdminClassGuardianController::class, 'update'])->name('classrooms.guardian.update');
+        Route::post('/classrooms/{id}/students', [AdminClassStudentController::class, 'store'])->name('classrooms.students.store');
+        Route::delete('/classrooms/{id}/students/{studentId}', [AdminClassStudentController::class, 'destroy'])->name('classrooms.students.destroy');
+
+        // Teachers
+        Route::get('/teachers', [AdminTeacherController::class, 'index'])->name('teachers.index');
+        Route::get('/teachers/template', AdminTeacherTemplateController::class)->name('teachers.template');
+        Route::post('/teachers/import', AdminTeacherImportController::class)->name('teachers.import');
+        Route::post('/teachers', [AdminTeacherController::class, 'store'])->name('teachers.store');
+        Route::get('/teachers/{id}', [AdminTeacherController::class, 'show'])->name('teachers.show');
+        Route::put('/teachers/{id}', [AdminTeacherController::class, 'update'])->name('teachers.update');
+        Route::delete('/teachers/{id}', [AdminTeacherController::class, 'destroy'])->name('teachers.destroy');
+
+        // Students
+        Route::get('/students', [AdminStudentController::class, 'index'])->name('students.index');
+        Route::get('/students/template', AdminStudentTemplateController::class)->name('students.template');
+        Route::get('/students/fetch', AdminStudentFetchController::class)->name('students.fetch');
+        Route::get('/students/{id}', [AdminStudentController::class, 'show'])->name('students.show');
+        Route::post('/students', [AdminStudentController::class, 'store'])->name('students.store');
+        Route::put('/students/{id}', [AdminStudentController::class, 'update'])->name('students.update');
+        Route::delete('/students/{id}', [AdminStudentController::class, 'destroy'])->name('students.destroy');
+        Route::post('/students/import', AdminStudentImportController::class)->name('students.import');
+
+        // Subjects
+        Route::get('/subjects/fetch', [AdminSubjectController::class, 'fetch'])->name('subjects.fetch');
+        Route::get('/subjects', [AdminSubjectController::class, 'index'])->name('subjects.index');
+        Route::post('/subjects', [AdminSubjectController::class, 'store'])->name('subjects.store');
+        Route::put('/subjects/{subject}', [AdminSubjectController::class, 'update'])->name('subjects.update');
+        Route::delete('/subjects/{subject}', [AdminSubjectController::class, 'destroy'])->name('subjects.destroy');
+        Route::put('/subjects/{subject}/majors', [AdminSubjectController::class, 'updateMajors'])->name('subjects.majors.update');
+        Route::put('/subjects/{subject}/teachers', [AdminSubjectController::class, 'updateTeachers'])->name('subjects.teachers.update');
+
+        // Buildings
+        Route::post('/buildings', [AdminBuildingController::class, 'store'])->name('buildings.store');
+        Route::get('/buildings/{building}', [AdminBuildingController::class, 'show'])->name('buildings.show');
+        Route::put('/buildings/{building}', [AdminBuildingController::class, 'update'])->name('buildings.update');
+        Route::delete('/buildings/{building}', [AdminBuildingController::class, 'destroy'])->name('buildings.destroy');
+
+        // Rooms
+        Route::get('/room-history', [AdminRoomHistoryController::class, 'index'])->name('rooms.history');
+        Route::post('/room-history', [AdminRoomHistoryController::class, 'store'])->name('rooms.history.store');
+        Route::put('/room-history/{id}', [AdminRoomHistoryController::class, 'update'])->name('rooms.history.update');
+        Route::delete('/room-history/{id}', [AdminRoomHistoryController::class, 'destroy'])->name('rooms.history.destroy');
         Route::get('/rooms', [AdminRoomController::class, 'index'])->name('rooms.index');
+        Route::post('/rooms', [AdminRoomController::class, 'store'])->name('rooms.store');
+        Route::get('/rooms/{room}', [AdminRoomController::class, 'show'])->name('rooms.show');
+        Route::put('/rooms/{room}', [AdminRoomController::class, 'update'])->name('rooms.update');
+        Route::delete('/rooms/{room}', [AdminRoomController::class, 'destroy'])->name('rooms.destroy');
+
         Route::get('/schedules', [AdminScheduleController::class, 'index'])->name('schedules.index');
+        Route::get('/schedules/major/{majorId}', [AdminScheduleController::class, 'getMajorSchedules'])->name('schedules.major');
     });
+

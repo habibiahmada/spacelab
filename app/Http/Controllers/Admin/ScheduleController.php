@@ -3,59 +3,92 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\{ScheduleEntry, Major, ClassRoom, Teacher};
+use App\Models\Classroom;
+use App\Models\Major;
+use App\Models\Period;
 
 class ScheduleController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $majors = Major::orderBy('name')->get();
-        $classrooms = ClassRoom::with('major')
-            ->get()
-            ->sortBy(fn ($c) => "{$c->level}-{$c->major->name}-{$c->rombel}");
+        // Only fetch basic major information for tabs (lightweight initial load)
+        $majors = Major::select('id', 'code', 'name', 'logo')
+            ->withCount('classes')
+            ->orderBy('code')
+            ->get();
 
-        $teachers = Teacher::orderBy('name')->get();
-
-        $query = ScheduleEntry::with(['room', 'classroom', 'teacher', 'subject'])
-            ->orderByRaw("
-                CASE
-                    WHEN day = 'Senin' THEN 1
-                    WHEN day = 'Selasa' THEN 2
-                    WHEN day = 'Rabu' THEN 3
-                    WHEN day = 'Kamis' THEN 4
-                    WHEN day = 'Jumat' THEN 5
-                    WHEN day = 'Sabtu' THEN 6
-                    ELSE 7
-                END
-            ")
-            ->orderBy('start_at', 'asc');
-
-        if ($request->filled('major')) {
-            $query->whereHas('classroom', fn($q) => $q->where('major_id', $request->major));
-        }
-
-        if ($request->filled('classroom')) {
-            $query->where('classroom_id', $request->classroom);
-        }
-
-        if ($request->filled('teacher')) {
-            $query->where('teacher_id', $request->teacher);
-        }
-
-        if ($request->filled('day')) {
-            $query->where('day', $request->day);
-        }
-
-        $schedules = $query->paginate(15)->withQueryString();
-
-        return view('admin.pages.schedules', [
-            'schedules' => $schedules,
-            'title' => 'Lihat Jadwal',
-            'description' => 'Semua Jadwal',
+        return view('staff.schedules.index', [
             'majors' => $majors,
-            'classrooms' => $classrooms,
-            'teachers' => $teachers,
+            'title' => 'Jadwal',
+            'description' => 'Halaman jadwal',
+        ]);
+    }
+
+    /**
+     * AJAX endpoint to fetch schedules for a specific major
+     */
+    public function getMajorSchedules($majorId)
+    {
+        // Fetch non-teaching periods (breaks)
+        $nonTeachingPeriods = Period::where('is_teaching', false)
+            ->whereNotNull('start_time')
+            ->whereNotNull('end_time')
+            ->orderBy('start_time')
+            ->get();
+
+        // Fetch classes for this major only
+        $classes = Classroom::where('major_id', $majorId)
+            ->with([
+                'timetableTemplates' => function ($query) {
+                    $query->where('is_active', true)
+                          ->with([
+                              'entries.period',
+                              'entries.teacherSubject.subject',
+                              'entries.teacherSubject.teacher.user',
+                              'entries.roomHistory.room',
+                          ]);
+                }
+            ])
+            ->orderBy('level')
+            ->orderBy('rombel')
+            ->get();
+
+        // Process schedules for each class
+        $classes->each(function ($class) use ($nonTeachingPeriods) {
+            $template = $class->timetableTemplates->first();
+            $entries = $template ? $template->entries : collect();
+            $groupedEntries = $entries->groupBy('day_of_week');
+
+            $scheduleDays = [];
+            for ($i = 1; $i <= 6; $i++) {
+                $dayEntries = $groupedEntries->get($i, collect());
+
+                if ($dayEntries->isNotEmpty()) {
+                    // Merge with non-teaching periods
+                    $merged = $dayEntries->concat($nonTeachingPeriods->map(function ($p) use ($i) {
+                        $period = clone $p;
+                        $period->day_of_week = $i;
+                        $period->is_break = true;
+                        return $period;
+                    }));
+
+                    // Sort by start time
+                    $sorted = $merged->sortBy(function ($item) {
+                        if (isset($item->period)) {
+                            return $item->period->start_time;
+                        }
+                        return $item->start_time;
+                    })->values();
+
+                    $scheduleDays[$i] = $sorted;
+                }
+            }
+            $class->schedule_days = $scheduleDays;
+        });
+
+        return response()->json([
+            'success' => true,
+            'classes' => $classes,
         ]);
     }
 }
