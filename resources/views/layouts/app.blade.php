@@ -9,6 +9,7 @@
     @include('partials.meta.guest-head')
     {{-- Alpine.js --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @stack('styles')
 </head>
 
 <body
@@ -211,5 +212,6 @@
             {{ $slot }}
         </div>
     </main>
+    @stack('scripts')
 </body>
 </html>

@@ -120,6 +120,8 @@ Route::middleware(['auth', 'role:Admin'])
 
         // Rooms
         Route::get('/room-history', [AdminRoomHistoryController::class, 'index'])->name('rooms.history');
+        // detail page for a specific room with calendar
+        Route::get('/room-history/{id}', [AdminRoomHistoryController::class, 'show'])->name('rooms.history.show');
         Route::post('/room-history', [AdminRoomHistoryController::class, 'store'])->name('rooms.history.store');
         Route::put('/room-history/{id}', [AdminRoomHistoryController::class, 'update'])->name('rooms.history.update');
         Route::delete('/room-history/{id}', [AdminRoomHistoryController::class, 'destroy'])->name('rooms.history.destroy');

@@ -117,6 +117,7 @@ Route::middleware(['auth', 'role:Staff'])
 
         // Rooms
         Route::get('/room-history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
+        Route::get('/room-history/{id}', [StaffRoomHistoryController::class, 'show'])->name('rooms.history.show');
         Route::post('/room-history', [StaffRoomHistoryController::class, 'store'])->name('rooms.history.store');
         Route::put('/room-history/{id}', [StaffRoomHistoryController::class, 'update'])->name('rooms.history.update');
         Route::delete('/room-history/{id}', [StaffRoomHistoryController::class, 'destroy'])->name('rooms.history.destroy');
