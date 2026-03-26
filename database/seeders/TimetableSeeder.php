@@ -27,7 +27,7 @@ class TimetableSeeder extends Seeder
         $templates = TimetableTemplate::where('is_active', true)->get();
         $teacherSubjects = TeacherSubject::all();
         $periods = Period::orderBy('start_time')->get();
-        $rooms = Room::where('type', 'kelas')->get();
+        $rooms = Room::where('type', 'kelas')->orWhere('type', 'lab')->where('name', '!=', 'Ruang Serbaguna')->get();
         $teachers = Teacher::all();
 
         if ($templates->isEmpty()) {
@@ -136,7 +136,12 @@ class TimetableSeeder extends Seeder
                         $usedRooms = $roomSchedule[$slotKey] ?? [];
                         $availableRoom = $rooms->first(function ($r) use ($usedRooms) {
                             return ! in_array($r->id, $usedRooms);
-                        }) ?? $rooms->first();
+                        });
+
+                        if (! $availableRoom) {
+                            $entriesFailed++;
+                            continue;
+                        }
 
                         $teacherForRoom = $teachers->random();
 
@@ -175,7 +180,13 @@ class TimetableSeeder extends Seeder
                         } else {
                             $availableRoom = $rooms->first(function ($r) use ($usedRooms) {
                                 return ! in_array($r->id, $usedRooms);
-                            }) ?? $rooms->first();
+                            });
+
+                            if (! $availableRoom) {
+                                // No rooms left to allocate!
+                                $entriesFailed++;
+                                continue;
+                            }
 
                             $teacherForRoom = $teachers->random();
 

@@ -113,6 +113,16 @@ class RoomHistoryTest extends TestCase
         ]);
     }
 
+    public function test_can_view_room_history_show()
+    {
+        $this->loginAsStaff();
+
+        $room = Room::factory()->create();
+        $response = $this->get(route('staff.rooms.history.show', $room->id));
+        $response->assertStatus(200);
+        $response->assertViewIs('staff.roomhistory.show');
+    }
+
     public function test_can_delete_room_history()
     {
         $this->loginAsStaff();

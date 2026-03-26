@@ -19,15 +19,18 @@ class RoomHistoryController extends Controller
     {
         $dayOfWeek = Carbon::now()->dayOfWeekIso;
 
-        $rooms = Room::with(['timetableEntries' => function ($query) use ($dayOfWeek) {
+        // paginate rooms instead of pulling everything in one go
+        $roomsQuery = Room::with(['timetableEntries' => function ($query) use ($dayOfWeek) {
             $query->where('day_of_week', $dayOfWeek)
                 ->whereHas('template', function ($q) {
                     $q->where('is_active', true);
                 })
                 ->with(['period', 'teacherSubject.subject', 'teacherSubject.teacher', 'roomHistory.classroom']);
-        }])->get();
+        }]);
 
-        $rooms = $rooms->map(function ($room) {
+        $rooms = $roomsQuery->paginate(10);
+        // compute current status on each room in the current page
+        $rooms->getCollection()->transform(function ($room) {
             $now = Carbon::now();
             $currentEntry = $room->timetableEntries->first(function ($entry) use ($now) {
                 return $entry->isOngoing($now);
@@ -39,6 +42,7 @@ class RoomHistoryController extends Controller
             return $room;
         });
 
+        // histories still available for the global modal, but not used on index table
         $histories = RoomHistory::with(['room', 'classroom', 'term', 'teacher'])
             ->latest()
             ->paginate(10);
@@ -50,7 +54,7 @@ class RoomHistoryController extends Controller
 
         return view('admin.roomhistory.index', [
             'title' => 'Riwayat Status Ruangan',
-            'description' => 'Halaman riwayat ruangan dan penggunaan saat ini',
+            'description' => 'Halaman ringkasan ruangan dan manajemen booking',
             'rooms' => $rooms,
             'histories' => $histories,
             'teachers' => $teachers,
@@ -134,14 +138,69 @@ class RoomHistoryController extends Controller
             ],
         ]);
 
+        // if incoming request came from a room-show page, redirect back there
+        $referer = $request->headers->get('referer');
+        if ($referer && preg_match('#/room-history/([0-9a-f\-]+)#', $referer, $m)) {
+            // $m[1] may be room id
+            return redirect()->route('admin.rooms.history.show', $history->room_id)
+                ->with('success', 'Room history updated successfully.');
+        }
+
         return redirect()->back()->with('success', 'Room history updated successfully.');
     }
 
     public function destroy($id)
     {
         $history = RoomHistory::findOrFail($id);
+        $roomId = $history->room_id;
         $history->delete();
 
+        // if deletion happened from room-show page, go back to that page
+        $referer = request()->headers->get('referer');
+        if ($referer && preg_match('#/room-history/([0-9a-f\-]+)#', $referer, $m)) {
+            return redirect()->route('admin.rooms.history.show', $roomId)
+                ->with('success', 'Room history deleted successfully.');
+        }
+
         return redirect()->back()->with('success', 'Room history deleted successfully.');
+    }
+
+    /**
+     * Display calendar and bookings for a single room.
+     */
+    public function show($id)
+    {
+        $room = Room::with(['roomHistory' => function ($q) {
+            $q->with(['classroom', 'term', 'teacher']);
+        }])->findOrFail($id);
+
+        // prepare events for the calendar
+        $events = $room->roomHistory->filter(function($h){
+            return $h->start_date !== null;
+        })->map(function ($h) {
+            return [
+                'id' => $h->id,
+                'title' => $h->event_type ?: 'Booking',
+                'start' => $h->start_date->toIso8601String(),
+                'end' => $h->end_date?->toIso8601String(),
+                'classroom' => $h->classroom?->full_name,
+                'teacher' => $h->teacher?->name,
+                'term' => $h->term?->tahun_ajaran,
+            ];
+        });
+
+        $teachers = Teacher::all();
+        $classrooms = Classroom::all();
+        $terms = Term::all();
+
+        return view('admin.roomhistory.show', [
+            'title' => 'Jadwal Ruangan '.$room->name,
+            'description' => 'Kalender penggunaan dan pemesanan ruangan',
+            'room' => $room,
+            'events' => $events,
+            'teachers' => $teachers,
+            'classrooms' => $classrooms,
+            'terms' => $terms,
+        ]);
     }
 }

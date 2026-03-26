@@ -24,7 +24,7 @@ class RoomController extends Controller
             ->orderBy('name')
             ->get();
 
-        $totalRooms = $buildings->sum('rooms_count');
+        $totalRooms = $buildings->sum('rooms_count') + Room::where('building_id', null)->count();
         $activeRooms = $buildings->sum(function ($building) {
             return $building->rooms()->where('is_active', true)->count();
         });

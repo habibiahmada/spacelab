@@ -40,7 +40,7 @@ class ReportController extends Controller
 
         $majors = Major::select('id', 'code', 'name')->orderBy('code')->paginate(50);
 
-        $studentDistribution = Classroom::select('id', 'major_id', 'level', 'rombel', 'full_name')
+        $studentDistribution = Classroom::select('id', 'major_id', 'level', 'rombel')
             ->withCount(['classHistories' => function ($query) use ($activeTerm) {
                 if ($activeTerm) {
                     $query->whereHas('block', function ($q) use ($activeTerm) {

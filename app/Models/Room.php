@@ -54,6 +54,11 @@ class Room extends Model
         return $this->hasMany(RoomHistory::class, 'room_id');
     }
 
+    public function roomHistory(): HasMany
+    {
+        return $this->roomHistories();
+    }
+
     // CCTV Relations
     public function cctvPolicy()
     {
