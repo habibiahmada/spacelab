@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Staff;
 
+use App\Models\Classroom;
+use App\Models\Major;
+use App\Models\Role;
 use App\Models\Room;
 use App\Models\RoomHistory;
-use App\Models\Classroom;
 use App\Models\Teacher;
 use App\Models\Term;
 use App\Models\User;
-use App\Models\Major;
-use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -90,12 +90,12 @@ class RoomHistoryTest extends TestCase
         $teacher = Teacher::create(['user_id' => $teacherUser->id, 'code' => 'TEA2', 'phone' => '08124']);
 
         $history = RoomHistory::create([
-             'room_id' => $room->id,
-             'terms_id' => $term->id,
-             'classes_id' => $class->id,
-             'teacher_id' => $teacher->id,
-             'user_id' => $this->staff->id,
-             'event_type' => 'Old Event'
+            'room_id' => $room->id,
+            'terms_id' => $term->id,
+            'classes_id' => $class->id,
+            'teacher_id' => $teacher->id,
+            'user_id' => $this->staff->id,
+            'event_type' => 'Old Event',
         ]);
 
         $response = $this->put(route('staff.rooms.history.update', $history->id), [
@@ -103,7 +103,7 @@ class RoomHistoryTest extends TestCase
             'terms_id' => $term->id,
             'classes_id' => $class->id,
             'teacher_id' => $teacher->id,
-            'event_type' => 'New Event'
+            'event_type' => 'New Event',
         ]);
 
         $response->assertRedirect();
@@ -111,6 +111,16 @@ class RoomHistoryTest extends TestCase
             'id' => $history->id,
             'event_type' => 'New Event',
         ]);
+    }
+
+    public function test_can_view_room_history_show()
+    {
+        $this->loginAsStaff();
+
+        $room = Room::factory()->create();
+        $response = $this->get(route('staff.rooms.history.show', $room->id));
+        $response->assertStatus(200);
+        $response->assertViewIs('staff.roomhistory.show');
     }
 
     public function test_can_delete_room_history()
@@ -127,12 +137,12 @@ class RoomHistoryTest extends TestCase
         $teacher = Teacher::create(['user_id' => $teacherUser->id, 'code' => 'TEA3', 'phone' => '08125']);
 
         $history = RoomHistory::create([
-             'room_id' => $room->id,
-             'terms_id' => $term->id,
-             'classes_id' => $class->id,
-             'teacher_id' => $teacher->id,
-             'user_id' => $this->staff->id,
-             'event_type' => 'Delete Me'
+            'room_id' => $room->id,
+            'terms_id' => $term->id,
+            'classes_id' => $class->id,
+            'teacher_id' => $teacher->id,
+            'user_id' => $this->staff->id,
+            'event_type' => 'Delete Me',
         ]);
 
         $response = $this->delete(route('staff.rooms.history.destroy', $history->id));

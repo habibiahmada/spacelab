@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\TimetableEntry;
 use App\Models\Period;
+use App\Models\TimetableEntry;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,10 +19,11 @@ class ScheduleController extends Controller
 
         if (! $teacher) {
             Log::warning('⚠️ User has no teacher relationship; not showing timetable for teacher.');
+
             return view('teacher.schedules', [
                 'teacher' => null,
                 'allSchedules' => collect(),
-                'teacherFullName' => $user?->name ?? '-',   
+                'teacherFullName' => $user?->name ?? '-',
                 'subjects' => collect(),
                 'totalSubjects' => 0,
                 'title' => 'Jadwal',
@@ -34,16 +35,16 @@ class ScheduleController extends Controller
 
         // Ambil semua jadwal dengan relasi model
         $allSchedulesRaw = TimetableEntry::whereHas('teacherSubject', function ($q) use ($teacher) {
-                $q->where('teacher_id', $teacher->id);
-            })
+            $q->where('teacher_id', $teacher->id);
+        })
             ->whereBetween('day_of_week', [1, 7])
             ->with([
-                'period',
-                'template.class.major',
-                'teacherSubject.subject',
-                'teacherSubject.teacher.user',
-                'roomHistory.room.building',
-            ])
+            'period',
+            'template.class.major',
+            'teacherSubject.subject',
+            'teacherSubject.teacher.user',
+            'roomHistory.room.building',
+        ])
             ->orderBy('day_of_week', 'asc')
             ->orderBy('period_id', 'asc')
             ->get()
@@ -83,14 +84,21 @@ class ScheduleController extends Controller
             // Hanya tambahkan period entries jika jadwal lengkap
             $periodEntriesForDay = collect();
             if ($shouldShowPeriods) {
-                $periodEntriesForDay = $nonTeachingPeriods->map(function($p) use ($d) {
-                    return new class($p, $d) {
+                $periodEntriesForDay = $nonTeachingPeriods->map(function ($p) use ($d) {
+                    return new class($p, $d)
+                    {
                         public $period;
+
                         public $template;
+
                         public $teacherSubject;
+
                         public $teacher;
+
                         public $roomHistory;
+
                         public $is_period_only;
+
                         public $day_of_week;
 
                         public function __construct($period, $day)
@@ -119,9 +127,11 @@ class ScheduleController extends Controller
 
             // Merge dan sort by start_time (fallback ke ordinal)
             $now = Carbon::now();
-            $merged = $dayCollection->concat($periodEntriesForDay)->sortBy(function($item) use ($now) {
+            $merged = $dayCollection->concat($periodEntriesForDay)->sortBy(function ($item) use ($now) {
                 $period = $item->period ?? null;
-                if (! $period) return PHP_INT_MAX;
+                if (! $period) {
+                    return PHP_INT_MAX;
+                }
 
                 $start = $period->start_time ?? ($period->start_date?->format('H:i:s') ?? null);
                 if ($start) {
@@ -134,10 +144,15 @@ class ScheduleController extends Controller
                             $c = null;
                         }
                     }
-                    if ($c) return $c->timestamp;
+                    if ($c) {
+                        return $c->timestamp;
+                    }
                 }
 
-                if (isset($period->ordinal)) return (int) $period->ordinal * 1000;
+                if (isset($period->ordinal)) {
+                    return (int) $period->ordinal * 1000;
+                }
+
                 return PHP_INT_MAX;
             })->values();
 

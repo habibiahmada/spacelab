@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 use App\Models\Company;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class CompanySeeder extends Seeder
 {
@@ -20,7 +18,7 @@ class CompanySeeder extends Seeder
             $name = fake()->company();
 
             // Use same approach as MajorSeeder for logo generation: deterministic avatar URL using a seed
-            $logo = 'https://api.dicebear.com/7.x/notionists/svg?seed=' . urlencode(Str::slug($name));
+            $logo = 'https://api.dicebear.com/7.x/notionists/svg?seed='.urlencode(Str::slug($name));
 
             Company::updateOrCreate(
                 ['name' => $name],

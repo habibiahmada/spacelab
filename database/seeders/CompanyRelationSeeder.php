@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\CompanyRelation;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use App\Models\CompanyRelation;
 
 class CompanyRelationSeeder extends Seeder
 {
@@ -21,6 +19,7 @@ class CompanyRelationSeeder extends Seeder
         $companyIds = DB::table('companies')->pluck('id');
         if ($majorIds->isEmpty() || $companyIds->isEmpty()) {
             $this->command->info('⚠️  Tabel majors atau companies kosong. Jalankan MajorSeeder dan CompanySeeder terlebih dahulu agar relasi bisa dibuat.');
+
             return;
         }
         $partnershipTypes = ['internship', 'recruitment', 'mou', 'scholarship'];

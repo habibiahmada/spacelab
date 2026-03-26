@@ -27,11 +27,11 @@ class BuildingController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'pengguna (' . Auth::user()->name . ')',
+            'entity' => 'pengguna ('.Auth::user()->name.')',
             'record_id' => Auth::id(),
-            'action' => 'create_building',
+            'action' => 'create',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' membuat gedung baru pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' membuat gedung baru pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],
@@ -72,11 +72,11 @@ class BuildingController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'pengguna (' . Auth::user()->name . ')',
+            'entity' => 'pengguna ('.Auth::user()->name.')',
             'record_id' => $building->id,
             'action' => 'update_building',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' memperbarui gedung pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' memperbarui gedung pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],
@@ -101,11 +101,11 @@ class BuildingController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'pengguna (' . Auth::user()->name . ')',
+            'entity' => 'pengguna ('.Auth::user()->name.')',
             'record_id' => $building->id,
             'action' => 'delete_building',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' menghapus gedung pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' menghapus gedung pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],

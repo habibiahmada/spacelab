@@ -21,7 +21,7 @@ class TimetableEntryTest extends TestCase
             'end_time' => '09:15:00',
         ]);
 
-        $entry = new TimetableEntry();
+        $entry = new TimetableEntry;
         $entry->setRelation('period', $period);
 
         $now = Carbon::parse('2025-11-29 08:40:00'); // within the daily time 08:35--09:15
@@ -43,7 +43,7 @@ class TimetableEntryTest extends TestCase
             'start_time' => '23:00:00',
             'end_time' => '01:00:00',
         ]);
-        $entry = new \App\Models\TimetableEntry();
+        $entry = new \App\Models\TimetableEntry;
         $entry->setRelation('period', $period);
 
         $now = Carbon::parse('2025-11-29 23:30:00');

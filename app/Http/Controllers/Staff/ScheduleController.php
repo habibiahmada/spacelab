@@ -41,13 +41,13 @@ class ScheduleController extends Controller
             ->with([
                 'timetableTemplates' => function ($query) {
                     $query->where('is_active', true)
-                          ->with([
-                              'entries.period',
-                              'entries.teacherSubject.subject',
-                              'entries.teacherSubject.teacher.user',
-                              'entries.roomHistory.room',
-                          ]);
-                }
+                        ->with([
+                            'entries.period',
+                            'entries.teacherSubject.subject',
+                            'entries.teacherSubject.teacher.user',
+                            'entries.roomHistory.room',
+                        ]);
+                },
             ])
             ->orderBy('level')
             ->orderBy('rombel')
@@ -69,6 +69,7 @@ class ScheduleController extends Controller
                         $period = clone $p;
                         $period->day_of_week = $i;
                         $period->is_break = true;
+
                         return $period;
                     }));
 
@@ -77,6 +78,7 @@ class ScheduleController extends Controller
                         if (isset($item->period)) {
                             return $item->period->start_time;
                         }
+
                         return $item->start_time;
                     })->values();
 

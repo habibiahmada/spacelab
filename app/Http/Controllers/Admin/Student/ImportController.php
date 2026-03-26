@@ -49,13 +49,13 @@ class ImportController extends Controller
                 ->first();
 
             // If no active block found, get the first block of the term
-            if (!$activeBlock) {
+            if (! $activeBlock) {
                 $activeBlock = Block::where('terms_id', $activeTerm->id)
                     ->orderBy('start_date')
                     ->first();
             }
 
-            if (!$activeBlock) {
+            if (! $activeBlock) {
                 throw new \Exception('Tidak ada blok yang tersedia untuk term aktif. Silakan buat blok terlebih dahulu.');
             }
 
@@ -66,6 +66,7 @@ class ImportController extends Controller
 
                 if (count($row) < 6) {
                     $skipped++;
+
                     continue;
                 }
 
@@ -88,6 +89,7 @@ class ImportController extends Controller
                     Student::where('nisn', $nisn)->exists()
                 ) {
                     $skipped++;
+
                     continue;
                 }
 
@@ -96,6 +98,7 @@ class ImportController extends Controller
 
                 if (count($parts) < 3) {
                     $skipped++;
+
                     continue;
                 }
 
@@ -106,8 +109,9 @@ class ImportController extends Controller
                     ->whereHas('major', fn ($q) => $q->where('code', $majorCode))
                     ->first();
 
-                if (!$class) {
+                if (! $class) {
                     $skipped++;
+
                     continue;
                 }
 
@@ -146,8 +150,7 @@ class ImportController extends Controller
             DB::rollBack();
             fclose($handle);
 
-            return back()->with('error', 'Import gagal: ' . $e->getMessage());
+            return back()->with('error', 'Import gagal: '.$e->getMessage());
         }
     }
-
 }

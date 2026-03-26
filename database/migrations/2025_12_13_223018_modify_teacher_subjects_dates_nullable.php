@@ -22,7 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('teacher_subjects', function (Blueprint $table) {
-        });
+        Schema::table('teacher_subjects', function (Blueprint $table) {});
     }
 };

@@ -69,7 +69,8 @@ return new class extends Migration
                             $table->index('block_id');
                             $table->foreign('block_id')->references('id')->on('blocks')->onDelete('set null');
                         });
-                    } catch (\Throwable $e) {}
+                    } catch (\Throwable $e) {
+                    }
                 }
             }
         }
@@ -99,20 +100,35 @@ return new class extends Migration
                 Schema::table('guardian_class_history', function (Blueprint $table) {
                     $table->dropForeign(['teacher_id']);
                 });
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
 
             try {
                 Schema::table('guardian_class_history', function (Blueprint $table) {
                     $table->dropForeign(['block_id']);
                 });
-            } catch (\Throwable $e) {}
-            try { Schema::table('guardian_class_history', function (Blueprint $table) { $table->dropIndex(['teacher_id']); }); } catch (\Throwable $e) {}
-            try { Schema::table('guardian_class_history', function (Blueprint $table) { $table->dropIndex(['block_id']); }); } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
+            try {
+                Schema::table('guardian_class_history', function (Blueprint $table) {
+                    $table->dropIndex(['teacher_id']);
+                });
+            } catch (\Throwable $e) {
+            }
+            try {
+                Schema::table('guardian_class_history', function (Blueprint $table) {
+                    $table->dropIndex(['block_id']);
+                });
+            } catch (\Throwable $e) {
+            }
         }
 
         Schema::table('guardian_class_history', function (Blueprint $table) {
             if (Schema::hasColumn('guardian_class_history', 'block_id')) {
-                try { $table->dropColumn('block_id'); } catch (\Throwable $e) {}
+                try {
+                    $table->dropColumn('block_id');
+                } catch (\Throwable $e) {
+                }
             }
         });
     }

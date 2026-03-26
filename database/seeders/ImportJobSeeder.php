@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\ImportJob;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class ImportJobSeeder extends Seeder
 {
@@ -18,7 +18,7 @@ class ImportJobSeeder extends Seeder
             'file_path' => 'storage/imports/schedule.xlsx',
             'status' => 'success',
             'message' => 'Data jadwal berhasil diimpor.',
-            'created_by' => $user ? $user->id : null
+            'created_by' => $user ? $user->id : null,
         ]);
     }
 }

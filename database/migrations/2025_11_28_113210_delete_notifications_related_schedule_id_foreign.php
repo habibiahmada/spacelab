@@ -13,7 +13,7 @@ return new class extends Migration
     {
         //
         Schema::table('notifications', function (Blueprint $table) {
-        $table->dropForeign(['related_schedule_id']);
+            $table->dropForeign(['related_schedule_id']);
         });
 
     }

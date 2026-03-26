@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 use App\Models\ClassHistory;
 use App\Models\GuardianClassHistory;
 use App\Models\Period;
 use App\Models\Term;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ClassroomController extends Controller
 {
@@ -26,11 +25,11 @@ class ClassroomController extends Controller
         $guardian = null;
         if ($teacher) {
             $guardianQuery = GuardianClassHistory::where('teacher_id', $teacher->id)
-                    ->where(function ($q) {
-                        $q->whereNull('ended_at')->orWhere('ended_at', '>=', Carbon::now());
-                    })
-                    ->orderByDesc('started_at')
-                    ->with(['teacher.user', 'class']);
+                ->where(function ($q) {
+                    $q->whereNull('ended_at')->orWhere('ended_at', '>=', Carbon::now());
+                })
+                ->orderByDesc('started_at')
+                ->with(['teacher.user', 'class']);
 
             $guardian = $guardianQuery->first();
             $classroom = $guardian?->class;
@@ -46,7 +45,7 @@ class ClassroomController extends Controller
             if ($activeTerm) {
                 $classmatesQuery = $classmatesQuery->where('terms_id', $activeTerm->id);
             }
-            $students = $classmatesQuery->with('student.user')->get()->map(fn($ch) => $ch->student->user);
+            $students = $classmatesQuery->with('student.user')->get()->map(fn ($ch) => $ch->student->user);
 
             // Keep $guardian as the current user's guardian record for the class
 
@@ -91,14 +90,21 @@ class ClassroomController extends Controller
             // Hanya tambahkan period entries jika jadwal lengkap
             $periodEntriesForDay = collect();
             if ($shouldShowPeriods) {
-                $periodEntriesForDay = $nonTeachingPeriods->map(function($p) use ($dayOfWeek) {
-                    return new class($p, $dayOfWeek) {
+                $periodEntriesForDay = $nonTeachingPeriods->map(function ($p) use ($dayOfWeek) {
+                    return new class($p, $dayOfWeek)
+                    {
                         public $period;
+
                         public $template;
+
                         public $teacherSubject;
+
                         public $teacher;
+
                         public $roomHistory;
+
                         public $is_period_only;
+
                         public $day_of_week;
 
                         public function __construct($period, $day)
@@ -127,9 +133,11 @@ class ClassroomController extends Controller
 
             // Merge dan sort by start_time
             $now = $currentTime;
-            $todayEntries = $todayEntriesRaw->concat($periodEntriesForDay)->sortBy(function($item) use ($now) {
+            $todayEntries = $todayEntriesRaw->concat($periodEntriesForDay)->sortBy(function ($item) use ($now) {
                 $period = $item->period ?? null;
-                if (! $period) return PHP_INT_MAX;
+                if (! $period) {
+                    return PHP_INT_MAX;
+                }
 
                 $start = $period->start_time ?? ($period->start_date?->format('H:i:s') ?? null);
                 if ($start) {
@@ -142,14 +150,19 @@ class ClassroomController extends Controller
                             $c = null;
                         }
                     }
-                    if ($c) return $c->timestamp;
+                    if ($c) {
+                        return $c->timestamp;
+                    }
                 }
 
-                if (isset($period->ordinal)) return (int) $period->ordinal * 1000;
+                if (isset($period->ordinal)) {
+                    return (int) $period->ordinal * 1000;
+                }
+
                 return PHP_INT_MAX;
             })->values();
 
-            $currentEntry = $todayEntries->first(fn($e) => method_exists($e, 'isOngoing') ? $e->isOngoing($currentTime) : false);
+            $currentEntry = $todayEntries->first(fn ($e) => method_exists($e, 'isOngoing') ? $e->isOngoing($currentTime) : false);
         }
 
         return view('teacher.classroom', [

@@ -30,13 +30,14 @@ class MarkAlphaAttendance extends Command
         // Get all active sessions that have expired
         $expiredSessions = \App\Models\AttendanceSession::where('is_active', true)
             ->where('end_time', '<', \Carbon\Carbon::now())
-            ->with(['timetableEntry.template' => function($q) {
+            ->with(['timetableEntry.template' => function ($q) {
                 $q->with('class');
             }])
             ->get();
 
         if ($expiredSessions->isEmpty()) {
             $this->info('No expired sessions found.');
+
             return;
         }
 

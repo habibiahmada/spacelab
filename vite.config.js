@@ -17,7 +17,10 @@ export default defineConfig({
         "resources/js/admin/room-index.js",
         "resources/js/admin/teacher-index.js",
         "resources/js/admin/student-index.js",
-        "resources/js/admin/staff-index.js"
+        "resources/js/admin/staff-index.js",
+        "resources/js/admin/cctv-index.js",
+        "resources/js/admin/cctv-playback.js",
+        "resources/js/admin/cctv-health.js"
       ],
       refresh: true,
     }),

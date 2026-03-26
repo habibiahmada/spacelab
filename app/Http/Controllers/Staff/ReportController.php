@@ -3,19 +3,18 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Student;
-use App\Models\Teacher;
+use App\Models\ClassHistory;
 use App\Models\Classroom;
 use App\Models\Major;
 use App\Models\Room;
+use App\Models\Student;
 use App\Models\Subject;
+use App\Models\Teacher;
 use App\Models\Term;
 use App\Models\TimetableEntry;
 use App\Models\TimetableTemplate;
-use App\Models\ClassHistory;
-use App\Models\TeacherSubject;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
@@ -51,10 +50,10 @@ class ReportController extends Controller
                 });
             }
         }])
-        ->with('major')
-        ->orderBy('level')
-        ->get()
-        ->groupBy('major.code');
+            ->with('major')
+            ->orderBy('level')
+            ->get()
+            ->groupBy('major.code');
 
         return view('staff.reports.index', compact(
             'title',
@@ -191,13 +190,13 @@ class ReportController extends Controller
                     'period',
                     'teacherSubject.teacher.user',
                     'teacherSubject.subject',
-                    'roomHistory.room'
+                    'roomHistory.room',
                 ])
-                ->where('template_id', $template->id)
-                ->get()
-                ->groupBy(function ($entry) {
-                    return $entry->day_of_week . '-' . $entry->period_id;
-                });
+                    ->where('template_id', $template->id)
+                    ->get()
+                    ->groupBy(function ($entry) {
+                        return $entry->day_of_week.'-'.$entry->period_id;
+                    });
 
                 // Get periods
                 $periods = \App\Models\Period::orderBy('ordinal')->get();
@@ -239,14 +238,14 @@ class ReportController extends Controller
             $usage = TimetableEntry::whereHas('roomHistory', function ($query) use ($room) {
                 $query->where('room_id', $room->id);
             })
-            ->whereHas('template', function ($query) {
-                $query->where('is_active', true);
-            })
-            ->count();
+                ->whereHas('template', function ($query) {
+                    $query->where('is_active', true);
+                })
+                ->count();
 
             $roomUsage[$room->id] = [
                 'count' => $usage,
-                'percentage' => min(100, round(($usage / 30) * 100)) // Assuming max 30 slots per week
+                'percentage' => min(100, round(($usage / 30) * 100)), // Assuming max 30 slots per week
             ];
         }
 
@@ -264,8 +263,8 @@ class ReportController extends Controller
     public function exportStudents(Request $request)
     {
         $classId = $request->get('class_id');
-        
-        if (!$classId) {
+
+        if (! $classId) {
             return back()->with('error', 'Pilih kelas terlebih dahulu');
         }
 
@@ -283,21 +282,21 @@ class ReportController extends Controller
             ->unique('id')
             ->sortBy('user.name');
 
-        $filename = 'siswa_' . str_replace(' ', '_', $classroom->full_name) . '_' . date('Y-m-d') . '.csv';
+        $filename = 'siswa_'.str_replace(' ', '_', $classroom->full_name).'_'.date('Y-m-d').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ];
 
         $callback = function () use ($students, $classroom) {
             $file = fopen('php://output', 'w');
             // Add BOM for Excel UTF-8
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
+
             // Header
-            fputcsv($file, ['Laporan Siswa Kelas ' . $classroom->full_name]);
-            fputcsv($file, ['Tanggal Export: ' . Carbon::now()->format('d/m/Y H:i')]);
+            fputcsv($file, ['Laporan Siswa Kelas '.$classroom->full_name]);
+            fputcsv($file, ['Tanggal Export: '.Carbon::now()->format('d/m/Y H:i')]);
             fputcsv($file, []);
             fputcsv($file, ['No', 'NIS', 'NISN', 'Nama', 'Email']);
 
@@ -308,7 +307,7 @@ class ReportController extends Controller
                     $student->nis ?? '-',
                     $student->nisn ?? '-',
                     $student->user->name ?? '-',
-                    $student->user->email ?? '-'
+                    $student->user->email ?? '-',
                 ]);
             }
 
@@ -328,19 +327,19 @@ class ReportController extends Controller
             ->get()
             ->sortBy('user.name');
 
-        $filename = 'guru_' . date('Y-m-d') . '.csv';
+        $filename = 'guru_'.date('Y-m-d').'.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ];
 
         $callback = function () use ($teachers) {
             $file = fopen('php://output', 'w');
             fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
+
             fputcsv($file, ['Laporan Data Guru']);
-            fputcsv($file, ['Tanggal Export: ' . Carbon::now()->format('d/m/Y H:i')]);
+            fputcsv($file, ['Tanggal Export: '.Carbon::now()->format('d/m/Y H:i')]);
             fputcsv($file, []);
             fputcsv($file, ['No', 'Kode', 'Nama', 'Email', 'Telepon', 'Mata Pelajaran']);
 
@@ -356,7 +355,7 @@ class ReportController extends Controller
                     $teacher->user->name ?? '-',
                     $teacher->user->email ?? '-',
                     $teacher->phone ?? '-',
-                    $subjects ?: '-'
+                    $subjects ?: '-',
                 ]);
             }
 

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\Models\Subject;
 use App\Models\Major;
+use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
@@ -25,7 +24,7 @@ class SubjectController extends Controller
 
         $majors = Major::orderBy('name')->get();
 
-        $teachers = Teacher::with('user')->get()->sortBy(function($teacher) {
+        $teachers = Teacher::with('user')->get()->sortBy(function ($teacher) {
             return $teacher->user->name;
         });
 
@@ -39,7 +38,7 @@ class SubjectController extends Controller
         if ($request->has('search')) {
             $search = $request->search;
             $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('code', 'like', "%{$search}%");
+                ->orWhere('code', 'like', "%{$search}%");
         }
 
         return response()->json($query->limit(20)->get());
@@ -76,6 +75,7 @@ class SubjectController extends Controller
     public function destroy(Subject $subject)
     {
         $subject->delete();
+
         return redirect()->back()->with('success', 'Subject deleted successfully.');
     }
 

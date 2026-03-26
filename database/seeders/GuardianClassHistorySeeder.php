@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\GuardianClassHistory;
 use App\Models\Classroom;
+use App\Models\GuardianClassHistory;
 use App\Models\RoleAssignment;
 use App\Models\Teacher;
+use Illuminate\Database\Seeder;
 
 class GuardianClassHistorySeeder extends Seeder
 {
@@ -17,11 +17,13 @@ class GuardianClassHistorySeeder extends Seeder
 
         if ($classes->isEmpty()) {
             $this->command->warn('⚠️ No classes found. Aborting GuardianClassHistorySeeder.');
+
             return;
         }
 
         if ($teachers->isEmpty()) {
             $this->command->warn('⚠️ No teachers found. Aborting GuardianClassHistorySeeder.');
+
             return;
         }
 
@@ -29,10 +31,10 @@ class GuardianClassHistorySeeder extends Seeder
         $index = 0;
 
         $roleAssignedTeacherIds = RoleAssignment::pluck('head_of_major_id')
-                    ->merge(RoleAssignment::pluck('program_coordinator_id'))
-                                ->filter()
-                                ->unique()
-                                ->toArray();
+            ->merge(RoleAssignment::pluck('program_coordinator_id'))
+            ->filter()
+            ->unique()
+            ->toArray();
         // track already assigned guardians to ensure a teacher isn't guardian for multiple classes at the same time
         $assignedGuardianTeacherIds = [];
 
@@ -67,15 +69,15 @@ class GuardianClassHistorySeeder extends Seeder
 
             try {
                 GuardianClassHistory::updateOrCreate(
-                [
-                    'teacher_id' => $teacher->id,
-                    'class_id' => $class->id,
-                ],
-                [
-                    'started_at' => now()->subMonths(6),
-                    'ended_at' => null,
-                ]
-            );
+                    [
+                        'teacher_id' => $teacher->id,
+                        'class_id' => $class->id,
+                    ],
+                    [
+                        'started_at' => now()->subMonths(6),
+                        'ended_at' => null,
+                    ]
+                );
             } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
                 // Unique constraint violated while seeding — skip and continue
                 continue;

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Major;
 use Illuminate\Database\Seeder;
-use App\Models\{Major, Teacher};
 
 class MajorSeeder extends Seeder
 {
@@ -101,6 +101,6 @@ class MajorSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ MajorSeeder berhasil menambahkan ' . count($majors) . ' jurusan SMK.');
+        $this->command->info('✅ MajorSeeder berhasil menambahkan '.count($majors).' jurusan SMK.');
     }
 }

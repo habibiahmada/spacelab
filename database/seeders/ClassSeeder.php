@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Classroom;
+use App\Models\Major;
 use Illuminate\Database\Seeder;
-use App\Models\{Classroom, Teacher, Major, Term};
 
 class ClassSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class ClassSeeder extends Seeder
 
         if ($majors->isEmpty()) {
             $this->command->warn('⚠️ Tidak ada jurusan di database. Jalankan MajorSeeder dulu.');
+
             return;
         }
 

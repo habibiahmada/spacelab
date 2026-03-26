@@ -12,7 +12,9 @@ class Subject extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = ['code', 'name', 'type', 'description'];
 
     public function scheduleEntries(): HasMany
@@ -46,8 +48,8 @@ class Subject extends Model
     public function majors() // existing many-to-many through major_subject
     {
         return $this->belongsToMany(Major::class, 'major_subject', 'subject_id', 'major_id')
-                    ->using(MajorSubject::class)
-                    ->withTimestamps()
-                    ->withPivot(['notes']);
+            ->using(MajorSubject::class)
+            ->withTimestamps()
+            ->withPivot(['notes']);
     }
 }

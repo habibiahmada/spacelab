@@ -12,13 +12,16 @@ class TeacherSubject extends Pivot
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $table = 'teacher_subjects';
+
     protected $fillable = [
         'teacher_id',
         'subject_id',
         'started_at',
-        'ended_at'
+        'ended_at',
     ];
 
     protected $casts = [

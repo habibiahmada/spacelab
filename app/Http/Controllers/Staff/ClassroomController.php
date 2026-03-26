@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classroom;
-use App\Models\Major;
-use App\Models\Teacher;
-use App\Models\GuardianClassHistory;
-use App\Models\Term;
-use App\Models\Block;
-use App\Models\Student;
 use App\Models\ClassHistory;
+use App\Models\Classroom;
+use App\Models\GuardianClassHistory;
+use App\Models\Major;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Term;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -54,8 +53,6 @@ class ClassroomController extends Controller
         return redirect()->route('staff.classrooms.index')
             ->with('success', 'Kelas berhasil ditambahkan.');
     }
-
-
 
     public function show($id)
     {
@@ -109,10 +106,6 @@ class ClassroomController extends Controller
             'availableStudents' => $availableStudents,
         ]);
     }
-
-
-
-
 
     public function update(Request $request, $id)
     {

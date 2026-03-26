@@ -178,51 +178,62 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const content = `
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Kode</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">${room.code}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 dark:bg-gray-800/30 p-5 rounded-xl border border-gray-100 dark:border-gray-700">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Kode Ruangan</label>
+                        <p class="text-base font-semibold text-gray-900 dark:text-gray-100">${room.code}</p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Nama</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">${room.name}</p>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Nama Ruangan</label>
+                        <p class="text-base font-semibold text-gray-900 dark:text-gray-100">${room.name}</p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Gedung</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">${room.building_name || "-"}</p>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Gedung / Lokasi</label>
+                        <div class="flex items-center gap-2">
+                           <span class="p-1 rounded bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+                               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                           </span>
+                           <p class="text-sm font-medium text-gray-900 dark:text-gray-100">${room.building_name || "Tidak Terikat Gedung"}</p>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Lantai</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">${room.floor ?? "-"}</p>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Lantai</label>
+                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">${room.floor !== null ? 'Lantai ' + room.floor : "-"}</p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Kapasitas</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">${room.capacity ?? "-"}</p>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Kapasitas</label>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">${room.capacity ?? "0"}</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Siswa</span>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Tipe</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">${room.type ? room.type.charAt(0).toUpperCase() + room.type.slice(1) : "-"}</p>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Tipe Ruangan</label>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">
+                            ${room.type ? room.type.charAt(0).toUpperCase() + room.type.slice(1) : "-"}
+                        </span>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Status</label>
-                        <p class="mt-1">
-                            ${
-                                room.is_active
-                                    ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">Aktif</span>'
-                                    : '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">Nonaktif</span>'
-                            }
-                        </p>
+                    <div class="col-span-1 md:col-span-2 space-y-2 pt-2 border-t border-gray-100 dark:border-gray-700 mt-2">
+                        <label class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Status Operasional</label>
+                        <div class="flex items-center gap-2">
+                            ${room.is_active
+                    ? '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400"><span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>Aktif & Tersedia</span>'
+                    : '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">Nonaktif</span>'
+                }
+                        </div>
                     </div>
                 </div>
-                ${
-                    room.notes
-                        ? `
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-500 dark:text-gray-400">Catatan</label>
-                        <p class="mt-1 text-sm text-gray-900 dark:text-gray-100">${room.notes}</p>
+                ${room.notes
+                    ? `
+                    <div class="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30">
+                        <label class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 flex items-center gap-1.5 mb-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            Catatan Penting
+                        </label>
+                        <p class="text-sm text-amber-800 dark:text-amber-200 italic leading-relaxed">"${room.notes}"</p>
                     </div>
                 `
-                        : ""
+                    : ""
                 }
             `;
 

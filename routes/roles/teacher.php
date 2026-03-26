@@ -1,17 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Teacher\{
-    DashboardController as TeacherDashboardController,
-    ScheduleController as TeacherScheduleController,
-    ClassroomController as TeacherClassroomController,
-    MajorHeadController as TeacherMajorHeadController,
-    ProgramCoordinatorController as TeacherProgramCoordinatorController,
-    ProfileController as TeacherProfileController,
-};
-
 use App\Http\Controllers\Admin\AttendanceSessionController as TeacherAttendanceSessionController;
 use App\Http\Controllers\AttendanceController as TeacherAttendanceController;
+use App\Http\Controllers\Teacher\ClassroomController as TeacherClassroomController;
+use App\Http\Controllers\Teacher\DashboardController as TeacherDashboardController;
+use App\Http\Controllers\Teacher\MajorHeadController as TeacherMajorHeadController;
+use App\Http\Controllers\Teacher\ProfileController as TeacherProfileController;
+use App\Http\Controllers\Teacher\ProgramCoordinatorController as TeacherProgramCoordinatorController;
+use App\Http\Controllers\Teacher\ScheduleController as TeacherScheduleController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:Guru'])
     ->prefix('teacher')

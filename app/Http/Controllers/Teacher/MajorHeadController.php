@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Models\RoleAssignment;
-use App\Models\Term;
 use App\Models\ClassHistory;
+use App\Models\RoleAssignment;
 use App\Models\Teacher;
 use App\Models\TeacherSubject;
+use App\Models\Term;
+use Illuminate\Support\Facades\Auth;
 
 class MajorHeadController extends Controller
 {
@@ -41,7 +41,7 @@ class MajorHeadController extends Controller
             }
             $assignment = $assignmentQuery->first();
 
-                if ($assignment && $assignment->major) {
+            if ($assignment && $assignment->major) {
                 $major = $assignment->major;
 
                 $classQuery = $major->classes()->withCount(['classHistories as students_count' => function ($q) use ($activeTerm) {
@@ -56,20 +56,24 @@ class MajorHeadController extends Controller
                 $majorSubjects = $major->majorSubjects()->with('subject')->get();
 
                 $subjectIds = $majorSubjects->pluck('subject_id')->all();
-                if (!empty($subjectIds)) {
+                if (! empty($subjectIds)) {
                     $teacherIdsFromSubjects = TeacherSubject::whereIn('subject_id', $subjectIds)->pluck('teacher_id')->unique()->all();
                 } else {
                     $teacherIdsFromSubjects = [];
                 }
 
                 $teacherIds = $teacherIdsFromSubjects;
-                if ($assignment->head) $teacherIds[] = $assignment->head->id;
-                if ($assignment->programCoordinator) $teacherIds[] = $assignment->programCoordinator->id;
+                if ($assignment->head) {
+                    $teacherIds[] = $assignment->head->id;
+                }
+                if ($assignment->programCoordinator) {
+                    $teacherIds[] = $assignment->programCoordinator->id;
+                }
                 $teacherIds = array_values(array_unique($teacherIds));
 
                 $teacherCount = count($teacherIds);
 
-                if (!empty($teacherIds)) {
+                if (! empty($teacherIds)) {
                     $teachers = Teacher::whereIn('id', $teacherIds)->with('user')->paginate(10, ['*'], 'teachers_page');
                 } else {
                     $teachers = collect();

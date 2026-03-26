@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->text('description')->nullable();
             $table->integer('total_floors')->default(1);
-            
+
             $table->timestamps();
         });
     }

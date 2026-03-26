@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -63,7 +63,7 @@ class StaffController extends Controller
 
             // Get or create Staff role
             $role = Role::where('name', 'Staff')->first();
-            if (!$role) {
+            if (! $role) {
                 $role = Role::create(['name' => 'Staff']);
             }
 
@@ -80,7 +80,8 @@ class StaffController extends Controller
             return redirect()->back()->with('success', 'Staff berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menambahkan staff: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menambahkan staff: '.$e->getMessage());
         }
     }
 
@@ -106,7 +107,7 @@ class StaffController extends Controller
                 'created_at' => $staff->created_at?->format('d M Y'),
             ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Gagal memuat data staff: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal memuat data staff: '.$e->getMessage()], 500);
         }
     }
 
@@ -124,7 +125,7 @@ class StaffController extends Controller
 
         $rules = [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email,'.$id,
         ];
 
         $messages = [
@@ -163,7 +164,8 @@ class StaffController extends Controller
             return redirect()->back()->with('success', 'Data staff berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal memperbarui data staff: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal memperbarui data staff: '.$e->getMessage());
         }
     }
 
@@ -184,7 +186,7 @@ class StaffController extends Controller
 
             // Check if this is the last admin (safety check)
             if ($staff->role?->name === 'Admin') {
-                $adminCount = User::whereHas('role', fn($q) => $q->where('name', 'Admin'))->count();
+                $adminCount = User::whereHas('role', fn ($q) => $q->where('name', 'Admin'))->count();
                 if ($adminCount <= 1) {
                     return redirect()->back()->with('error', 'Tidak dapat menghapus admin terakhir.');
                 }
@@ -198,7 +200,8 @@ class StaffController extends Controller
             return redirect()->back()->with('success', 'Staff berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menghapus staff: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menghapus staff: '.$e->getMessage());
         }
     }
 
@@ -222,7 +225,7 @@ class StaffController extends Controller
 
             return redirect()->back()->with('success', 'Password staff berhasil direset ke default (staff123).');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal mereset password: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mereset password: '.$e->getMessage());
         }
     }
 }

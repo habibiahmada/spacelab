@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Staff\Major;
 
 use App\Http\Controllers\Controller;
-use App\Models\Major;
 use App\Models\CompanyRelation;
+use App\Models\Major;
 use Illuminate\Http\Request;
 
 class CompanyRelationController extends Controller
@@ -49,9 +49,10 @@ class CompanyRelationController extends Controller
 
         try {
             $companyRelation->update($validated);
+
             return redirect()->back()->with('success', 'Mitra perusahaan berhasil diperbarui.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memperbarui data: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui data: '.$e->getMessage());
         }
     }
 
@@ -67,9 +68,10 @@ class CompanyRelationController extends Controller
 
         try {
             $companyRelation->delete();
+
             return redirect()->back()->with('success', 'Mitra perusahaan berhasil dihapus.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus data: '.$e->getMessage());
         }
     }
 }

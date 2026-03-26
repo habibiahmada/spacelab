@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use App\Models\TimetableEntry;
-use App\Models\Student;
-use App\Models\Teacher;
+use App\Models\AttendanceRecord;
+use App\Models\AttendanceSession;
+use App\Models\AuditLog;
 use App\Models\Classroom;
 use App\Models\Room;
+use App\Models\Student;
 use App\Models\Subject;
-use App\Models\AuditLog;
+use App\Models\Teacher;
 use App\Models\Term;
-use App\Models\AttendanceSession;
-use App\Models\AttendanceRecord;
+use App\Models\TimetableEntry;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -108,7 +107,7 @@ class DashboardController extends Controller
                 };
 
                 return [
-                    'message' => $entityLabel . ' ' . $actionLabel,
+                    'message' => $entityLabel.' '.$actionLabel,
                     'time' => $log->created_at,
                 ];
             });
@@ -116,7 +115,7 @@ class DashboardController extends Controller
         // Ambil semester aktif
         $activeTerm = Term::where('is_active', true)->first();
         $termLabel = $activeTerm ? $activeTerm->tahun_ajaran : 'Tidak ada semester aktif';
-        $termPeriod = $activeTerm ? 'Periode: ' . $activeTerm->start_date->format('M d, Y') . ' - ' . $activeTerm->end_date->format('M d, Y') : '';
+        $termPeriod = $activeTerm ? 'Periode: '.$activeTerm->start_date->format('M d, Y').' - '.$activeTerm->end_date->format('M d, Y') : '';
 
         // Cek apakah ada session absensi aktif
         $activeSessions = AttendanceSession::where('is_active', true)->exists();

@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Staff;
 
+use App\Models\Block;
 use App\Models\ClassHistory;
 use App\Models\Classroom;
 use App\Models\Role;
 use App\Models\Student;
 use App\Models\Term;
 use App\Models\User;
-use App\Models\Block;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,7 +17,9 @@ class StudentTest extends TestCase
     use RefreshDatabase;
 
     protected $activeTerm;
+
     protected $block;
+
     protected $role;
 
     protected function setUp(): void
@@ -26,10 +28,10 @@ class StudentTest extends TestCase
         // Create active term and block
         $this->activeTerm = Term::factory()->create(['is_active' => true]);
         $this->block = Block::create([
-             'terms_id' => $this->activeTerm->id,
-             'name' => 'Block 1',
-             'start_date' => now(),
-             'end_date' => now()->addMonths(3)
+            'terms_id' => $this->activeTerm->id,
+            'name' => 'Block 1',
+            'start_date' => now(),
+            'end_date' => now()->addMonths(3),
         ]);
 
         // Ensure student role exists

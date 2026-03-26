@@ -15,10 +15,11 @@ class RoomHistory extends Model
     protected $table = 'room_history';
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
-        'room_id', 'event_type', 'classes_id', 'terms_id', 'teacher_id', 'user_id', 'start_date', 'end_date'
+        'room_id', 'event_type', 'classes_id', 'terms_id', 'teacher_id', 'user_id', 'start_date', 'end_date',
     ];
 
     protected $casts = [
@@ -59,7 +60,8 @@ class RoomHistory extends Model
     public function scopeActive($query, $date = null)
     {
         $date = $date ?? now();
+
         return $query->whereDate('start_date', '<=', $date)
-                     ->whereDate('end_date', '>=', $date);
+            ->whereDate('end_date', '>=', $date);
     }
 }

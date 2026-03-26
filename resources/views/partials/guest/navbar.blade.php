@@ -1,23 +1,23 @@
 <nav x-data="{ mobileOpen: false }" @keydown.window.escape="mobileOpen = false"
-    class="fixed inset-x-0 top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-gray-100 dark:border-slate-700">
+    class="fixed inset-x-0 top-0 z-50 bg-white/95 dark:bg-slate-900/80 backdrop-blur-sm shadow-md">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <!-- Logo -->
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-3 bg-white/80 dark:bg-slate-900/80 px-3 py-1 rounded-md">
                 <a href="/" class="flex items-center space-x-2">
                     <x-application-logo />
-                    <span class="text-lg font-semibold">SpaceLab</span>
+                    <span class="text-lg font-bold bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent">SpaceLab</span>
                 </a>
             </div>
 
-            @if (!request()->routeIs('login') && !request()->routeIs('attendance.qr') && !request()->routeIs('views.*'))
+            @if (!request()->routeIs('login') && !request()->routeIs('attendance.qr') && !request()->routeIs('views.*') && !request()->routeIs('password.*') && !request()->routeIs('verification.*'))
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-6 text-sm">
+                <div class="hidden md:flex items-center space-x-6">
                     <a href="#features" class="hover:text-accent transition">Fitur</a>
-                    <a href="#how-it-works" class="hover:text-accent transition">Cara Kerja</a>
-                    <a href="#benefits" class="hover:text-accent transition">Keunggulan</a>
-                    <a href="#faqs" class="hover:text-accent transition">FAQ</a>
+                    <a href="#how-it-works" class="hover:text-accent transition">Cara Kerja</a> 
+                    <a href="#benefits" class="hover:text-accent transition">Keunggulan</a> 
+                    <a href="#faqs" class="hover:text-accent transition">FAQ</a>    
                 </div>
             @endif
 
@@ -28,12 +28,12 @@
                     <!-- Auth Links -->
                     @auth
                         <a href="{{ route(Auth::user()->role->lower_name . '.index') }}"
-                        class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border text-[#1b1b18] dark:text-[#EDEDEC]">
+                        class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border">
                             Dashboard
                         </a>
                     @else
                         <a href="{{ route('login') }}"
-                        class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border text-[#1b1b18] dark:text-[#EDEDEC]">
+                        class="hover:text-accent transition px-5 py-1.5 rounded-sm text-sm leading-normal border">
                             Masuk
                         </a>
                     @endauth
@@ -57,10 +57,10 @@
                     aria-label="Toggle Dark Mode"
                 >
                     <template x-if="!darkMode">
-                        <x-heroicon-o-moon class="w-6 h-6 text-gray-800 dark:text-gray-200" />
+                        <x-heroicon-o-moon class="w-6 h-6  hover:text-black dark:text-gray-200" />
                     </template>
                     <template x-if="darkMode">
-                        <x-heroicon-o-sun class="w-6 h-6 text-gray-800 dark:text-gray-200" />
+                        <x-heroicon-o-sun class="w-6 h-6  dark:text-gray-200" />
                     </template>
                 </button>
 

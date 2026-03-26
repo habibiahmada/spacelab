@@ -12,13 +12,16 @@ class AuditLog extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = [
-        'entity', 'record_id', 'action', 'user_id', 'old_data', 'new_data'
+        'entity', 'record_id', 'action', 'user_id', 'old_data', 'new_data',
     ];
+
     protected $casts = [
         'old_data' => 'array',
-        'new_data' => 'array'
+        'new_data' => 'array',
     ];
 
     public function user(): BelongsTo

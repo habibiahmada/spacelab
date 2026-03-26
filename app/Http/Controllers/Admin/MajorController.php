@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\ClassHistory;
+use App\Models\Company;
 use App\Models\Major;
 use App\Models\RoleAssignment;
 use App\Models\Teacher;
 use App\Models\TeacherSubject;
-use App\Models\Company;
-use App\Models\CompanyRelation;
 use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,20 +72,24 @@ class MajorController extends Controller
         $subjectIds = $majorSubjects->pluck('subject_id')->all();
 
         $teacherIds = [];
-        if (!empty($subjectIds)) {
+        if (! empty($subjectIds)) {
             $teacherIds = TeacherSubject::whereIn('subject_id', $subjectIds)->pluck('teacher_id')->unique()->all();
         }
 
         // Add Head and Coordinator to teacher list
         if ($assignment) {
-            if ($assignment->head) $teacherIds[] = $assignment->head->id;
-            if ($assignment->programCoordinator) $teacherIds[] = $assignment->programCoordinator->id;
+            if ($assignment->head) {
+                $teacherIds[] = $assignment->head->id;
+            }
+            if ($assignment->programCoordinator) {
+                $teacherIds[] = $assignment->programCoordinator->id;
+            }
         }
         $teacherIds = array_values(array_unique($teacherIds));
         $teacherCount = count($teacherIds);
 
         $teachers = collect();
-        if (!empty($teacherIds)) {
+        if (! empty($teacherIds)) {
             $teachers = Teacher::whereIn('id', $teacherIds)->with('user')->paginate(10, ['*'], 'teachers_page');
         }
 
@@ -106,7 +109,7 @@ class MajorController extends Controller
 
         // Student Count
         $classIds = $major->classes()->pluck('id')->all();
-        if (!empty($classIds)) {
+        if (! empty($classIds)) {
             $studentQuery = ClassHistory::whereIn('class_id', $classIds);
             if ($activeTerm) {
                 $studentQuery->where('terms_id', $activeTerm->id);
@@ -138,7 +141,7 @@ class MajorController extends Controller
                 ->unique()
                 ->all();
 
-            if (!empty($busyTeacherIds)) {
+            if (! empty($busyTeacherIds)) {
                 $eligibleTeachers->whereNotIn('id', $busyTeacherIds);
             }
         }
@@ -194,11 +197,11 @@ class MajorController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'pengguna (' . Auth::user()->name . ')',
+            'entity' => 'pengguna ('.Auth::user()->name.')',
             'record_id' => $validated['code'],
             'action' => 'create_major',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' membuat jurusan baru pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' membuat jurusan baru pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],
@@ -246,11 +249,11 @@ class MajorController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'jurusan (' . $major->name . ')',
+            'entity' => 'jurusan ('.$major->name.')',
             'record_id' => $major->id,
             'action' => 'update_major',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' memperbarui jurusan pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' memperbarui jurusan pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],
@@ -259,8 +262,6 @@ class MajorController extends Controller
         return redirect()->back()
             ->with('success', 'Jurusan berhasil diperbarui');
     }
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -280,14 +281,13 @@ class MajorController extends Controller
 
         $major->delete();
 
-
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'jurusan (' . $major->name . ')',
+            'entity' => 'jurusan ('.$major->name.')',
             'record_id' => $major->id,
             'action' => 'delete_major',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' menghapus jurusan pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' menghapus jurusan pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],

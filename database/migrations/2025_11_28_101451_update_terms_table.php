@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         //
-         Schema::table('terms', function (Blueprint $table) {
+        Schema::table('terms', function (Blueprint $table) {
             if (Schema::hasColumn('terms', 'name')) {
                 $table->renameColumn('name', 'tahun_ajaran');
             }
 
-            if (!Schema::hasColumn('terms', 'kind')) {
+            if (! Schema::hasColumn('terms', 'kind')) {
                 $table->enum('kind', ['ganjil', 'genap'])->after('tahun_ajaran');
             }
         });

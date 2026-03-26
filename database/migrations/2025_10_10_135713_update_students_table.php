@@ -4,8 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up(): void {
+return new class extends Migration
+{
+    public function up(): void
+    {
         Schema::table('students', function (Blueprint $table) {
             // Hapus kolom 'name' karena nama diambil dari tabel users
             if (Schema::hasColumn('students', 'name')) {
@@ -27,7 +29,8 @@ return new class extends Migration {
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::table('students', function (Blueprint $table) {
             // Kembalikan kolom 'name'
             $table->string('name', 128)->after('nis');

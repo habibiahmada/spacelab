@@ -19,7 +19,7 @@ class BlockController extends Controller
                     'terms_id' => 'required|exists:terms,id',
                     'name' => 'required|string|max:255',
                     'start_date' => 'required|date',
-                    'end_date' => 'required|date|after:start_date'
+                    'end_date' => 'required|date|after:start_date',
                 ],
                 [
                     'terms_id.required' => 'Tahun ajaran wajib diisi',
@@ -28,7 +28,7 @@ class BlockController extends Controller
                     'name.max' => 'Nama block maksimal 255 karakter',
                     'start_date.required' => 'Tanggal mulai wajib diisi',
                     'end_date.required' => 'Tanggal selesai wajib diisi',
-                    'end_date.after' => 'Tanggal selesai harus setelah tanggal mulai'
+                    'end_date.after' => 'Tanggal selesai harus setelah tanggal mulai',
                 ]
             );
 
@@ -38,7 +38,7 @@ class BlockController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: '.$e->getMessage())->withInput();
         }
     }
 
@@ -52,7 +52,7 @@ class BlockController extends Controller
             'terms_id' => $block->terms_id,
             'name' => $block->name,
             'start_date' => $block->start_date->format('Y-m-d'),
-            'end_date' => $block->end_date->format('Y-m-d')
+            'end_date' => $block->end_date->format('Y-m-d'),
         ]);
     }
 
@@ -66,14 +66,14 @@ class BlockController extends Controller
                 [
                     'name' => 'required|string|max:255',
                     'start_date' => 'required|date',
-                    'end_date' => 'required|date|after:start_date'
+                    'end_date' => 'required|date|after:start_date',
                 ],
                 [
                     'name.required' => 'Nama block wajib diisi',
                     'name.max' => 'Nama block maksimal 255 karakter',
                     'start_date.required' => 'Tanggal mulai wajib diisi',
                     'end_date.required' => 'Tanggal selesai wajib diisi',
-                    'end_date.after' => 'Tanggal selesai harus setelah tanggal mulai'
+                    'end_date.after' => 'Tanggal selesai harus setelah tanggal mulai',
                 ]
             );
 
@@ -83,7 +83,7 @@ class BlockController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->validator)->withInput();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: '.$e->getMessage())->withInput();
         }
     }
 
@@ -94,9 +94,10 @@ class BlockController extends Controller
     {
         try {
             $block->delete();
+
             return redirect()->route('admin.terms.index')->with('success', 'Block berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menghapus block: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus block: '.$e->getMessage());
         }
     }
 }

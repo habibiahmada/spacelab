@@ -22,5 +22,4 @@ class Company extends Model
     {
         return $this->hasMany(CompanyRelation::class, 'company_id');
     }
-
 }

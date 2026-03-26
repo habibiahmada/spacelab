@@ -14,7 +14,7 @@ return new class extends Migration
         //
         Schema::table('students', function (Blueprint $table) {
 
-            if (!Schema::hasColumn('students', 'name')) {
+            if (! Schema::hasColumn('students', 'name')) {
                 $table->string('name')->after('nisn');
             }
 
@@ -22,7 +22,7 @@ return new class extends Migration
                 $table->renameColumn('user_id', 'users_id');
             }
 
-            if (!Schema::hasColumn('students', 'avatar')) {
+            if (! Schema::hasColumn('students', 'avatar')) {
                 $table->string('avatar')->nullable()->after('users_id');
             }
 
@@ -58,13 +58,13 @@ return new class extends Migration
                 $table->renameColumn('users_id', 'user_id');
             }
 
-            if (!Schema::hasColumn('students', 'class_id')) {
+            if (! Schema::hasColumn('students', 'class_id')) {
                 $table->unsignedBigInteger('class_id')->after('nisn');
             }
-            if (!Schema::hasColumn('students', 'guardian_name')) {
+            if (! Schema::hasColumn('students', 'guardian_name')) {
                 $table->string('guardian_name')->after('address');
             }
-            if (!Schema::hasColumn('students', 'phone')) {
+            if (! Schema::hasColumn('students', 'phone')) {
                 $table->string('phone')->after('guardian_name');
             }
         });

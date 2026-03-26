@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -18,9 +17,9 @@ return new class extends Migration
             $table->uuid('room_history_id')->nullable()->after('period_id');
 
             $table->foreign('room_history_id')
-                  ->references('id')
-                  ->on('room_history')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('room_history')
+                ->onDelete('cascade');
         });
     }
 
@@ -34,10 +33,9 @@ return new class extends Migration
 
             $table->uuid('room_id')->nullable()->after('period_id');
             $table->foreign('room_id')
-                  ->references('id')
-                  ->on('rooms')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('rooms')
+                ->onDelete('cascade');
         });
     }
 };
-

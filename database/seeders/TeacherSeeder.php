@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\{Classroom, Teacher, User, Subject};
+use App\Models\Classroom;
+use App\Models\Teacher;
+use App\Models\User;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class TeacherSeeder extends Seeder
 {
@@ -12,7 +14,7 @@ class TeacherSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        $teachers = User::whereHas('role', fn($q) => $q->where('name', 'Guru'))->get();
+        $teachers = User::whereHas('role', fn ($q) => $q->where('name', 'Guru'))->get();
 
         // If there are fewer teachers than classes, create additional users with role Guru
         $classesCount = Classroom::count();
@@ -24,10 +26,10 @@ class TeacherSeeder extends Seeder
             User::factory()
                 ->count($needed)
                 ->asTeacher()
-                ->create([ 'password' => 'guru123' ]);
+                ->create(['password' => 'guru123']);
 
             // Refresh teachers collection
-            $teachers = User::whereHas('role', fn($q) => $q->where('name', 'Guru'))->get();
+            $teachers = User::whereHas('role', fn ($q) => $q->where('name', 'Guru'))->get();
             $currentTeacherCount = $teachers->count();
         }
 
@@ -35,6 +37,7 @@ class TeacherSeeder extends Seeder
 
         if ($teachers->isEmpty()) {
             $this->command->warn('⚠️ Tidak ada user dengan role Guru. Jalankan UserSeeder dulu.');
+
             return;
         }
 
@@ -46,9 +49,9 @@ class TeacherSeeder extends Seeder
 
             // Teacher table now expects `code`, `phone`, `avatar` and `user_id`.
             // Build a code like T-001
-            $code = 'T-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT);
+            $code = 'T-'.str_pad($index + 1, 3, '0', STR_PAD_LEFT);
 
-            $avatar = 'https://i.pravatar.cc/300?img=' . rand(1, 70);
+            $avatar = 'https://i.pravatar.cc/300?img='.rand(1, 70);
 
             Teacher::create([
                 'code' => $code,
@@ -58,6 +61,6 @@ class TeacherSeeder extends Seeder
             ]);
         }
 
-        $this->command->info('✅ TeacherSeeder berhasil membuat data guru berdasarkan user role Guru (' . $teachers->count() . ' orang).');
+        $this->command->info('✅ TeacherSeeder berhasil membuat data guru berdasarkan user role Guru ('.$teachers->count().' orang).');
     }
 }

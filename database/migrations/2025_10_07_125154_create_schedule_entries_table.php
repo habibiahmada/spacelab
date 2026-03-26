@@ -4,8 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
-    public function up(): void {
+return new class extends Migration
+{
+    public function up(): void
+    {
         Schema::create('schedule_entries', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('room_id');
@@ -16,7 +18,7 @@ return new class extends Migration {
             $table->timestamp('start_at');
             $table->timestamp('end_at');
             $table->text('recurrence_rule')->nullable();
-            $table->enum('status', ['confirmed','pending','cancelled'])->default('pending');
+            $table->enum('status', ['confirmed', 'pending', 'cancelled'])->default('pending');
             $table->text('note')->nullable();
             $table->uuid('created_by')->nullable();
             $table->timestamps();
@@ -33,7 +35,8 @@ return new class extends Migration {
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::dropIfExists('schedule_entries');
     }
 };

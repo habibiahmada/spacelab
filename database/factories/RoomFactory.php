@@ -19,7 +19,7 @@ class RoomFactory extends Factory
     {
         return [
             'code' => $this->faker->unique()->bothify('R###'),
-            'name' => 'Ruang ' . $this->faker->words(2, true),
+            'name' => 'Ruang '.$this->faker->words(2, true),
             'building_id' => Building::factory(),
             'floor' => $this->faker->numberBetween(1, 4),
             'capacity' => $this->faker->numberBetween(20, 50),

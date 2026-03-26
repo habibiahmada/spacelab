@@ -35,7 +35,7 @@ class ImportController extends Controller
 
         try {
             $role = Role::where('name', 'Guru')->first();
-            if (!$role) {
+            if (! $role) {
                 $role = Role::create(['name' => 'Guru']);
             }
 
@@ -45,6 +45,7 @@ class ImportController extends Controller
             while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
                 if (count($row) < 4) {
                     $skipped++;
+
                     continue;
                 }
 
@@ -64,12 +65,14 @@ class ImportController extends Controller
                 // Skip if email already exists
                 if (User::where('email', $email)->exists()) {
                     $skipped++;
+
                     continue;
                 }
 
                 // Skip if code already exists and is not empty
                 if ($code && Teacher::where('code', $code)->exists()) {
                     $skipped++;
+
                     continue;
                 }
 
@@ -101,7 +104,7 @@ class ImportController extends Controller
             DB::rollBack();
             fclose($handle);
 
-            return back()->with('error', 'Import gagal: ' . $e->getMessage());
+            return back()->with('error', 'Import gagal: '.$e->getMessage());
         }
     }
 }

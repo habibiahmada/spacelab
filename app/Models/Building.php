@@ -14,6 +14,7 @@ class Building extends Model
     protected $table = 'building';
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = ['name', 'code', 'description', 'total_floors'];

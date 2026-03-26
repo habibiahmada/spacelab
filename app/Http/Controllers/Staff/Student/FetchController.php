@@ -16,11 +16,11 @@ class FetchController extends Controller
     {
         // Get active term
         $activeTerm = Term::where('is_active', true)->first();
-        if (!$activeTerm) {
+        if (! $activeTerm) {
             return response()->json([
                 'students' => [],
                 'total' => 0,
-                'showing' => 0
+                'showing' => 0,
             ]);
         }
 
@@ -60,7 +60,7 @@ class FetchController extends Controller
 
         // Format data for response
         $formattedStudents = $students->map(function ($classHistory) {
-            if (!$classHistory->student || !$classHistory->student->user) {
+            if (! $classHistory->student || ! $classHistory->student->user) {
                 return null;
             }
 
@@ -86,7 +86,7 @@ class FetchController extends Controller
             'showing' => $formattedStudents->count(),
             'current_page' => $students->currentPage(),
             'last_page' => $students->lastPage(),
-            'per_page' => $perPage
+            'per_page' => $perPage,
         ]);
     }
 }

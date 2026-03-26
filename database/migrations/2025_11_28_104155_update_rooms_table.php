@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         //
-         Schema::table('rooms', function (Blueprint $table) {
+        Schema::table('rooms', function (Blueprint $table) {
 
             if (Schema::hasColumn('rooms', 'building')) {
                 $table->renameColumn('building', 'building_id');
@@ -23,11 +23,11 @@ return new class extends Migration
             }
             $table->enum('type', ['kelas', 'lab', 'aula', 'lainnya'])->after('capacity');
 
-            if (!Schema::hasColumn('rooms', 'is_active')) {
+            if (! Schema::hasColumn('rooms', 'is_active')) {
                 $table->boolean('is_active')->default(true)->after('type');
             }
 
-            if (!Schema::hasColumn('rooms', 'notes')) {
+            if (! Schema::hasColumn('rooms', 'notes')) {
                 $table->text('notes')->nullable()->after('is_active');
             }
 
@@ -35,7 +35,7 @@ return new class extends Migration
                 $table->dropColumn('resources');
             }
 
-            if (!Schema::hasColumn('rooms', 'created_at') && !Schema::hasColumn('rooms', 'updated_at')) {
+            if (! Schema::hasColumn('rooms', 'created_at') && ! Schema::hasColumn('rooms', 'updated_at')) {
                 $table->timestamps();
             }
         });

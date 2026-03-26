@@ -23,5 +23,20 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('app:mark-alpha-attendance')
             ->everyMinute()
             ->withoutOverlapping();
+        
+        // CCTV Health Check - every minute
+        $schedule->command('cctv:health-check')
+            ->everyMinute()
+            ->withoutOverlapping();
+        
+        // CCTV Retention Cleanup - every hour
+        $schedule->command('cctv:retention-cleanup')
+            ->hourly()
+            ->withoutOverlapping();
+
+        // CCTV Segment Metadata Sync - every 5 minutes
+        $schedule->command('cctv:segment-index-sync')
+            ->everyFiveMinutes()
+            ->withoutOverlapping();
     })
     ->create();

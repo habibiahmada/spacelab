@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\ClassHistory;
-use App\Models\TimetableEntry;
 use App\Models\AttendanceRecord;
+use App\Models\ClassHistory;
+use App\Models\Student;
 use App\Models\Term;
+use App\Models\TimetableEntry;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -34,8 +34,8 @@ class SearchStudentController extends Controller
                 $q->whereHas('user', function ($q2) use ($query) {
                     $q2->where('name', 'LIKE', "%{$query}%");
                 })
-                ->orWhere('nis', 'LIKE', "%{$query}%")
-                ->orWhere('nisn', 'LIKE', "%{$query}%");
+                    ->orWhere('nis', 'LIKE', "%{$query}%")
+                    ->orWhere('nisn', 'LIKE', "%{$query}%");
             })
             ->limit(20)
             ->get();
@@ -49,7 +49,7 @@ class SearchStudentController extends Controller
 
         // 3️⃣ Get class histories in ONE query
         $classHistories = ClassHistory::whereIn('student_id', $studentIds)
-            ->when($activeTerm, fn($q) => $q->where('terms_id', $activeTerm->id))
+            ->when($activeTerm, fn ($q) => $q->where('terms_id', $activeTerm->id))
             ->with('classroom.major')
             ->latest()
             ->get()
@@ -69,21 +69,21 @@ class SearchStudentController extends Controller
             $ongoingEntries = TimetableEntry::where('day_of_week', $dayOfWeek)
                 ->whereHas('template', function ($q) use ($classIds) {
                     $q->whereIn('class_id', $classIds)
-                      ->where('is_active', true);
+                        ->where('is_active', true);
                 })
                 ->whereHas('period', function ($q) use ($now) {
                     $q->whereTime('start_time', '<=', $now)
-                      ->whereTime('end_time', '>=', $now);
+                        ->whereTime('end_time', '>=', $now);
                 })
                 ->with([
                     'period',
                     'teacherSubject.teacher.user',
                     'teacherSubject.subject',
                     'roomHistory.room.building',
-                    'template'
+                    'template',
                 ])
                 ->get()
-                ->keyBy(fn($entry) => $entry->template->class_id);
+                ->keyBy(fn ($entry) => $entry->template->class_id);
         }
 
         // 6️⃣ Attendance in ONE query

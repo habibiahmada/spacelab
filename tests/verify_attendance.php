@@ -1,23 +1,23 @@
 <?php
 
-$user = App\Models\User::whereHas('role', fn($q) => $q->where('name', 'Siswa'))->first();
+$user = App\Models\User::whereHas('role', fn ($q) => $q->where('name', 'Siswa'))->first();
 $entry = App\Models\TimetableEntry::first();
-$teacher = App\Models\User::whereHas('role', fn($q) => $q->where('name', 'Guru'))->first();
-$service = new App\Services\AttendanceService();
+$teacher = App\Models\User::whereHas('role', fn ($q) => $q->where('name', 'Guru'))->first();
+$service = new App\Services\AttendanceService;
 
-if (!$user || !$entry || !$teacher) {
+if (! $user || ! $entry || ! $teacher) {
     echo "Missing data for test.\n";
     exit;
 }
 
 echo "Opening Session...\n";
 $session = $service->openSession($entry, $teacher);
-echo "Session Token: " . $session->token . "\n";
-echo "End Time: " . $session->end_time . "\n";
+echo 'Session Token: '.$session->token."\n";
+echo 'End Time: '.$session->end_time."\n";
 
 echo "Validating First Attendance...\n";
 $result = $service->validateAttendance($session, $user);
-echo "Result 1: " . json_encode($result) . "\n";
+echo 'Result 1: '.json_encode($result)."\n";
 
 if ($result['valid']) {
     echo "Creating Record...\n";
@@ -31,7 +31,7 @@ if ($result['valid']) {
 
 echo "Validating Second Attendance (Same Day)...\n";
 $result2 = $service->validateAttendance($session, $user);
-echo "Result 2: " . json_encode($result2) . "\n";
+echo 'Result 2: '.json_encode($result2)."\n";
 
 // Test Mark Alpha
 echo "Testing Mark Alpha Logic...\n";

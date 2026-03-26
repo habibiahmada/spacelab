@@ -14,9 +14,11 @@ class Teacher extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = [
-        'phone', 'user_id', 'code', 'avatar'
+        'phone', 'user_id', 'code', 'avatar',
     ];
 
     public function user(): BelongsTo
@@ -84,5 +86,4 @@ class Teacher extends Model
     {
         return $this->hasMany(RoleAssignment::class, 'program_coordinator_id');
     }
-
 }

@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\TimetableEntry;
 use App\Models\Period;
-use App\Models\AttendanceSession;
-use App\Models\AttendanceRecord;
+use App\Models\TimetableEntry;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -28,12 +26,12 @@ class DashboardController extends Controller
         // Ambil jadwal mengajar hari ini
         // =========================
         $schedulesTodayRaw = TimetableEntry::with([
-                'period',
-                'template.class.major',
-                'teacherSubject.subject',
-                'teacherSubject.teacher.user',
-                'roomHistory.room.building',
-            ])
+            'period',
+            'template.class.major',
+            'teacherSubject.subject',
+            'teacherSubject.teacher.user',
+            'roomHistory.room.building',
+        ])
             ->where('day_of_week', $currentDayIndex)
             ->whereHas('teacherSubject', function ($q) use ($teacher) {
                 $q->where('teacher_id', $teacher->id);
@@ -68,13 +66,20 @@ class DashboardController extends Controller
             ->get();
 
         $periodEntriesForDay = $nonTeachingPeriods->map(function ($p) use ($currentDayIndex) {
-            return new class($p, $currentDayIndex) {
+            return new class($p, $currentDayIndex)
+            {
                 public $period;
+
                 public $template = null;
+
                 public $teacherSubject = null;
+
                 public $teacher = null;
+
                 public $roomHistory = null;
+
                 public $is_period_only = true;
+
                 public $day_of_week;
 
                 public function __construct($period, $day)
@@ -86,6 +91,7 @@ class DashboardController extends Controller
                 public function isOngoing($now = null)
                 {
                     $now = $now ?: Carbon::now();
+
                     return method_exists($this->period, 'isOngoing')
                         ? $this->period->isOngoing($now)
                         : false;
@@ -94,6 +100,7 @@ class DashboardController extends Controller
                 public function isPast($now = null)
                 {
                     $now = $now ?: Carbon::now();
+
                     return method_exists($this->period, 'isPast')
                         ? $this->period->isPast($now)
                         : false;
@@ -107,7 +114,9 @@ class DashboardController extends Controller
         $schedulesToday = $schedulesTodayRaw
             ->concat($periodEntriesForDay)
             ->sortBy(function ($item) use ($currentTime) {
-                if (! $item->period) return PHP_INT_MAX;
+                if (! $item->period) {
+                    return PHP_INT_MAX;
+                }
 
                 if ($item->period->start_time) {
                     try {
@@ -115,7 +124,8 @@ class DashboardController extends Controller
                             $item->period->start_time,
                             $currentTime->getTimezone()
                         )->timestamp;
-                    } catch (\Exception $e) {}
+                    } catch (\Exception $e) {
+                    }
                 }
 
                 return $item->period->ordinal

@@ -8,8 +8,7 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-      */
-
+     */
     public function up(): void
     {
         Schema::create('attendance_records', function (Blueprint $table) {

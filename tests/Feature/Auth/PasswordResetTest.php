@@ -22,7 +22,6 @@ test('reset password link can be requested', function () {
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
-
 test('reset password screen can be rendered', function () {
     Notification::fake();
 

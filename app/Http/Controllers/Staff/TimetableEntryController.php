@@ -82,11 +82,11 @@ class TimetableEntryController extends Controller
                         'period',
                         'teacherSubject.teacher.user',
                         'teacherSubject.subject',
-                        'roomHistory.room'
+                        'roomHistory.room',
                     ])
                     ->get()
                     ->groupBy(function ($entry) {
-                        return $entry->day_of_week . '-' . $entry->period_id;
+                        return $entry->day_of_week.'-'.$entry->period_id;
                     });
             }
         }
@@ -148,7 +148,7 @@ class TimetableEntryController extends Controller
         // Validate conflicts
         $conflicts = $this->conflictService->validateEntry($validated);
 
-        if (!empty($conflicts)) {
+        if (! empty($conflicts)) {
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['conflict' => $conflicts]);
@@ -185,7 +185,7 @@ class TimetableEntryController extends Controller
         // Validate conflicts (exclude current entry)
         $conflicts = $this->conflictService->validateEntry($conflictData, $entry->id);
 
-        if (!empty($conflicts)) {
+        if (! empty($conflicts)) {
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['conflict' => $conflicts]);
@@ -241,7 +241,7 @@ class TimetableEntryController extends Controller
             ->map(function ($template) {
                 return [
                     'id' => $template->id,
-                    'name' => 'Versi ' . $template->version . ' - ' . ($template->block->name ?? 'Block'),
+                    'name' => 'Versi '.$template->version.' - '.($template->block->name ?? 'Block'),
                     'is_active' => $template->is_active,
                 ];
             });

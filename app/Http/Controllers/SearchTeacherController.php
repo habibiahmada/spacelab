@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttendanceSession;
 use App\Models\Teacher;
 use App\Models\TimetableEntry;
-use App\Models\AttendanceSession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -30,7 +30,9 @@ class SearchTeacherController extends Controller
                 ->get();
 
             foreach ($teachers as $teacher) {
-                if (!$teacher->user) continue;
+                if (! $teacher->user) {
+                    continue;
+                }
 
                 $result = [
                     'teacher' => $teacher,
@@ -46,9 +48,9 @@ class SearchTeacherController extends Controller
                 $currentEntry = TimetableEntry::where('day_of_week', $dayOfWeek)
                     ->where(function ($q) use ($teacher) {
                         $q->where('teacher_id', $teacher->id)
-                          ->orWhereHas('teacherSubject', function ($q2) use ($teacher) {
-                              $q2->where('teacher_id', $teacher->id);
-                          });
+                            ->orWhereHas('teacherSubject', function ($q2) use ($teacher) {
+                                $q2->where('teacher_id', $teacher->id);
+                            });
                     })
                     ->whereHas('template', function ($q) {
                         $q->where('is_active', true);

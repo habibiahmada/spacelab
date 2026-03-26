@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('day')->after('id');
         });
     }
-    
 
     /**
      * Reverse the migrations.

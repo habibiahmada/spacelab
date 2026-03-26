@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
-            
+
             $table->foreign('teacher_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('class_id')->references('id')->on('classes')->cascadeOnDelete();
             $table->timestamps();

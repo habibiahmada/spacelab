@@ -7,19 +7,21 @@ use Carbon\Carbon;
 class PagesController extends Controller
 {
     //
-    public function index() {
+    public function index()
+    {
         return view('pages.home',
             [
                 'title' => 'Welcome to Spacelab',
-                'description' => 'SpaceLab is an all-in-one academic schedule and facility management system designed to streamline school operations and enhance productivity.'
+                'description' => 'SpaceLab is an all-in-one academic schedule and facility management system designed to streamline school operations and enhance productivity.',
             ]
         );
     }
 
-    public function attendanceQr() {
+    public function attendanceQr()
+    {
 
         $today = Carbon::today();
-        
+
         //  ambil sesi aktif hari ini di database dari tabel attendance_sessions
         $activeSessionToken = \App\Models\AttendanceSession::where('is_active', true)
             ->whereDate('created_at', $today->toDateString())
@@ -32,16 +34,17 @@ class PagesController extends Controller
                 'activeSessionToken' => $activeSessionToken,
                 'today' => $today,
                 'dayName' => $today->translatedFormat('l'),
-                'dateFormatted' => $today->translatedFormat('d F Y')
+                'dateFormatted' => $today->translatedFormat('d F Y'),
             ]
         );
     }
 
-    public function views() {
+    public function views()
+    {
         return view('pages.views',
             [
                 'title' => 'Views',
-                'description' => 'Views'
+                'description' => 'Views',
             ]
         );
     }

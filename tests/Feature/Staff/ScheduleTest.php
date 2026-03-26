@@ -32,7 +32,7 @@ class ScheduleTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'success',
-            'classes'
+            'classes',
         ]);
     }
 }

@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Staff\Classroom;
 
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 use App\Models\Major;
+use Illuminate\Http\Request;
 
 class TemplateController extends Controller
 {
@@ -15,11 +14,11 @@ class TemplateController extends Controller
     public function __invoke(Request $request)
     {
         $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=classrooms_template.csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=classrooms_template.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
         $columns = ['level', 'kode jurusan', 'rombel'];

@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\AuditLog;
-use App\Models\User;
 use App\Models\TimetableEntry;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class AuditLogSeeder extends Seeder
 {
@@ -20,7 +20,7 @@ class AuditLogSeeder extends Seeder
             'action' => 'create',
             'user_id' => $user ? $user->id : null,
             'old_data' => null,
-            'new_data' => ['status' => 'confirmed']
+            'new_data' => ['status' => 'confirmed'],
         ]);
     }
 }

@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -15,8 +15,8 @@ return new class extends Migration
         });
 
         if (DB::getDriverName() === 'pgsql') {
-            DB::statement("ALTER TABLE periods ALTER COLUMN start_time TYPE time USING start_time::time;");
-            DB::statement("ALTER TABLE periods ALTER COLUMN end_time TYPE time USING end_time::time;");
+            DB::statement('ALTER TABLE periods ALTER COLUMN start_time TYPE time USING start_time::time;');
+            DB::statement('ALTER TABLE periods ALTER COLUMN end_time TYPE time USING end_time::time;');
         } else {
             Schema::table('periods', function (Blueprint $table) {
                 $table->time('start_time')->change();
@@ -33,8 +33,8 @@ return new class extends Migration
         });
 
         if (DB::getDriverName() === 'pgsql') {
-            DB::statement("ALTER TABLE periods ALTER COLUMN start_date TYPE timestamp USING start_date::timestamp;");
-            DB::statement("ALTER TABLE periods ALTER COLUMN end_date TYPE timestamp USING end_date::timestamp;");
+            DB::statement('ALTER TABLE periods ALTER COLUMN start_date TYPE timestamp USING start_date::timestamp;');
+            DB::statement('ALTER TABLE periods ALTER COLUMN end_date TYPE timestamp USING end_date::timestamp;');
         } else {
             Schema::table('periods', function (Blueprint $table) {
                 $table->timestamp('start_date')->nullable()->change();

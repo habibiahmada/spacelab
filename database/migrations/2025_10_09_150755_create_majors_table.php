@@ -9,7 +9,8 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('majors', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('code', 16)->unique();
@@ -19,7 +20,8 @@ return new class extends Migration
         });
     }
 
-    public function down(): void {
+    public function down(): void
+    {
         Schema::dropIfExists('majors');
     }
 };

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Block;
 use App\Models\Term;
+use Illuminate\Database\Seeder;
 
 class BlockSeeder extends Seeder
 {
@@ -14,6 +14,7 @@ class BlockSeeder extends Seeder
 
         if (! $term) {
             $this->command->warn('⚠️ TermSeeder must run before BlockSeeder.');
+
             return;
         }
 

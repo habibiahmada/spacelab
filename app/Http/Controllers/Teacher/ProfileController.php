@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
+use App\Models\GuardianClassHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\GuardianClassHistory;
 
 class ProfileController extends Controller
 {

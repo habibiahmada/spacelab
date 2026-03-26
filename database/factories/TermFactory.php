@@ -17,8 +17,9 @@ class TermFactory extends Factory
     public function definition(): array
     {
         $startYear = $this->faker->year();
+
         return [
-            'tahun_ajaran' => $startYear . '/' . ($startYear + 1),
+            'tahun_ajaran' => $startYear.'/'.($startYear + 1),
             'start_date' => $this->faker->date(),
             'end_date' => $this->faker->date(),
             'is_active' => true,

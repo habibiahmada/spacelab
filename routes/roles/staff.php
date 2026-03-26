@@ -1,39 +1,36 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Staff\{
-    DashboardController as StaffDashboardController,
-    ScheduleController as StaffScheduleController,
-    TermController as StaffTermController,
-    MajorController as StaffMajorController,
-    ClassroomController as StaffClassController,
-    TeacherController as StaffTeacherController,
-    StudentController as StaffStudentController,
-    RoomController as StaffRoomController,
-    BuildingController as StaffBuildingController,
-    RoomHistoryController as StaffRoomHistoryController,
-    ReportController as StaffReportController
-};
-use App\Http\Controllers\Staff\Term\BlockController as StaffBlockController;
-use App\Http\Controllers\Staff\Major\CompanyRelationController as StaffCompanyRelationController;
-use App\Http\Controllers\Staff\Major\RoleAssignmentController as StaffRoleAssignmentController;
-use App\Http\Controllers\Staff\Classroom\JsonController as StaffClassJsonController;
+use App\Http\Controllers\AttendanceController as StaffAttendanceController;
+use App\Http\Controllers\Staff\BuildingController as StaffBuildingController;
 use App\Http\Controllers\Staff\Classroom\GuardianController as StaffClassGuardianController;
-use App\Http\Controllers\Staff\Classroom\StudentController as StaffClassStudentController;
 use App\Http\Controllers\Staff\Classroom\ImportController as StaffClassroomImportController;
+use App\Http\Controllers\Staff\Classroom\JsonController as StaffClassJsonController;
+use App\Http\Controllers\Staff\Classroom\StudentController as StaffClassStudentController;
 use App\Http\Controllers\Staff\Classroom\TemplateController as StaffClassroomTemplateController;
+use App\Http\Controllers\Staff\ClassroomController as StaffClassController;
+use App\Http\Controllers\Staff\DashboardController as StaffDashboardController;
+use App\Http\Controllers\Staff\Major\CompanyRelationController as StaffCompanyRelationController;
+use App\Http\Controllers\Staff\Major\ImportController as StaffMajorImportController;
+use App\Http\Controllers\Staff\Major\RoleAssignmentController as StaffRoleAssignmentController;
+use App\Http\Controllers\Staff\Major\TemplateController as StaffMajorTemplateController;
+use App\Http\Controllers\Staff\MajorController as StaffMajorController;
+use App\Http\Controllers\Staff\ReportController as StaffReportController;
+use App\Http\Controllers\Staff\RoomController as StaffRoomController;
+use App\Http\Controllers\Staff\RoomHistoryController as StaffRoomHistoryController;
+use App\Http\Controllers\Staff\ScheduleController as StaffScheduleController;
 use App\Http\Controllers\Staff\Student\FetchController as StaffStudentFetchController;
 use App\Http\Controllers\Staff\Student\ImportController as StaffStudentImportController;
-use App\Http\Controllers\Staff\Major\ImportController as StaffMajorImportController;
 use App\Http\Controllers\Staff\Student\TemplateController as StaffStudentTemplateController;
-use App\Http\Controllers\Staff\Major\TemplateController as StaffMajorTemplateController;
+use App\Http\Controllers\Staff\StudentController as StaffStudentController;
+use App\Http\Controllers\Staff\SubjectController as StaffSubjectController;
 use App\Http\Controllers\Staff\Teacher\ImportController as StaffTeacherImportController;
 use App\Http\Controllers\Staff\Teacher\TemplateController as StaffTeacherTemplateController;
-use App\Http\Controllers\Staff\SubjectController as StaffSubjectController;
-use App\Http\Controllers\Staff\TimetableTemplateController as StaffTimetableTemplateController;
+use App\Http\Controllers\Staff\TeacherController as StaffTeacherController;
+use App\Http\Controllers\Staff\Term\BlockController as StaffBlockController;
+use App\Http\Controllers\Staff\TermController as StaffTermController;
 use App\Http\Controllers\Staff\TimetableEntryController as StaffTimetableEntryController;
-use App\Http\Controllers\Staff\StaffController as StaffStaffController;
-use App\Http\Controllers\AttendanceController as StaffAttendanceController;
+use App\Http\Controllers\Staff\TimetableTemplateController as StaffTimetableTemplateController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:Staff'])
     ->prefix('staff')
@@ -64,7 +61,7 @@ Route::middleware(['auth', 'role:Staff'])
         Route::put('/majors/{major}', [StaffMajorController::class, 'update'])->name('majors.update');
         Route::delete('/majors/{major}', [StaffMajorController::class, 'destroy'])->name('majors.destroy');
 
-        Route::get('/majors/{major}', [ StaffMajorController::class, 'show'])->name('majors.show');
+        Route::get('/majors/{major}', [StaffMajorController::class, 'show'])->name('majors.show');
         Route::post('/majors/{major}/company-relation', [StaffCompanyRelationController::class, 'store'])->name('majors.company-relation.store');
         Route::put('/majors/{major}/company-relation/{companyRelation}', [StaffCompanyRelationController::class, 'update'])->name('majors.company-relation.update');
         Route::delete('/majors/{major}/company-relation/{companyRelation}', [StaffCompanyRelationController::class, 'destroy'])->name('majors.company-relation.destroy');
@@ -120,6 +117,7 @@ Route::middleware(['auth', 'role:Staff'])
 
         // Rooms
         Route::get('/room-history', [StaffRoomHistoryController::class, 'index'])->name('rooms.history');
+        Route::get('/room-history/{id}', [StaffRoomHistoryController::class, 'show'])->name('rooms.history.show');
         Route::post('/room-history', [StaffRoomHistoryController::class, 'store'])->name('rooms.history.store');
         Route::put('/room-history/{id}', [StaffRoomHistoryController::class, 'update'])->name('rooms.history.update');
         Route::delete('/room-history/{id}', [StaffRoomHistoryController::class, 'destroy'])->name('rooms.history.destroy');
@@ -131,6 +129,7 @@ Route::middleware(['auth', 'role:Staff'])
 
         // Schedules - Main Entry Point
         Route::get('/schedules', [StaffTimetableEntryController::class, 'index'])->name('schedules.index');
+        Route::get('/schedules/major/{major}', [StaffScheduleController::class, 'getMajorSchedules'])->name('schedules.major');
 
         // Timetable Templates
         Route::get('/schedules/templates', [StaffTimetableTemplateController::class, 'index'])->name('schedules.templates.index');
@@ -162,4 +161,3 @@ Route::middleware(['auth', 'role:Staff'])
         Route::get('/attendance', [StaffAttendanceController::class, 'index'])->name('attendance.index');
         Route::post('/attendance', [StaffAttendanceController::class, 'store'])->name('attendance.store');
     });
-

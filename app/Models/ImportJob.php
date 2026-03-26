@@ -12,10 +12,13 @@ class ImportJob extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $table = 'import_jobs';
+
     protected $fillable = [
-        'type', 'entity', 'file_path', 'status', 'message', 'created_by'
+        'type', 'entity', 'file_path', 'status', 'message', 'created_by',
     ];
 
     public function creator(): BelongsTo

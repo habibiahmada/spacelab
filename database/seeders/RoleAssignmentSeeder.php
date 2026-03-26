@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Major;
+use App\Models\RoleAssignment;
+use App\Models\Term;
 use Illuminate\Database\Seeder;
-use App\Models\{RoleAssignment, Major, User, Term};
 
 class RoleAssignmentSeeder extends Seeder
 {
@@ -13,6 +15,7 @@ class RoleAssignmentSeeder extends Seeder
 
         if (! $term) {
             $this->command->warn('⚠️ Tidak ada term aktif. Jalankan TermSeeder dulu.');
+
             return;
         }
 
@@ -21,6 +24,7 @@ class RoleAssignmentSeeder extends Seeder
 
         if ($majors->isEmpty() || $teachers->isEmpty()) {
             $this->command->warn('⚠️ Pastikan ada jurusan dan guru terlebih dahulu.');
+
             return;
         }
 

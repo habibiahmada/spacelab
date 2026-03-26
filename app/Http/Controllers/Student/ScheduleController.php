@@ -3,14 +3,9 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Classroom;
-use App\Models\TimetableEntry;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Schema;
 
 class ScheduleController extends Controller
 {
@@ -32,6 +27,7 @@ class ScheduleController extends Controller
 
         if ($classIds->isEmpty()) {
             Log::warning('⚠️ Tidak ada class history untuk user; tidak menampilkan jadwal.');
+
             return view('student.schedules', [
                 'student' => $user,
                 'allSchedules' => collect(),
@@ -42,18 +38,18 @@ class ScheduleController extends Controller
         }
 
         // Ambil semua jadwal yang memiliki template aktif  dengan relasi model
-        $allSchedulesRaw = \App\Models\TimetableEntry::whereHas('template', function($q) use ($classIds) {
-                $q->whereIn('class_id', $classIds)
+        $allSchedulesRaw = \App\Models\TimetableEntry::whereHas('template', function ($q) use ($classIds) {
+            $q->whereIn('class_id', $classIds)
                 ->where('is_active', true);
-            })
+        })
             ->whereBetween('day_of_week', [1, 7])
             ->with([
-                'period',
-                'template.class.major',
-                'teacherSubject.subject',
-                'teacherSubject.teacher.user',
-                'roomHistory.room.building',
-            ])
+            'period',
+            'template.class.major',
+            'teacherSubject.subject',
+            'teacherSubject.teacher.user',
+            'roomHistory.room.building',
+        ])
             ->orderBy('day_of_week', 'asc')
             ->orderBy('period_id', 'asc')
             ->get()
@@ -93,14 +89,21 @@ class ScheduleController extends Controller
             // Hanya tambahkan period entries jika jadwal lengkap
             $periodEntriesForDay = collect();
             if ($shouldShowPeriods) {
-                $periodEntriesForDay = $nonTeachingPeriods->map(function($p) use ($d) {
-                    return new class($p, $d) {
+                $periodEntriesForDay = $nonTeachingPeriods->map(function ($p) use ($d) {
+                    return new class($p, $d)
+                    {
                         public $period;
+
                         public $template;
+
                         public $teacherSubject;
+
                         public $teacher;
+
                         public $roomHistory;
+
                         public $is_period_only;
+
                         public $day_of_week;
 
                         public function __construct($period, $day)
@@ -129,9 +132,11 @@ class ScheduleController extends Controller
 
             // Merge and sort by start_time (fallback to ordinal)
             $now = Carbon::now();
-            $merged = $dayCollection->concat($periodEntriesForDay)->sortBy(function($item) use ($now) {
+            $merged = $dayCollection->concat($periodEntriesForDay)->sortBy(function ($item) use ($now) {
                 $period = $item->period ?? null;
-                if (! $period) return PHP_INT_MAX;
+                if (! $period) {
+                    return PHP_INT_MAX;
+                }
 
                 $start = $period->start_time ?? ($period->start_date?->format('H:i:s') ?? null);
                 if ($start) {
@@ -144,10 +149,15 @@ class ScheduleController extends Controller
                             $c = null;
                         }
                     }
-                    if ($c) return $c->timestamp;
+                    if ($c) {
+                        return $c->timestamp;
+                    }
                 }
 
-                if (isset($period->ordinal)) return (int) $period->ordinal * 1000;
+                if (isset($period->ordinal)) {
+                    return (int) $period->ordinal * 1000;
+                }
+
                 return PHP_INT_MAX;
             })->values();
 
@@ -162,8 +172,8 @@ class ScheduleController extends Controller
         $studentClassFullName = $classroom?->full_name ?? ($classroom?->name ?? '-');
 
         return view('student.schedules', [
-            'student'              => $student,
-            'allSchedules'         => $allSchedules,
+            'student' => $student,
+            'allSchedules' => $allSchedules,
             'studentClassFullName' => $studentClassFullName,
             'title' => 'Jadwal',
             'description' => 'Halaman jadwal',

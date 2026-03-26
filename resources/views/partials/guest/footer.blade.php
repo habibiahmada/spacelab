@@ -6,7 +6,10 @@
       <div class="flex items-start gap-4">
         <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-md flex-shrink-0"></div>
         <div class="min-w-0">
-          <div class="font-semibold text-slate-900 dark:text-slate-100">SpaceLab</div>
+                <a href="/" class="flex items-center space-x-2">
+                    <x-application-logo />
+                    <span class="text-lg font-bold bg-gradient-to-r from-blue-500 to-blue-800 bg-clip-text text-transparent">SpaceLab</span>
+                </a>
           <p class="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-xs">
             Platform terpadu untuk mengelola jadwal pelajaran, ruangan, guru, dan siswa secara efisien — tanpa konflik jadwal dan laporan manual.
           </p>

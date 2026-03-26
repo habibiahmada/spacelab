@@ -12,11 +12,11 @@ class TemplateController extends Controller
     public function __invoke()
     {
         $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=students_template.csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=students_template.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
         $columns = ['Name', 'Email', 'Password', 'NIS', 'NISN', 'Classroom (e.g. 10 PPLG 1)'];

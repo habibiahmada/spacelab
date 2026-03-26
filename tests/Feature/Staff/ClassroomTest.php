@@ -45,7 +45,7 @@ class ClassroomTest extends TestCase
         $user = User::factory()->asStaff()->create();
         $classroom = Classroom::factory()->create([
             'level' => 10,
-            'rombel' => 1
+            'rombel' => 1,
         ]);
         $major = $classroom->major;
 

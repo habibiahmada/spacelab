@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Subject;
+use Illuminate\Database\Seeder;
 
 class SubjectSeeder extends Seeder
 {
@@ -112,6 +112,6 @@ class SubjectSeeder extends Seeder
             Subject::create($subject);
         }
 
-        $this->command->info('✅ SubjectSeeder berhasil menambahkan ' . count($subjects) . ' mata pelajaran.');
+        $this->command->info('✅ SubjectSeeder berhasil menambahkan '.count($subjects).' mata pelajaran.');
     }
 }

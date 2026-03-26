@@ -14,13 +14,14 @@ class GuardianClassHistory extends Model
     protected $table = 'guardian_class_history';
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = ['teacher_id', 'class_id', 'started_at', 'ended_at'];
 
     protected $casts = [
         'started_at' => 'datetime',
-        'ended_at' => 'datetime'
+        'ended_at' => 'datetime',
     ];
 
     public function teacher(): BelongsTo

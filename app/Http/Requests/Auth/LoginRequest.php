@@ -39,34 +39,33 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-public function authenticate(): void
-{
-    $this->ensureIsNotRateLimited();
+    public function authenticate(): void
+    {
+        $this->ensureIsNotRateLimited();
 
-    $user = User::where('email', $this->email)->first();
+        $user = User::where('email', $this->email)->first();
 
-    if (! $user) {
-        RateLimiter::hit($this->throttleKey());
+        if (! $user) {
+            RateLimiter::hit($this->throttleKey());
 
-        throw ValidationException::withMessages([
-            'email' => 'Email tidak terdaftar, silahkan hubungi administrator.',
-        ]);
+            throw ValidationException::withMessages([
+                'email' => 'Email tidak terdaftar, silahkan hubungi administrator.',
+            ]);
+        }
+
+        if (! Hash::check($this->password, $user->password)) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'password' => 'Password salah.',
+            ]);
+        }
+
+        // Jika lolos semuanya
+        Auth::login($user, $this->boolean('remember'));
+
+        RateLimiter::clear($this->throttleKey());
     }
-
-    if (!Hash::check($this->password, $user->password)) {
-        RateLimiter::hit($this->throttleKey());
-
-        throw ValidationException::withMessages([
-            'password' => 'Password salah.',
-        ]);
-    }
-
-    // Jika lolos semuanya
-    Auth::login($user, $this->boolean('remember'));
-
-    RateLimiter::clear($this->throttleKey());
-}
-
 
     /**
      * Ensure the login request is not rate limited.

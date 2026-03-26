@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Role;
-use Faker\Factory as Faker;
 
 class UserSeeder extends Seeder
 {
@@ -26,7 +25,7 @@ class UserSeeder extends Seeder
         User::factory()
             ->count(120)
             ->asTeacher()
-            ->create([ 'password' => 'guru123' ]);
+            ->create(['password' => 'guru123']);
 
         $gururole = Role::where('name', 'Guru')->first();
         User::create([
@@ -40,7 +39,7 @@ class UserSeeder extends Seeder
         User::factory()
             ->count(3149)
             ->asStudent()
-            ->create([ 'password' => 'siswa123' ]);
+            ->create(['password' => 'siswa123']);
 
         $studentRole = Role::where('name', 'Siswa')->first();
         User::create([
@@ -54,7 +53,7 @@ class UserSeeder extends Seeder
         User::factory()
             ->count(5)
             ->asStaff()
-            ->create([ 'password' => 'staff123' ]);
+            ->create(['password' => 'staff123']);
 
         $staffRole = Role::where('name', 'Staff')->first();
         User::create([

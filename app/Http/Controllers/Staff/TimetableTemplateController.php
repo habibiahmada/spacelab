@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Block;
 use App\Models\Classroom;
 use App\Models\Major;
-use App\Models\TimetableTemplate;
 use App\Models\Term;
+use App\Models\TimetableTemplate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

@@ -14,11 +14,11 @@ return new class extends Migration
         //
         Schema::table('teachers', function (Blueprint $table) {
 
-            if (!Schema::hasColumn('teachers', 'code')) {
+            if (! Schema::hasColumn('teachers', 'code')) {
                 $table->string('code')->after('id');
             }
 
-            if (!Schema::hasColumn('teachers', 'avatar')) {
+            if (! Schema::hasColumn('teachers', 'avatar')) {
                 $table->string('avatar')->nullable()->after('user_id');
             }
 
@@ -51,22 +51,22 @@ return new class extends Migration
                 $table->renameColumn('user', 'user_id');
             }
 
-            if (!Schema::hasColumn('teachers', 'staff_id')) {
+            if (! Schema::hasColumn('teachers', 'staff_id')) {
                 $table->string('staff_id')->nullable()->after('id');
             }
-            if (!Schema::hasColumn('teachers', 'name')) {
+            if (! Schema::hasColumn('teachers', 'name')) {
                 $table->string('name')->nullable()->after('staff_id');
             }
-            if (!Schema::hasColumn('teachers', 'email')) {
+            if (! Schema::hasColumn('teachers', 'email')) {
                 $table->string('email')->nullable()->after('name');
             }
-            if (!Schema::hasColumn('teachers', 'subjects')) {
+            if (! Schema::hasColumn('teachers', 'subjects')) {
                 $table->text('subjects')->nullable()->after('email');
             }
-            if (!Schema::hasColumn('teachers', 'available_hours')) {
+            if (! Schema::hasColumn('teachers', 'available_hours')) {
                 $table->string('available_hours')->nullable()->after('subjects');
             }
-            if (!Schema::hasColumn('teachers', 'image')) {
+            if (! Schema::hasColumn('teachers', 'image')) {
                 $table->string('image')->nullable()->after('available_hours');
             }
         });

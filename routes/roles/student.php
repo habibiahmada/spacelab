@@ -1,14 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Student\{
-    ClassroomController as StudentClassroomController,
-    DashboardController as StudentDashboardController,
-    ScheduleController as StudentScheduleController,
-    ProfileController as StudentProfileController,
-    RoomController as StudentRoomController,
-};
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Student\ClassroomController as StudentClassroomController;
+use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\ProfileController as StudentProfileController;
+use App\Http\Controllers\Student\RoomController as StudentRoomController;
+use App\Http\Controllers\Student\ScheduleController as StudentScheduleController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:Siswa'])
     ->prefix('student')

@@ -2,22 +2,24 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Carbon\Carbon;
 
 class TimetableEntry extends Model
 {
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = ['template_id', 'day_of_week', 'period_id', 'teacher_subject_id', 'room_history_id'];
+
     protected $casts = [
-        'day_of_week' => 'integer'
+        'day_of_week' => 'integer',
     ];
 
     public function template(): BelongsTo
@@ -50,8 +52,6 @@ class TimetableEntry extends Model
         return $this->hasMany(AttendanceSession::class);
     }
 
-
-
     public function getDayNameAttribute(): string
     {
         return match ($this->day_of_week) {
@@ -66,12 +66,10 @@ class TimetableEntry extends Model
         };
     }
 
-
     public function getSubjectAttribute()
     {
         return $this->teacherSubject?->subject;
     }
-
 
     public function getTeacherAttribute()
     {
@@ -111,21 +109,20 @@ class TimetableEntry extends Model
             $endTime = Carbon::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-d').' '.$period->end_date->format('H:i:s'), $now->getTimezone());
         }
 
-            if ($endTime->lessThanOrEqualTo($startTime)) {
-                $endTime->addDay();
-                $startPrevious = $startTime->copy()->subDay();
-                $endPrevious = $endTime->copy()->subDay();
+        if ($endTime->lessThanOrEqualTo($startTime)) {
+            $endTime->addDay();
+            $startPrevious = $startTime->copy()->subDay();
+            $endPrevious = $endTime->copy()->subDay();
 
-                if ($now->between($startPrevious, $endPrevious) || $now->between($startTime, $endTime)) {
-                    return true;
-                }
-
-                return false;
+            if ($now->between($startPrevious, $endPrevious) || $now->between($startTime, $endTime)) {
+                return true;
             }
 
-            return $now->greaterThanOrEqualTo($startTime) && $now->lessThan($endTime);
+            return false;
         }
 
+        return $now->greaterThanOrEqualTo($startTime) && $now->lessThan($endTime);
+    }
 
     public function isPast(?Carbon $now = null): bool
     {

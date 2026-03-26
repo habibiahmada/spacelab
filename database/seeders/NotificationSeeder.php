@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Notification;
-use App\Models\User;
 use App\Models\TimetableEntry;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class NotificationSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class NotificationSeeder extends Seeder
             'type' => 'info',
             'message' => 'Jadwal pertama semester genap sudah dibuat.',
             'is_read' => false,
-            'related_schedule_id' => $schedule ? $schedule->id : null
+            'related_schedule_id' => $schedule ? $schedule->id : null,
         ]);
     }
 }

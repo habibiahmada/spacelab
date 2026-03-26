@@ -9,6 +9,7 @@
     @include('partials.meta.guest-head')
     {{-- Alpine.js --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @stack('styles')
 </head>
 
 <body
@@ -44,7 +45,7 @@
             </div>
 
             <!-- Logo -->
-            <div class="flex items-center justify-center py-6">
+            <div class="flex items-center justify-center py-4">
                 <a href="{{ route(Auth::user()->role->lower_name . '.index') }}" class="flex items-center space-x-2">
                     <x-application-logo class="h-10 w-auto" />
                     <span class="text-lg font-semibold">SpaceLab</span>
@@ -56,7 +57,7 @@
         </div>
 
         <!-- User dropdown -->
-        <div class="border-t border-slate-200 dark:border-slate-700 p-4 transition-all duration-200">
+        <div class="border-t border-slate-200 dark:border-slate-700 p-3.5 transition-all duration-200">
             <div class="flex items-center gap-3">
                     @php
                         $user = Auth::user();
@@ -84,7 +85,11 @@
 
                 <div class="flex-1">
                     <div class="text-sm font-semibold">{{ auth()->user()->name }}</div>
-                    <div class="text-xs text-gray-500 dark:text-gray-400 transition-all duration-200">{{ auth()->user()->email }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 transition-all duration-200">{{ auth()->user()->email }}
+                        @if (auth()->user()->staff)
+                        | {{ auth()->user()->staff->type ?? 'N/A' }}                            
+                        @endif
+                    </div>
                 </div>
 
                 <details class="relative group">
@@ -160,7 +165,7 @@
         </header>
 
         <!-- Topbar -->
-        <div class="flex sticky top-0 justify-between items-center py-2 px-4 border-b border-slate-200 dark:border-slate-700 gap-4 bg-neskar-blue-50 dark:bg-slate-900 z-10 transition-all duration-200">
+        <div class="flex sticky top-0 justify-between items-center py-2 px-4 border-b border-slate-200 dark:border-slate-700 gap-4 bg-white dark:bg-slate-900 z-10 transition-all duration-200">
             <button @click="sidebarOpen = true" class="p-2 rounded-md lg:hidden hover:bg-slate-200 dark:hover:bg-slate-800 transition-all duration-200">
                 <x-heroicon-o-bars-3 class="w-6 h-6" />
             </button>
@@ -207,5 +212,6 @@
             {{ $slot }}
         </div>
     </main>
+    @stack('scripts')
 </body>
 </html>

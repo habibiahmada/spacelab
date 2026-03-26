@@ -40,17 +40,22 @@ class ImportController extends Controller
 
             while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
                 // Skip empty rows
-                if ($row === [null] || count($row) === 0) continue;
+                if ($row === [null] || count($row) === 0) {
+                    continue;
+                }
 
                 // Skip header
                 if ($isHeader) {
                     $isHeader = false;
+
                     continue;
                 }
 
                 // Normalize fields
                 $row = array_map(function ($v) {
-                    if (is_null($v)) return null;
+                    if (is_null($v)) {
+                        return null;
+                    }
                     $v = trim($v);
                     // remove BOM
                     $v = preg_replace('/^\xEF\xBB\xBF/', '', $v);
@@ -58,6 +63,7 @@ class ImportController extends Controller
                     $v = str_replace('""', '"', $v);
                     // Remove surrounding quotes
                     $v = preg_replace('/^\"|\"$/', '', $v);
+
                     return $v;
                 }, $row);
 
@@ -86,7 +92,9 @@ class ImportController extends Controller
                     ->where('rombel', $rombel)
                     ->exists();
 
-                if ($exists) continue;
+                if ($exists) {
+                    continue;
+                }
 
                 Classroom::create([
                     'level' => $level,
@@ -100,14 +108,17 @@ class ImportController extends Controller
             fclose($handle);
 
             if ($importedCount === 0) {
-                return redirect()->back()->with('error', 'Tidak ada data yang diimport. Pastikan kode jurusan di CSV sesuai (' . $selectedMajor->code . ') atau data belum ada di database.');
+                return redirect()->back()->with('error', 'Tidak ada data yang diimport. Pastikan kode jurusan di CSV sesuai ('.$selectedMajor->code.') atau data belum ada di database.');
             }
 
-            return redirect()->back()->with('success', $importedCount . ' kelas berhasil diimport.');
+            return redirect()->back()->with('success', $importedCount.' kelas berhasil diimport.');
         } catch (\Exception $e) {
             DB::rollBack();
-            if (isset($handle)) fclose($handle);
-            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+            if (isset($handle)) {
+                fclose($handle);
+            }
+
+            return redirect()->back()->with('error', 'Import failed: '.$e->getMessage());
         }
     }
 }

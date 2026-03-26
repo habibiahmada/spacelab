@@ -12,7 +12,9 @@ class Role extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = ['name'];
     // Previously we had a 'permissions' jsonb column; it was removed by migrations.
 
@@ -20,6 +22,7 @@ class Role extends Model
     {
         return $this->hasMany(User::class);
     }
+
     public function getLowerNameAttribute()
     {
         return strtolower($this->name);

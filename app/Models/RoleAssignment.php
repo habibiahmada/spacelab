@@ -12,6 +12,7 @@ class RoleAssignment extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = ['major_id', 'head_of_major_id', 'program_coordinator_id', 'terms_id'];
@@ -45,12 +46,12 @@ class RoleAssignment extends Model
 
             if ($model->head_of_major_id) {
                 $conflict = RoleAssignment::where('terms_id', $term)
-                                ->where(function ($q) use ($model) {
-                                    $q->where('head_of_major_id', $model->head_of_major_id)
-                                      ->orWhere('program_coordinator_id', $model->head_of_major_id);
-                                })
-                                ->where('id', '!=', $model->id ?? null)
-                                ->exists();
+                    ->where(function ($q) use ($model) {
+                        $q->where('head_of_major_id', $model->head_of_major_id)
+                            ->orWhere('program_coordinator_id', $model->head_of_major_id);
+                    })
+                    ->where('id', '!=', $model->id ?? null)
+                    ->exists();
 
                 if ($conflict) {
                     throw new \Exception('Teacher already assigned as head or program coordinator in the same term.');
@@ -59,12 +60,12 @@ class RoleAssignment extends Model
 
             if ($model->program_coordinator_id) {
                 $conflict = RoleAssignment::where('terms_id', $term)
-                                ->where(function ($q) use ($model) {
-                                    $q->where('head_of_major_id', $model->program_coordinator_id)
-                                      ->orWhere('program_coordinator_id', $model->program_coordinator_id);
-                                })
-                                ->where('id', '!=', $model->id ?? null)
-                                ->exists();
+                    ->where(function ($q) use ($model) {
+                        $q->where('head_of_major_id', $model->program_coordinator_id)
+                            ->orWhere('program_coordinator_id', $model->program_coordinator_id);
+                    })
+                    ->where('id', '!=', $model->id ?? null)
+                    ->exists();
 
                 if ($conflict) {
                     throw new \Exception('Teacher already assigned as head or program coordinator in the same term.');

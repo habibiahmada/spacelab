@@ -31,13 +31,13 @@ class StudentController extends Controller
             ->first();
 
         // Fallback: if no current block (e.g. holiday or between blocks), use the latest block of the term
-        if (!$activeBlock) {
+        if (! $activeBlock) {
             $activeBlock = Block::where('terms_id', $activeTerm->id)
                 ->orderBy('end_date', 'desc')
                 ->first();
         }
 
-        if (!$activeBlock) {
+        if (! $activeBlock) {
             return back()->with('error', 'Tidak ada block yang aktif atau tersedia untuk tahun ajaran ini.');
         }
 

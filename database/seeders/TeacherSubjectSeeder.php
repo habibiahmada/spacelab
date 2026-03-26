@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\{Teacher, Subject, TeacherSubject};
+use App\Models\Subject;
+use App\Models\Teacher;
+use App\Models\TeacherSubject;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class TeacherSubjectSeeder extends Seeder
 {
@@ -18,6 +20,7 @@ class TeacherSubjectSeeder extends Seeder
 
         if ($teachers->isEmpty() || $subjects->isEmpty()) {
             $this->command->warn('⚠️ Teachers and subjects are required for TeacherSubjectSeeder.');
+
             return;
         }
 
@@ -36,12 +39,12 @@ class TeacherSubjectSeeder extends Seeder
 
             // Create Teacher records for these new users
             foreach ($user as $u) {
-                if (!Teacher::where('user_id', $u->id)->exists()) {
-                    $code = 'T-' . str_pad($teachers->count() + 1, 3, '0', STR_PAD_LEFT);
+                if (! Teacher::where('user_id', $u->id)->exists()) {
+                    $code = 'T-'.str_pad($teachers->count() + 1, 3, '0', STR_PAD_LEFT);
                     Teacher::create([
                         'code' => $code,
                         'phone' => \Faker\Factory::create('id_ID')->unique()->phoneNumber(),
-                        'avatar' => 'https://i.pravatar.cc/300?img=' . rand(1, 70),
+                        'avatar' => 'https://i.pravatar.cc/300?img='.rand(1, 70),
                         'user_id' => $u->id,
                     ]);
                 }
@@ -59,7 +62,7 @@ class TeacherSubjectSeeder extends Seeder
             $numSubjects = rand(4, 6);
             $assignedSubjects = array_rand($subjectIds, min($numSubjects, count($subjectIds)));
 
-            if (!is_array($assignedSubjects)) {
+            if (! is_array($assignedSubjects)) {
                 $assignedSubjects = [$assignedSubjects];
             }
 

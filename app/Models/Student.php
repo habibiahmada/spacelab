@@ -12,9 +12,11 @@ class Student extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = [
-        'nis', 'nisn', 'users_id', 'avatar'
+        'nis', 'nisn', 'users_id', 'avatar',
     ];
 
     public function user(): BelongsTo

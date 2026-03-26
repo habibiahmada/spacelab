@@ -12,8 +12,11 @@ class Notification extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = ['user_id', 'type', 'message', 'is_read', 'related_schedule_id'];
+
     protected $casts = ['is_read' => 'boolean'];
 
     public function user(): BelongsTo

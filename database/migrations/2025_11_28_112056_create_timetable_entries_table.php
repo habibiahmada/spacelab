@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('timetable_entries', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('template_id');
-            $table->enum('day_of_week', [1,2,3,4,5,6,7]);
+            $table->enum('day_of_week', [1, 2, 3, 4, 5, 6, 7]);
             $table->uuid('period_id');
             $table->uuid('subject_id');
             $table->uuid('teacher_id');

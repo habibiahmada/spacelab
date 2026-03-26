@@ -11,12 +11,14 @@ class Report extends Model
     use HasFactory;
 
     public $timestamps = false;
+
     protected $fillable = [
-        'room_id', 'date', 'total_usage_hours', 'total_idle_hours', 'utilization_rate', 'generated_at'
+        'room_id', 'date', 'total_usage_hours', 'total_idle_hours', 'utilization_rate', 'generated_at',
     ];
+
     protected $casts = [
         'date' => 'date',
-        'generated_at' => 'datetime'
+        'generated_at' => 'datetime',
     ];
 
     public function room(): BelongsTo

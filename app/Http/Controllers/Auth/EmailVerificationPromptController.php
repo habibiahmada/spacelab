@@ -10,8 +10,9 @@ class EmailVerificationPromptController extends Controller
     public function __invoke(Request $request)
     {
         $role = $request->user()->role->lower_name;
+
         return $request->user()->hasVerifiedEmail()
-            ? redirect()->intended(route($role . '.dashboard'))
+            ? redirect()->intended(route($role.'.dashboard'))
             : view('auth.verify-email');
     }
 }

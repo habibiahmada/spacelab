@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->enum('type', ['teori', 'praktikum', 'lainnya'])->after('name');
 
-            if (!Schema::hasColumn('subjects', 'created_at') && !Schema::hasColumn('subjects', 'updated_at')) {
+            if (! Schema::hasColumn('subjects', 'created_at') && ! Schema::hasColumn('subjects', 'updated_at')) {
                 $table->timestamps();
             }
         });

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('major_id')->references('id')->on('majors')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->timestamps();
-            $table->unique(['major_id','subject_id']);
+            $table->unique(['major_id', 'subject_id']);
         });
     }
 

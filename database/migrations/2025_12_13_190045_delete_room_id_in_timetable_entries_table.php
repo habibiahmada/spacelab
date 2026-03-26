@@ -13,25 +13,24 @@ return new class extends Migration
     {
         // Drop unique index/constraint safely using raw SQL
         try {
-            // Postgres uses DROP INDEX (or DROP CONSTRAINT if it was a constraint, but here it's an index)
-            // MySQL uses DROP INDEX name ON table
             $driver = DB::getDriverName();
             if ($driver === 'pgsql') {
                 DB::statement('DROP INDEX IF EXISTS unique_timetable_room_slot');
-            } else {
-                 // For MySQL/SQLite, generic SQL or Schema builder (but Schema builder might error if not found)
-                 // Let's try raw SQL for MySQL too if predictable
-                 DB::statement("DROP INDEX unique_timetable_room_slot ON timetable_entries");
+            } elseif ($driver === 'mysql') {
+                DB::statement('DROP INDEX unique_timetable_room_slot ON timetable_entries');
+            } elseif ($driver === 'sqlite') {
+                // SQLite: Drop index if exists
+                DB::statement('DROP INDEX IF EXISTS unique_timetable_room_slot');
             }
         } catch (\Throwable $e) {
             // Ignore if index doesn't exist
         }
 
         Schema::table('timetable_entries', function (Blueprint $table) {
-             // Foreign key likely does not exist based on history.
-             // $table->dropForeign(['room_id']);
+            // Foreign key likely does not exist based on history.
+            // $table->dropForeign(['room_id']);
 
-             $table->dropColumn('room_id');
+            $table->dropColumn('room_id');
         });
     }
 

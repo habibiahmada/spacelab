@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use App\Models\Subject;
 use App\Models\Major;
+use App\Models\Subject;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SubjectMajorAllowedSeeder extends Seeder
 {
@@ -84,11 +84,15 @@ class SubjectMajorAllowedSeeder extends Seeder
 
         foreach ($mappings as $subjectCode => $majorCodes) {
             $subject = Subject::where('code', $subjectCode)->first();
-            if (! $subject) continue;
+            if (! $subject) {
+                continue;
+            }
 
             foreach ($majorCodes as $majorCode) {
                 $major = Major::where('code', $majorCode)->first();
-                if (! $major) continue;
+                if (! $major) {
+                    continue;
+                }
 
                 DB::table('subject_major_allowed')->updateOrInsert(
                     [
@@ -106,6 +110,6 @@ class SubjectMajorAllowedSeeder extends Seeder
             }
         }
 
-        $this->command->info('✅ subject_major_allowed seeded dengan mapping lengkap untuk semua ' . count($mappings) . ' mata pelajaran.');
+        $this->command->info('✅ subject_major_allowed seeded dengan mapping lengkap untuk semua '.count($mappings).' mata pelajaran.');
     }
 }

@@ -2,11 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Block;
+use App\Models\ClassHistory;
+use App\Models\Classroom;
+use App\Models\Role;
+use App\Models\Student;
+use App\Models\Term;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
-use App\Models\{ClassHistory, Student, Classroom, Term, Block, User, Role};
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ClassHistorySeeder extends Seeder
 {
@@ -18,6 +23,7 @@ class ClassHistorySeeder extends Seeder
 
         if ($classes->isEmpty()) {
             $this->command->warn('⚠️ Tidak ada kelas. Pastikan ClassSeeder telah dijalankan.');
+
             return;
         }
 
@@ -57,8 +63,8 @@ class ClassHistorySeeder extends Seeder
                     $newUsers = collect();
                     for ($i = 0; $i < $missing; $i++) {
                         $u = User::create([
-                            'name' => 'Siswa ' . Str::random(6),
-                            'email' => 'siswa+' . Str::random(8) . '@example.test',
+                            'name' => 'Siswa '.Str::random(6),
+                            'email' => 'siswa+'.Str::random(8).'@example.test',
                             'password_hash' => Hash::make('siswa123'),
                             'role_id' => $studentRole->id,
                         ]);
@@ -71,7 +77,7 @@ class ClassHistorySeeder extends Seeder
                 $i = $startIndex;
                 foreach ($newUsers as $user) {
                     $nis = str_pad($i, 8, '0', STR_PAD_LEFT);
-                    $nisn = '00' . str_pad($i, 8, '0', STR_PAD_LEFT);
+                    $nisn = '00'.str_pad($i, 8, '0', STR_PAD_LEFT);
 
                     // avatar random deterministic-ish
                     $hash = crc32($user->id);
@@ -106,13 +112,16 @@ class ClassHistorySeeder extends Seeder
                 ->count();
 
             $needed = max(0, 35 - $already);
-            if ($needed === 0) continue;
+            if ($needed === 0) {
+                continue;
+            }
 
             $toAssign = $shuffled->slice($pointer, $needed);
             $pointer += $toAssign->count();
 
             if ($toAssign->isEmpty()) {
                 $this->command->warn("⚠️ Siswa tidak cukup untuk mengisi Kelas {$class->id}. Terisi: {$already}. Diperlukan: {$needed}");
+
                 continue;
             }
 
@@ -122,7 +131,9 @@ class ClassHistorySeeder extends Seeder
                     ->where('class_id', $class->id)
                     ->where('terms_id', $term->id)
                     ->exists();
-                if ($exists) continue;
+                if ($exists) {
+                    continue;
+                }
 
                 ClassHistory::create([
                     'student_id' => $student->id,

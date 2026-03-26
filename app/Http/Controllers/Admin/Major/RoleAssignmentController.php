@@ -21,7 +21,7 @@ class RoleAssignmentController extends Controller
         ]);
 
         $activeTerm = Term::where('is_active', true)->first();
-        if (!$activeTerm) {
+        if (! $activeTerm) {
             return redirect()->back()->with('error', 'Tidak ada tahun ajaran aktif.');
         }
 
@@ -38,6 +38,7 @@ class RoleAssignmentController extends Controller
 
         try {
             $assignment->save();
+
             return redirect()->back()->with('success', 'Penugasan berhasil diperbarui.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

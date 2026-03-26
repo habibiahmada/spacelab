@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AttendanceSession;
-use App\Models\AttendanceRecord;
 use App\Models\AttendanceAttachment;
+use App\Models\AttendanceRecord;
+use App\Models\AttendanceSession;
 use App\Services\AttendanceService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AttendanceController extends Controller
 {
@@ -28,8 +28,9 @@ class AttendanceController extends Controller
             ->whereDate('scanned_at', now()->toDateString())
             ->exists();
         if ($hasAttendedToday) {
-            return redirect()->route($user->role->lower_name . '.index')->with('info', 'Anda sudah melakukan absensi hari ini.');
-        }   
+            return redirect()->route($user->role->lower_name.'.index')->with('info', 'Anda sudah melakukan absensi hari ini.');
+        }
+
         return view('attendance.index');
     }
 
@@ -75,13 +76,13 @@ class AttendanceController extends Controller
         // Find session by token
         $session = AttendanceSession::where('token', $request->token)->first();
 
-        if (!$session) {
+        if (! $session) {
             return redirect()->back()->withInput()->with('error', 'Token sesi tidak valid atau sudah kadaluarsa.');
         }
 
         // Validate attendance Logic (active, time, duplicate)
         $validation = $this->attendanceService->validateAttendance($session, $user);
-        if (!$validation['valid']) {
+        if (! $validation['valid']) {
             return redirect()->back()->withInput()->with('error', $validation['message']);
         }
 
@@ -90,37 +91,38 @@ class AttendanceController extends Controller
         if ($request->hasFile('selfie_photo')) {
             // Priority 1: File Upload from fallback
             $file = $request->file('selfie_photo');
-            $filename = 'selfie_' . time() . '_' . $user->id . '.' . $file->getClientOriginalExtension();
+            $filename = 'selfie_'.time().'_'.$user->id.'.'.$file->getClientOriginalExtension();
             $selfiePath = $file->storeAs('attendance/selfies', $filename, 'public');
         } elseif ($request->filled('selfie_photo_base64')) {
             // Priority 2: Base64 from Canvas
             try {
                 $base64String = $request->selfie_photo_base64;
-                
+
                 // Remove the data URL prefix if present
                 if (strpos($base64String, 'data:image') === 0) {
-                    $imageParts = explode(";base64,", $base64String);
-                    if (!isset($imageParts[1])) {
+                    $imageParts = explode(';base64,', $base64String);
+                    if (! isset($imageParts[1])) {
                         return redirect()->back()->withInput()->with('error', 'Format selfie base64 tidak valid.');
                     }
                     $base64String = $imageParts[1];
                 }
-                
+
                 $imageData = base64_decode($base64String, true);
                 if ($imageData === false) {
                     return redirect()->back()->withInput()->with('error', 'Selfie base64 corrupted atau tidak valid.');
                 }
-                
-                $filename = 'selfie_' . time() . '_' . $user->id . '.jpg';
-                $selfiePath = 'attendance/selfies/' . $filename;
+
+                $filename = 'selfie_'.time().'_'.$user->id.'.jpg';
+                $selfiePath = 'attendance/selfies/'.$filename;
                 Storage::disk('public')->put($selfiePath, $imageData);
             } catch (\Exception $e) {
-                Log::error('Selfie base64 processing error: ' . $e->getMessage());
-                return redirect()->back()->withInput()->with('error', 'Gagal memproses selfie: ' . $e->getMessage());
+                Log::error('Selfie base64 processing error: '.$e->getMessage());
+
+                return redirect()->back()->withInput()->with('error', 'Gagal memproses selfie: '.$e->getMessage());
             }
         }
 
-        if (!$selfiePath) {
+        if (! $selfiePath) {
             return redirect()->back()->withInput()->with('error', 'Selfie wajib diambil melalui kamera atau upload file.');
         }
 
@@ -141,7 +143,7 @@ class AttendanceController extends Controller
             if ($request->hasFile('attachment')) {
                 $file = $request->file('attachment');
                 $path = $file->store('attendance/attachments', 'public');
-                
+
                 AttendanceAttachment::create([
                     'attendance_record_id' => $record->id,
                     'file_path' => $path,
@@ -150,10 +152,12 @@ class AttendanceController extends Controller
             }
 
             $rolePrefix = $user->role->lower_name;
-            return redirect()->route($rolePrefix . '.attendance.index')->with('success', 'Absensi berhasil dikirim!');
+
+            return redirect()->route($rolePrefix.'.attendance.index')->with('success', 'Absensi berhasil dikirim!');
         } catch (\Exception $e) {
-            Log::error('Attendance store error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan absensi: ' . $e->getMessage());
+            Log::error('Attendance store error: '.$e->getMessage());
+
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan absensi: '.$e->getMessage());
         }
     }
 }

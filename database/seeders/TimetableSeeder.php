@@ -2,18 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\Period;
+use App\Models\Room;
+use App\Models\RoomHistory;
+use App\Models\Teacher;
+use App\Models\TeacherSubject;
+use App\Models\Term;
+use App\Models\TimetableEntry;
+use App\Models\TimetableTemplate;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
-use App\Models\{
-    TimetableTemplate,
-    TimetableEntry,
-    Term,
-    RoomHistory,
-    TeacherSubject,
-    Period,
-    Room,
-    Teacher
-};
 
 class TimetableSeeder extends Seeder
 {
@@ -21,6 +19,7 @@ class TimetableSeeder extends Seeder
     {
         if (! Schema::hasTable('room_history')) {
             $this->command->warn('⚠️ Table room_history does not exist. Run RoomHistorySeeder first.');
+
             return;
         }
 
@@ -28,46 +27,52 @@ class TimetableSeeder extends Seeder
         $templates = TimetableTemplate::where('is_active', true)->get();
         $teacherSubjects = TeacherSubject::all();
         $periods = Period::orderBy('start_time')->get();
-        $rooms = Room::where('type', 'kelas')->get();
+        $rooms = Room::where('type', 'kelas')->orWhere('type', 'lab')->where('name', '!=', 'Ruang Serbaguna')->get();
         $teachers = Teacher::all();
 
         if ($templates->isEmpty()) {
             $this->command->warn('⚠️ No timetable templates found. Run TimetableTemplateSeeder first.');
+
             return;
         }
 
         if ($teacherSubjects->isEmpty()) {
             $this->command->warn('⚠️ TeacherSubject data is required. Run TeacherSubjectSeeder first.');
+
             return;
         }
 
         if ($periods->isEmpty()) {
             $this->command->warn('⚠️ Period data is required. Run PeriodSeeder first.');
+
             return;
         }
 
         if ($rooms->isEmpty()) {
             $this->command->warn('⚠️ Classroom rooms are required. Run RoomSeeder first.');
+
             return;
         }
 
         if ($teachers->isEmpty()) {
             $this->command->warn('⚠️ Teachers are required. Run TeacherSeeder first.');
+
             return;
         }
 
         // gunakan is_teaching jika ada, fallback true jika tidak ada (tidak wajib menambah kolom)
-        $teachingPeriods = $periods->filter(fn($p) => ($p->is_teaching ?? true))->values();
+        $teachingPeriods = $periods->filter(fn ($p) => ($p->is_teaching ?? true))->values();
 
         if ($teachingPeriods->isEmpty()) {
             $this->command->warn('⚠️ No teaching periods found (check is_teaching flags).');
+
             return;
         }
 
         $roomHistory = RoomHistory::where('terms_id', $term->id)->get();
         $roomHistoryByClass = $roomHistory->keyBy('classes_id');
 
-        $daysOfWeek = [1,2,3,4,5]; // Monday-Friday
+        $daysOfWeek = [1, 2, 3, 4, 5]; // Monday-Friday
         $periodIds = $teachingPeriods->pluck('id')->toArray();
 
         // Track teacher/room usage per slot to prevent conflicts
@@ -120,6 +125,7 @@ class TimetableSeeder extends Seeder
 
                     if (! $candidate) {
                         $entriesFailed++;
+
                         continue;
                     }
 
@@ -128,9 +134,14 @@ class TimetableSeeder extends Seeder
 
                     if ($roomHistEntry === null) {
                         $usedRooms = $roomSchedule[$slotKey] ?? [];
-                        $availableRoom = $rooms->first(function($r) use ($usedRooms) {
+                        $availableRoom = $rooms->first(function ($r) use ($usedRooms) {
                             return ! in_array($r->id, $usedRooms);
-                        }) ?? $rooms->first();
+                        });
+
+                        if (! $availableRoom) {
+                            $entriesFailed++;
+                            continue;
+                        }
 
                         $teacherForRoom = $teachers->random();
 
@@ -160,16 +171,22 @@ class TimetableSeeder extends Seeder
                     $usedRooms = $roomSchedule[$slotKey] ?? [];
                     if (in_array($roomHistEntry->room_id, $usedRooms)) {
                         $alternatives = RoomHistory::where('classes_id', $classId)->get();
-                        $found = $alternatives->first(function($alt) use ($usedRooms) {
+                        $found = $alternatives->first(function ($alt) use ($usedRooms) {
                             return ! in_array($alt->room_id, $usedRooms);
                         });
 
                         if ($found) {
                             $roomHistEntry = $found;
                         } else {
-                            $availableRoom = $rooms->first(function($r) use ($usedRooms) {
+                            $availableRoom = $rooms->first(function ($r) use ($usedRooms) {
                                 return ! in_array($r->id, $usedRooms);
-                            }) ?? $rooms->first();
+                            });
+
+                            if (! $availableRoom) {
+                                // No rooms left to allocate!
+                                $entriesFailed++;
+                                continue;
+                            }
 
                             $teacherForRoom = $teachers->random();
 
@@ -199,16 +216,16 @@ class TimetableSeeder extends Seeder
                     // buat timetable entry
                     try {
                         TimetableEntry::create([
-                            'template_id'         => $template->id,
-                            'day_of_week'         => $day,
-                            'period_id'           => $periodId,
-                            'teacher_subject_id'  => $candidate->id,
-                            'room_history_id'     => $roomHistEntry->id,
+                            'template_id' => $template->id,
+                            'day_of_week' => $day,
+                            'period_id' => $periodId,
+                            'teacher_subject_id' => $candidate->id,
+                            'room_history_id' => $roomHistEntry->id,
                         ]);
 
                         // mark teacher and room used in this slot
                         $teacherSchedule[$slotKey][] = $candidate->teacher_id;
-                        $roomSchedule[$slotKey][]    = $roomHistEntry->room_id;
+                        $roomSchedule[$slotKey][] = $roomHistEntry->room_id;
 
                         $entriesCreated++;
                     } catch (\Exception $e) {
@@ -226,10 +243,10 @@ class TimetableSeeder extends Seeder
      * Cari TeacherSubject yang available untuk slot (tidak scheduling conflict).
      * Prioritas: gunakan $preferred jika available, jika tidak carilah di $pool.
      *
-     * @param \App\Models\TeacherSubject $preferred
-     * @param \Illuminate\Support\Collection $pool
-     * @param array $teacherSchedule
-     * @param string $slotKey
+     * @param  \App\Models\TeacherSubject  $preferred
+     * @param  \Illuminate\Support\Collection  $pool
+     * @param  array  $teacherSchedule
+     * @param  string  $slotKey
      * @return \App\Models\TeacherSubject|null
      */
     protected function findAvailableTeacherSubject($preferred, $pool, $teacherSchedule, $slotKey)
@@ -237,7 +254,7 @@ class TimetableSeeder extends Seeder
         $usedTeachers = $teacherSchedule[$slotKey] ?? [];
 
         // helper closure untuk cek apakah ts available
-        $isAvailable = function($ts) use ($usedTeachers) {
+        $isAvailable = function ($ts) use ($usedTeachers) {
             return ! in_array($ts->teacher_id, $usedTeachers);
         };
 
@@ -254,6 +271,7 @@ class TimetableSeeder extends Seeder
 
         // sebagai fallback, coba cari teacherSubject lain di DB yang mungkin tidak ada di pool
         $alt = TeacherSubject::whereNotIn('teacher_id', $usedTeachers)->first();
+
         return $alt;
     }
 }

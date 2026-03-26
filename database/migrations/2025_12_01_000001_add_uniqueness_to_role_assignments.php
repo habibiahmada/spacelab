@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -17,11 +17,13 @@ return new class extends Migration
             // Add simple unique indexes
             try {
                 $table->unique(['head_of_major_id', 'terms_id'], 'unique_head_per_term');
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
 
             try {
                 $table->unique(['program_coordinator_id', 'terms_id'], 'unique_pc_per_term');
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
         });
 
         $connection = config('database.default');
@@ -67,8 +69,14 @@ SQL
         }
 
         Schema::table('role_assignments', function (Blueprint $table) {
-            try { $table->dropUnique('unique_head_per_term'); } catch (\Throwable $e) {}
-            try { $table->dropUnique('unique_pc_per_term'); } catch (\Throwable $e) {}
+            try {
+                $table->dropUnique('unique_head_per_term');
+            } catch (\Throwable $e) {
+            }
+            try {
+                $table->dropUnique('unique_pc_per_term');
+            } catch (\Throwable $e) {
+            }
         });
     }
 };

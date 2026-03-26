@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('company_relations', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            
+
             $table->uuid('company_id');
-            $table->uuid('major_id'); 
+            $table->uuid('major_id');
 
             $table->string('partnership_type')->nullable(); // Contoh: 'internship', 'recruitment', 'mou'
             $table->string('status')->default('active'); // Contoh: 'active', 'expired', 'pending'
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('document_link')->nullable();
-
 
             $table->timestamps();
 

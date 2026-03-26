@@ -3,16 +3,15 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClassHistory;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use App\Models\AttendanceSession;
 use App\Models\AttendanceRecord;
-use App\Models\TimetableEntry;
+use App\Models\AttendanceSession;
+use App\Models\ClassHistory;
 use App\Models\Classroom;
 use App\Models\Period;
 use App\Models\Term;
+use App\Models\TimetableEntry;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -55,16 +54,16 @@ class DashboardController extends Controller
 
             // Jadwal hari ini
             $schedules = TimetableEntry::whereHas('template', function ($q) use ($classIds) {
-                    $q->whereIn('class_id', $classIds);
-                })
+                $q->whereIn('class_id', $classIds);
+            })
                 ->where('day_of_week', $dayIndex)
                 ->with([
-                    'period',
-                    'template.class.major',
-                    'teacherSubject.subject',
-                    'teacherSubject.teacher.user',
-                    'roomHistory.room',
-                ])
+                'period',
+                'template.class.major',
+                'teacherSubject.subject',
+                'teacherSubject.teacher.user',
+                'roomHistory.room',
+            ])
                 ->orderBy('period_id', 'asc')
                 ->get();
 
@@ -102,13 +101,20 @@ class DashboardController extends Controller
                     ->get();
 
                 $periodEntries = $nonTeachingPeriods->map(function ($p) use ($dayIndex) {
-                    return new class($p, $dayIndex) {
+                    return new class($p, $dayIndex)
+                    {
                         public $period;
+
                         public $template;
+
                         public $teacherSubject;
+
                         public $teacher;
+
                         public $roomHistory;
+
                         public $is_period_only = true;
+
                         public $day_of_week;
 
                         public function __construct($period, $day)
@@ -132,10 +138,13 @@ class DashboardController extends Controller
                 $schedules = $schedules
                     ->concat($periodEntries)
                     ->sortBy(function ($item) {
-                        if (! $item->period) return PHP_INT_MAX;
+                        if (! $item->period) {
+                            return PHP_INT_MAX;
+                        }
                         if ($item->period->start_time) {
                             return Carbon::parse($item->period->start_time)->timestamp;
                         }
+
                         return $item->period->ordinal ? $item->period->ordinal * 1000 : PHP_INT_MAX;
                     })
                     ->values();
@@ -157,12 +166,12 @@ class DashboardController extends Controller
         }
 
         return view('student.dashboard', [
-            'student'        => $student,
+            'student' => $student,
             'schedulesToday' => $schedules,
-            'countToday'     => $schedules->count() - $periodEntries->count(),
-            'today'          => $dayName,
-            'currentTime'    => $currentTime,
-            'currentDayIndex'=> $dayIndex,
+            'countToday' => $schedules->count() - $periodEntries->count(),
+            'today' => $dayName,
+            'currentTime' => $currentTime,
+            'currentDayIndex' => $dayIndex,
             'studentClassFullName' => $studentClassFullName,
             'title' => 'Dashboard',
             'description' => 'Halaman dashboard',

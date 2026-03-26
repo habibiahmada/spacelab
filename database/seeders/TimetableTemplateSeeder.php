@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Classroom;
 use App\Models\Block;
+use App\Models\Classroom;
 use App\Models\TimetableTemplate;
+use Illuminate\Database\Seeder;
 
 class TimetableTemplateSeeder extends Seeder
 {
@@ -16,11 +16,13 @@ class TimetableTemplateSeeder extends Seeder
 
         if ($classes->isEmpty()) {
             $this->command->warn('⚠️ No classrooms found. Create classrooms first.');
+
             return;
         }
 
         if ($blocks->isEmpty()) {
             $this->command->warn('⚠️ No blocks found. Create blocks first.');
+
             return;
         }
 
@@ -30,7 +32,7 @@ class TimetableTemplateSeeder extends Seeder
                     [
                         'class_id' => $class->id,
                         'block_id' => $block->id,
-                        'version'  => 'v1',
+                        'version' => 'v1',
                     ],
                     [
                         'is_active' => true,

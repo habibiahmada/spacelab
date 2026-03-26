@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Carbon\Carbon;
 
 class Period extends Model
 {
     use HasFactory, HasUuids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = ['ordinal', 'start_time', 'end_time', 'is_teaching', 'start_date', 'end_date'];
@@ -26,7 +27,6 @@ class Period extends Model
     {
         return $this->hasMany(TimetableEntry::class, 'period_id');
     }
-
 
     public function isOngoing(?Carbon $now = null): bool
     {

@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AttendanceSession;
 use App\Models\AttendanceRecord;
+use App\Models\AttendanceSession;
 use App\Models\TimetableEntry;
 use App\Models\User;
 use App\Services\AttendanceService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class AttendanceSessionController extends Controller
 {
@@ -33,18 +33,18 @@ class AttendanceSessionController extends Controller
 
         $stats = [
             'total' => (clone $baseQuery)->distinct()->count('user_id'),
-            'staff' => (clone $baseQuery)->whereHas('user', fn($q) => $q->whereHas('role', fn($r) => $r->where('name', 'Staff')))->distinct()->count('user_id'),
-            'guru' => (clone $baseQuery)->whereHas('user', fn($q) => $q->whereHas('role', fn($r) => $r->where('name', 'Guru')))->distinct()->count('user_id'),
-            'siswa' => (clone $baseQuery)->whereHas('user', fn($q) => $q->whereHas('role', fn($r) => $r->where('name', 'Siswa')))->distinct()->count('user_id'),
+            'staff' => (clone $baseQuery)->whereHas('user', fn ($q) => $q->whereHas('role', fn ($r) => $r->where('name', 'Staff')))->distinct()->count('user_id'),
+            'guru' => (clone $baseQuery)->whereHas('user', fn ($q) => $q->whereHas('role', fn ($r) => $r->where('name', 'Guru')))->distinct()->count('user_id'),
+            'siswa' => (clone $baseQuery)->whereHas('user', fn ($q) => $q->whereHas('role', fn ($r) => $r->where('name', 'Siswa')))->distinct()->count('user_id'),
         ];
-        
+
         // Also need total counts to show "18 / 25"
         // This might be heavy if users table is huge, but for now:
         $counts = [
             'total' => User::count(),
-            'staff' => User::whereHas('role', fn($q) => $q->where('name', 'Staff'))->count(),
-            'guru' => User::whereHas('role', fn($q) => $q->where('name', 'Guru'))->count(),
-            'siswa' => User::whereHas('role', fn($q) => $q->where('name', 'Siswa'))->count(),
+            'staff' => User::whereHas('role', fn ($q) => $q->where('name', 'Staff'))->count(),
+            'guru' => User::whereHas('role', fn ($q) => $q->where('name', 'Guru'))->count(),
+            'siswa' => User::whereHas('role', fn ($q) => $q->where('name', 'Siswa'))->count(),
         ];
 
         // 2. Weekly Chart Data (all statuses + filters)
@@ -67,12 +67,12 @@ class AttendanceSessionController extends Controller
         }
 
         $chartRole = $request->input('chart_role');
-        if (!in_array($chartRole, $allowedChartRoles, true)) {
+        if (! in_array($chartRole, $allowedChartRoles, true)) {
             $chartRole = null;
         }
 
         $chartStatus = $request->input('chart_status');
-        if (!in_array($chartStatus, $allowedChartStatuses, true)) {
+        if (! in_array($chartStatus, $allowedChartStatuses, true)) {
             $chartStatus = null;
         }
 
@@ -89,14 +89,14 @@ class AttendanceSessionController extends Controller
             ->whereIn('status', $selectedChartStatuses);
 
         if ($chartRole) {
-            $weeklyDataQuery->whereHas('user.role', fn($q) => $q->where('name', $chartRole));
+            $weeklyDataQuery->whereHas('user.role', fn ($q) => $q->where('name', $chartRole));
         }
 
         $weeklyData = $weeklyDataQuery
             ->groupBy(DB::raw('DATE(scanned_at)'), 'status')
             ->get()
             ->groupBy('date')
-            ->map(fn($items) => $items->keyBy('status'));
+            ->map(fn ($items) => $items->keyBy('status'));
 
         $chartLabels = [];
         $chartSeries = [];
@@ -118,7 +118,7 @@ class AttendanceSessionController extends Controller
 
         $chartData = [
             'labels' => $chartLabels,
-            'datasets' => collect($selectedChartStatuses)->map(fn($statusKey) => [
+            'datasets' => collect($selectedChartStatuses)->map(fn ($statusKey) => [
                 'label' => $chartStatusMeta[$statusKey]['label'],
                 'data' => $chartSeries[$statusKey],
                 'backgroundColor' => $chartStatusMeta[$statusKey]['color'],
@@ -127,8 +127,8 @@ class AttendanceSessionController extends Controller
         ];
 
         $chartWeekLabel = $startOfWeek->locale('id')->isoFormat('D MMMM Y')
-            . ' - '
-            . $endOfWeek->locale('id')->isoFormat('D MMMM Y');
+            .' - '
+            .$endOfWeek->locale('id')->isoFormat('D MMMM Y');
 
         $chartFilters = [
             'week' => $chartReferenceDate->toDateString(),
@@ -158,7 +158,7 @@ class AttendanceSessionController extends Controller
 
         // Filters
         if ($request->filled('role')) {
-            $query->whereHas('user.role', fn($q) => $q->where('name', $request->role));
+            $query->whereHas('user.role', fn ($q) => $q->where('name', $request->role));
         }
 
         if ($request->filled('status')) {
@@ -166,7 +166,7 @@ class AttendanceSessionController extends Controller
         }
 
         if ($request->filled('search')) {
-            $query->whereHas('user', fn($q) => $q->where('name', 'like', '%' . $request->search . '%'));
+            $query->whereHas('user', fn ($q) => $q->where('name', 'like', '%'.$request->search.'%'));
         }
 
         $records = $query->latest()->paginate(20);
@@ -209,8 +209,8 @@ class AttendanceSessionController extends Controller
             $exists = AttendanceSession::where('timetable_entry_id', $entry->id)
                 ->where('is_active', true)
                 ->exists();
-            
-            if (!$exists) {
+
+            if (! $exists) {
                 $this->attendanceService->openSession($entry, Auth::user());
                 $count++;
             }
@@ -244,7 +244,7 @@ class AttendanceSessionController extends Controller
             $timetableEntry = $session->timetableEntry;
             if ($timetableEntry && $timetableEntry->template && $timetableEntry->template->class) {
                 $classroom = $timetableEntry->template->class;
-                
+
                 // Get students in this class
                 // Using the same logic as MarkAlphaAttendance command
                 $historyRecords = \App\Models\ClassHistory::where('class_id', $classroom->id)
@@ -253,14 +253,16 @@ class AttendanceSessionController extends Controller
 
                 foreach ($historyRecords as $record) {
                     $user = $record->student?->user;
-                    if (!$user) continue;
+                    if (! $user) {
+                        continue;
+                    }
 
                     // Check if they have attended TODAY (Daily Attendance Rule)
                     $hasAttendedToday = AttendanceRecord::where('user_id', $user->id)
                         ->whereDate('scanned_at', Carbon::today())
                         ->exists();
 
-                    if (!$hasAttendedToday) {
+                    if (! $hasAttendedToday) {
                         AttendanceRecord::create([
                             'attendance_session_id' => $session->id,
                             'user_id' => $user->id,

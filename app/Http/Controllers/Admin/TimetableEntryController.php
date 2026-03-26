@@ -82,11 +82,11 @@ class TimetableEntryController extends Controller
                         'period',
                         'teacherSubject.teacher.user',
                         'teacherSubject.subject',
-                        'roomHistory.room'
+                        'roomHistory.room',
                     ])
                     ->get()
                     ->groupBy(function ($entry) {
-                        return $entry->day_of_week . '-' . $entry->period_id;
+                        return $entry->day_of_week.'-'.$entry->period_id;
                     });
             }
         }
@@ -102,10 +102,10 @@ class TimetableEntryController extends Controller
                     && $teacherSubject->subject?->name;
             })
             ->unique(function ($teacherSubject) {
-                return $teacherSubject->teacher_id . '-' . $teacherSubject->subject_id;
+                return $teacherSubject->teacher_id.'-'.$teacherSubject->subject_id;
             })
             ->sortBy(function ($teacherSubject) {
-                return ($teacherSubject->subject?->name ?? '') . '|' . ($teacherSubject->teacher?->user?->name ?? '');
+                return ($teacherSubject->subject?->name ?? '').'|'.($teacherSubject->teacher?->user?->name ?? '');
             })
             ->values()
             ->map(function ($teacherSubject) {
@@ -134,7 +134,7 @@ class TimetableEntryController extends Controller
                     continue;
                 }
 
-                $slotKey = $busyEntry->day_of_week . '-' . $busyEntry->period_id;
+                $slotKey = $busyEntry->day_of_week.'-'.$busyEntry->period_id;
                 $busyTeachersBySlot[$slotKey] = $busyTeachersBySlot[$slotKey] ?? [];
                 $busyTeachersBySlot[$slotKey][] = $teacherId;
             }
@@ -199,7 +199,7 @@ class TimetableEntryController extends Controller
         // Validate conflicts
         $conflicts = $this->conflictService->validateEntry($validated);
 
-        if (!empty($conflicts)) {
+        if (! empty($conflicts)) {
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['conflict' => $conflicts]);
@@ -236,7 +236,7 @@ class TimetableEntryController extends Controller
         // Validate conflicts (exclude current entry)
         $conflicts = $this->conflictService->validateEntry($conflictData, $entry->id);
 
-        if (!empty($conflicts)) {
+        if (! empty($conflicts)) {
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['conflict' => $conflicts]);
@@ -292,7 +292,7 @@ class TimetableEntryController extends Controller
             ->map(function ($template) {
                 return [
                     'id' => $template->id,
-                    'name' => 'Versi ' . $template->version . ' - ' . ($template->block->name ?? 'Block'),
+                    'name' => 'Versi '.$template->version.' - '.($template->block->name ?? 'Block'),
                     'is_active' => $template->is_active,
                 ];
             });

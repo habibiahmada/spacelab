@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Student;
-use App\Models\User;
-use App\Models\Classroom;
 use App\Models\ClassHistory;
-use App\Models\Term;
-use App\Models\Role;
+use App\Models\Classroom;
 use App\Models\Major;
+use App\Models\Role;
+use App\Models\Student;
+use App\Models\Term;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -58,7 +58,7 @@ class StudentController extends Controller
 
             // 1. Find or First active term
             $activeTerm = Term::where('is_active', true)->first();
-            if (!$activeTerm) {
+            if (! $activeTerm) {
                 throw new \Exception('No active term found.');
             }
 
@@ -97,11 +97,10 @@ class StudentController extends Controller
             return redirect()->back()->with('success', 'Siswa berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menambahkan siswa: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menambahkan siswa: '.$e->getMessage());
         }
     }
-
-
 
     public function show($id)
     {
@@ -113,7 +112,7 @@ class StudentController extends Controller
                 ->with(['student.user', 'classroom.major', 'block'])
                 ->first();
 
-            if (!$classHistory || !$classHistory->student) {
+            if (! $classHistory || ! $classHistory->student) {
                 return response()->json(['error' => 'Student not found'], 404);
             }
 
@@ -143,9 +142,9 @@ class StudentController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . Student::find($id)->users_id,
-            'nis' => 'nullable|string|unique:students,nis,' . $id,
-            'nisn' => 'required|string|unique:students,nisn,' . $id,
+            'email' => 'required|email|unique:users,email,'.Student::find($id)->users_id,
+            'nis' => 'nullable|string|unique:students,nis,'.$id,
+            'nisn' => 'required|string|unique:students,nisn,'.$id,
             'classroom_id' => 'required|exists:classes,id',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
@@ -188,7 +187,7 @@ class StudentController extends Controller
             $student->update([
                 'nis' => $request->nis,
                 'nisn' => $request->nisn,
-                'avatar' => $avatar
+                'avatar' => $avatar,
             ]);
 
             // Update class history if classroom changed
@@ -208,7 +207,8 @@ class StudentController extends Controller
             return redirect()->back()->with('success', 'Data siswa berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal memperbarui data siswa: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal memperbarui data siswa: '.$e->getMessage());
         }
     }
 
@@ -234,7 +234,8 @@ class StudentController extends Controller
             return redirect()->back()->with('success', 'Siswa berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menghapus siswa: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal menghapus siswa: '.$e->getMessage());
         }
     }
 }

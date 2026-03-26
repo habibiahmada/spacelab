@@ -12,15 +12,14 @@ class TemplateController extends Controller
     public function __invoke()
     {
         $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=majors_template.csv",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=majors_template.csv',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ];
 
         $columns = ['code', 'name', 'description', 'logo', 'website', 'contact_email', 'slogan'];
-
 
         $callback = function () use ($columns) {
             $file = fopen('php://output', 'w');

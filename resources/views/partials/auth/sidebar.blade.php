@@ -1,21 +1,17 @@
 <!-- Sidebar Navigation -->
-<nav class="mt-6 space-y-1">
+<nav class="px-3 pb-4">
+    <div class="space-y-3 border-t border-slate-200/80 bg-white/80 p-2.5 shadow-sm dark:border-slate-700 dark:bg-slate-900/60">
+        {{-- Menu dinamis berdasarkan role --}}
+        @switch(Auth::user()->role->lower_name)
+            @case('admin')
+                @include('partials.auth.menus.admin')
+                @break
 
-    <div class="px-4 text-xs font-semibold uppercase text-gray-500 dark:text-gray-400">
-        {{ __('Menu') }}
-    </div>
-
-    {{-- Menu dinamis berdasarkan role --}}
-    @switch(Auth::user()->role->lower_name)
-        @case('admin')
-            @include('partials.auth.menus.admin')
-            @break
-
-        @case('guru')
+            @case('guru')
                 @php
                     $isUserIsGuardian = false;
-                    $isUserIsHeadOfMajor = false;
-                    $isUserIsProgramCoodinatior = false;
+                    $isHeadOfMajor = false;
+                    $isProgramCoordinator = false;
 
                     $user = Auth::user();
                     if ($user && $user->teacher) {
@@ -24,25 +20,28 @@
                         })->exists();
 
                         $teacher = $user->teacher;
-
                         $isHeadOfMajor = $teacher ? $teacher->roleAssignments()->exists() : false;
                         $isProgramCoordinator = $teacher ? $teacher->asCoordinatorAssignments()->exists() : false;
                     }
-
-
                 @endphp
-                @include('partials.auth.menus.teacher', ['isUserIsGuardian' => $isUserIsGuardian])
-            @break
 
-        @case('staff')
-            @include('partials.auth.menus.staff')
-            @break
+                @include('partials.auth.menus.teacher', [
+                    'isUserIsGuardian' => $isUserIsGuardian,
+                    'isHeadOfMajor' => $isHeadOfMajor,
+                    'isProgramCoordinator' => $isProgramCoordinator,
+                ])
+                @break
 
-        @case('siswa')
-            @include('partials.auth.menus.student')
-            @break
+            @case('staff')
+                @include('partials.auth.menus.staff')
+                @break
 
-        @default
-            <p class="text-sm text-gray-500 px-4 py-2">{{ __('No navigation available') }}</p>
-    @endswitch
+            @case('siswa')
+                @include('partials.auth.menus.student')
+                @break
+
+            @default
+                <p class="px-3 py-2 text-sm text-slate-500 dark:text-slate-400">{{ __('No navigation available') }}</p>
+        @endswitch
+    </div>
 </nav>

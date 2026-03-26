@@ -18,7 +18,7 @@ class BuildingFactory extends Factory
     {
         return [
             'code' => $this->faker->unique()->bothify('GD#'),
-            'name' => 'Gedung ' . $this->faker->unique()->randomLetter(),
+            'name' => 'Gedung '.$this->faker->unique()->randomLetter(),
             'description' => $this->faker->sentence(),
             'total_floors' => $this->faker->numberBetween(1, 5),
         ];

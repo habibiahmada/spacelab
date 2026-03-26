@@ -24,6 +24,14 @@ class RoomController extends Controller
             ->orderBy('name')
             ->get();
 
+        $totalRooms = $buildings->sum('rooms_count') + Room::where('building_id', null)->count();
+        $activeRooms = $buildings->sum(function ($building) {
+            return $building->rooms()->where('is_active', true)->count();
+        });
+        $inactiveRooms = $totalRooms - $activeRooms;
+
+        $totalBuildings = $buildings->count();
+
         $undefinedRooms = Room::where('building_id', null)->get();
 
         return view('admin.room.index', [
@@ -32,6 +40,10 @@ class RoomController extends Controller
             'buildings' => $buildings,
             'roomTypes' => ['kelas', 'lab', 'aula', 'lainnya'],
             'undefinedRooms' => $undefinedRooms,
+            'totalRooms' => $totalRooms,
+            'activeRooms' => $activeRooms,
+            'inactiveRooms' => $inactiveRooms,
+            'totalBuildings' => $totalBuildings,
         ]);
     }
 
@@ -57,11 +69,11 @@ class RoomController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'ruangan (' . $validated['name'] . ')',
+            'entity' => 'ruangan ('.$validated['name'].')',
             'record_id' => Room::where('code', $validated['code'])->first()->id,
             'action' => 'create',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' menambahkan ruangan baru pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' menambahkan ruangan baru pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],
@@ -114,11 +126,11 @@ class RoomController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'ruangan (' . $room->name . ')',
+            'entity' => 'ruangan ('.$room->name.')',
             'record_id' => $room->id,
             'action' => 'update',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' memperbarui data ruangan pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' memperbarui data ruangan pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],
@@ -143,11 +155,11 @@ class RoomController extends Controller
 
         AuditLog::create([
             'user_id' => Auth::id(),
-            'entity' => 'ruangan (' . $room->name . ')',
+            'entity' => 'ruangan ('.$room->name.')',
             'record_id' => $room->id,
             'action' => 'delete',
             'new_data' => [
-                'message' => 'Pengguna ' . Auth::user()->name . ' menghapus ruangan pada ' . now()->toDateTimeString(),
+                'message' => 'Pengguna '.Auth::user()->name.' menghapus ruangan pada '.now()->toDateTimeString(),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ],

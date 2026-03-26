@@ -76,7 +76,7 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: root
         run: |
-          rm database/schema/pgsql-schema.sql
+          rm -f database/schema/pgsql-schema.sql
           php artisan migrate --force
           php artisan db:seed
 

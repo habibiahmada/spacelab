@@ -18,7 +18,6 @@ return new class extends Migration
             $table->uuid('terms_id');
             $table->uuid('block_id');
 
-
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->foreign('class_id')->references('id')->on('classes')->cascadeOnDelete();
             $table->foreign('terms_id')->references('id')->on('terms')->cascadeOnDelete();

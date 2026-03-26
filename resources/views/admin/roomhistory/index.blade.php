@@ -10,13 +10,13 @@
     <div class="py-6">
         <div class="mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-            <!-- Section 2: History Table - Modern Design -->
+            <!-- Section 2: Room Summary Table -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Riwayat Penggunaan Ruangan</h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">Kelola dan lacak alokasi ruangan</p>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Ringkasan Ruangan</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">Daftar ruangan dengan status terkini dan akses ke kalender</p>
                         </div>
                         <button onclick="openModal('create')"
                             class="inline-flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all duration-200 hover:shadow-md">
@@ -31,120 +31,37 @@
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-900">
                             <tr>
-                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    Ruangan
-                                </th>
-                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    Kelas
-                                </th>
-                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    Guru
-                                </th>
-                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    Tahun Ajaran
-                                </th>
-                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    Tipe Event
-                                </th>
-                                <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    Periode
-                                </th>
-                                <th scope="col" class="px-6 py-3.5 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                    Aksi
-                                </th>
+                                <th class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Kode</th>
+                                <th class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Nama</th>
+                                <th class="px-6 py-3.5 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3.5 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                            @forelse($histories as $history)
+                            @forelse($rooms as $room)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center">
-                                                <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                                </svg>
-                                            </div>
-                                            <div class="ml-3">
-                                                <div class="text-sm font-semibold text-gray-900 dark:text-white">
-                                                    {{ $history->room->code ?? '-' }}
-                                                </div>
-                                                <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                    {{ $history->room->name ?? 'Ruangan' }}
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        {{ $room->code }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ $history->classroom->full_name ?? '-' }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                        {{ $room->name }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold {{ $room->current_status === 'Occupied' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' }}">
+                                            {{ $room->current_status }}
                                         </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">
-                                            {{ $history->teacher->name ?? '-' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm">
-                                            <div class="font-medium text-gray-900 dark:text-white">
-                                                {{ $history->term->tahun_ajaran ?? '-' }}
-                                            </div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ ucfirst($history->term->kind ?? '-') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                                            {{ $history->event_type ?? '-' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-700 dark:text-gray-300">
-                                        <div class="flex items-center gap-1">
-                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                            </svg>
-                                            <span>{{ $history->start_date?->format('d M Y H:i') ?? '-' }}</span>
-                                            <!-- Contoh output: 04 Jan 2026 15:30 -->
-                                        </div>
-                                        <div class="flex items-center gap-1 mt-1">
-                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                            </svg>
-                                            <span>{{ $history->end_date?->format('d M Y H:i') ?? '-' }}</span>
-                                            <!-- Contoh output: 04 Jan 2026 18:45 -->
-                                        </div>
-                                    </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex items-center justify-end gap-2">
-                                            <button onclick="openModal('edit', {{ json_encode($history) }})"
-                                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg transition-colors duration-150">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                                </svg>
-                                                <span>Edit</span>
-                                            </button>
-                                            <button onclick="confirmDelete('{{ $history->id }}')"
-                                                class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg transition-colors duration-150">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                </svg>
-                                                <span>Hapus</span>
-                                            </button>
-                                        </div>
+                                        <a href="{{ route('admin.rooms.history.show', $room->id) }}"
+                                           class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200">Lihat Kalender →</a>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="px-6 py-12">
+                                    <td colspan="4" class="px-6 py-12">
                                         <div class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-                                            <svg class="w-16 h-16 mb-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                            </svg>
-                                            <p class="text-base font-medium">Belum ada riwayat penggunaan</p>
-                                            <p class="text-sm text-gray-400 dark:text-gray-500 mt-1">Tambahkan alokasi ruangan untuk memulai</p>
+                                            <p class="text-base font-medium">Tidak ada ruangan</p>
+                                            <p class="text-sm text-gray-400 dark:text-gray-500 mt-1">Tambahkan ruangan terlebih dahulu</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -154,9 +71,9 @@
                 </div>
 
                 <!-- Pagination -->
-                @if($histories->hasPages())
+                @if($rooms->hasPages())
                     <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-                        {{ $histories->links() }}
+                        {{ $rooms->links() }}
                     </div>
                 @endif
             </div>

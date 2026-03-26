@@ -1,63 +1,35 @@
 <meta charset="utf-8" />
-{{-- buat lebih besar skalanya --}}
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>
     {{ ($title ?? config('app.name')) . (isset($description) ? ' | ' . $description : '') }}
 </title>
-{{-- Favicon LIGHT --}}
 <link 
     rel="icon" 
-    href="{{ asset('assets/images/logo/favicon/dark/favicon-dark.ico') }}" 
-    media="(prefers-color-scheme: light)"
+    href="{{ asset('assets/images/logo/favicon.ico') }}" 
     sizes="any"
 >
 
 <link 
     rel="icon" 
-    href="{{ asset('assets/images/logo/favicon/dark/favicon-dark.svg') }}"
-    media="(prefers-color-scheme: light)"
+    href="{{ asset('assets/images/logo/favicon.svg') }}"
     type="image/svg+xml"
 >
 
 <link 
     rel="apple-touch-icon" 
-    href="{{ asset('assets/images/logo/favicon/dark/apple-touch-icon-dark.png') }}"
-    media="(prefers-color-scheme: light)"
+    href="{{ asset('assets/images/logo/apple-touch-icon.png') }}"
+    sizes="180x180"
 >
 
 <link 
     rel="manifest" 
-    href="{{ asset('assets/images/logo/favicon/dark/site.webmanifest') }}"
-    media="(prefers-color-scheme: light)"
->
-
-
-{{-- Favicon DARK --}}
-<link 
-    rel="icon" 
-    href="{{ asset('assets/images/logo/favicon/light/favicon-light.ico') }}" 
-    media="(prefers-color-scheme: dark)"
-    sizes="any"
->
-
-<link 
-    rel="icon" 
-    href="{{ asset('assets/images/logo/favicon/light/favicon-light.svg') }}"
-    media="(prefers-color-scheme: dark)"
-    type="image/svg+xml"
->
-
-<link 
-    rel="apple-touch-icon" 
-    href="{{ asset('assets/images/logo/favicon/light/apple-touch-icon-light.png') }}"
-    media="(prefers-color-scheme: dark)"
+    href="{{ asset('assets/images/logo/site.webmanifest') }}"
 >
 
 <link 
     rel="manifest" 
-    href="{{ asset('assets/images/logo/favicon/light/site.webmanifest') }}"
-    media="(prefers-color-scheme: dark)"
+    href="{{ asset('assets/images/logo/site.webmanifest') }}"
 >
 
 

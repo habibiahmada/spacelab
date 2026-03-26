@@ -11,11 +11,7 @@ class TimetableConflictService
      * Cek bentrok guru: Guru tidak boleh mengajar di hari & jam yang sama,
      * walaupun beda kelas.
      *
-     * @param string $teacherId
-     * @param int $dayOfWeek
-     * @param string $periodId
-     * @param string $blockId
-     * @param string|null $excludeEntryId Entry ID yang dikecualikan (untuk update)
+     * @param  string|null  $excludeEntryId  Entry ID yang dikecualikan (untuk update)
      * @return TimetableEntry|null Entry yang bentrok, null jika tidak ada bentrok
      */
     public function checkTeacherConflict(
@@ -46,11 +42,7 @@ class TimetableConflictService
      * Cek bentrok ruangan: Ruangan tidak boleh dipakai di hari & jam yang sama
      * oleh kelas lain.
      *
-     * @param string $roomHistoryId
-     * @param int $dayOfWeek
-     * @param string $periodId
-     * @param string $blockId
-     * @param string|null $excludeEntryId Entry ID yang dikecualikan (untuk update)
+     * @param  string|null  $excludeEntryId  Entry ID yang dikecualikan (untuk update)
      * @return TimetableEntry|null Entry yang bentrok, null jika tidak ada bentrok
      */
     public function checkRoomConflict(
@@ -78,8 +70,8 @@ class TimetableConflictService
     /**
      * Validasi entry jadwal, return array of conflict messages.
      *
-     * @param array $data Data entry yang akan divalidasi
-     * @param string|null $excludeEntryId Entry ID yang dikecualikan (untuk update)
+     * @param  array  $data  Data entry yang akan divalidasi
+     * @param  string|null  $excludeEntryId  Entry ID yang dikecualikan (untuk update)
      * @return array Array of error messages, empty jika tidak ada conflict
      */
     public function validateEntry(array $data, ?string $excludeEntryId = null): array
@@ -88,14 +80,14 @@ class TimetableConflictService
 
         // Get block_id from template
         $template = TimetableTemplate::find($data['template_id']);
-        if (!$template) {
+        if (! $template) {
             return ['Template jadwal tidak ditemukan.'];
         }
 
         $blockId = $template->block_id;
 
         // Check teacher conflict
-        if (!empty($data['teacher_id'])) {
+        if (! empty($data['teacher_id'])) {
             $teacherConflict = $this->checkTeacherConflict(
                 $data['teacher_id'],
                 $data['day_of_week'],
@@ -115,7 +107,7 @@ class TimetableConflictService
         }
 
         // Check room conflict
-        if (!empty($data['room_history_id'])) {
+        if (! empty($data['room_history_id'])) {
             $roomConflict = $this->checkRoomConflict(
                 $data['room_history_id'],
                 $data['day_of_week'],

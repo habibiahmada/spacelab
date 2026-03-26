@@ -2,20 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\AttendanceSession;
 use App\Models\AttendanceRecord;
+use App\Models\AttendanceSession;
 use App\Models\TimetableEntry;
 use App\Models\User;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AttendanceService
 {
     /**
      * Open a new attendance session for a timetable entry.
      *
-     * @param TimetableEntry $entry
-     * @param User $openedBy
      * @return AttendanceSession
      */
     public function openSession(TimetableEntry $entry, User $openedBy)
@@ -38,7 +36,6 @@ class AttendanceService
     /**
      * Close an attendance session.
      *
-     * @param AttendanceSession $session
      * @return bool
      */
     public function closeSession(AttendanceSession $session)
@@ -49,13 +46,11 @@ class AttendanceService
     /**
      * Validate if a user can mark attendance for a session.
      *
-     * @param AttendanceSession $session
-     * @param User $user
      * @return array ['valid' => bool, 'message' => string]
      */
     public function validateAttendance(AttendanceSession $session, User $user)
     {
-        if (!$session->is_active) {
+        if (! $session->is_active) {
             return ['valid' => false, 'message' => 'Sesi absensi sudah ditutup.'];
         }
 

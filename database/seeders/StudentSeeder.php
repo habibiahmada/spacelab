@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Models\{Student, User, Role};
 
 class StudentSeeder extends Seeder
 {
@@ -12,6 +14,7 @@ class StudentSeeder extends Seeder
         $studentRole = Role::where('name', 'Siswa')->first();
         if (! $studentRole) {
             $this->command->warn('⚠️ Role "Siswa" belum ada. Jalankan RoleSeeder dulu.');
+
             return;
         }
 
@@ -19,6 +22,7 @@ class StudentSeeder extends Seeder
 
         if ($studentUsers->isEmpty()) {
             $this->command->warn('⚠️ Tidak ada user berrole Siswa. Jalankan UserSeeder dulu.');
+
             return;
         }
 
@@ -27,7 +31,7 @@ class StudentSeeder extends Seeder
         $i = 1;
         foreach ($studentUsers as $user) {
             $nis = str_pad($i, 8, '0', STR_PAD_LEFT);
-            $nisn = '00' . str_pad($i, 8, '0', STR_PAD_LEFT);
+            $nisn = '00'.str_pad($i, 8, '0', STR_PAD_LEFT);
 
             $hash = crc32($user->id);
             $index = $hash % 100;

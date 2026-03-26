@@ -33,23 +33,31 @@ class ImportController extends Controller
 
             while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
                 // Skip empty rows
-                if ($row === [null] || count($row) === 0) continue;
+                if ($row === [null] || count($row) === 0) {
+                    continue;
+                }
 
                 // Skip header
                 if ($isHeader) {
                     $isHeader = false;
+
                     continue;
                 }
 
                 // Ensure we have at least the expected number of columns
-                if (count($row) < 2) continue;
+                if (count($row) < 2) {
+                    continue;
+                }
 
                 // Normalize fields (trim and remove BOM from first column)
                 $row = array_map(function ($v) {
-                    if (is_null($v)) return null;
+                    if (is_null($v)) {
+                        return null;
+                    }
                     $v = trim($v);
                     // remove UTF-8 BOM if present
                     $v = preg_replace('/^\xEF\xBB\xBF/', '', $v);
+
                     return $v;
                 }, $row);
 
@@ -85,11 +93,15 @@ class ImportController extends Controller
 
             DB::commit();
             fclose($handle);
+
             return redirect()->back()->with('success', 'Jurusan berhasil diimport.');
         } catch (\Exception $e) {
             DB::rollBack();
-            if (isset($handle)) fclose($handle);
-            return redirect()->back()->with('error', 'Import failed: ' . $e->getMessage());
+            if (isset($handle)) {
+                fclose($handle);
+            }
+
+            return redirect()->back()->with('error', 'Import failed: '.$e->getMessage());
         }
     }
 }

@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -58,11 +58,13 @@ return new class extends Migration
                 Schema::table('timetable_entries', function (Blueprint $table) {
                     try {
                         $table->unique(['room_id', 'day_of_week', 'period_id'], 'unique_timetable_room_slot');
-                    } catch (\Throwable $e) {}
+                    } catch (\Throwable $e) {
+                    }
 
                     try {
                         $table->unique(['teacher_id', 'day_of_week', 'period_id'], 'unique_timetable_teacher_slot');
-                    } catch (\Throwable $e) {}
+                    } catch (\Throwable $e) {
+                    }
                 });
             }
 
@@ -73,13 +75,25 @@ return new class extends Migration
     {
         Schema::table('timetable_entries', function (Blueprint $table) {
             if (Schema::hasColumn('timetable_entries', 'teacher_id')) {
-                try { $table->dropUnique('unique_timetable_teacher_slot'); } catch (\Throwable $e) {}
-                try { $table->dropColumn('teacher_id'); } catch (\Throwable $e) {}
+                try {
+                    $table->dropUnique('unique_timetable_teacher_slot');
+                } catch (\Throwable $e) {
+                }
+                try {
+                    $table->dropColumn('teacher_id');
+                } catch (\Throwable $e) {
+                }
             }
 
             if (Schema::hasColumn('timetable_entries', 'room_id')) {
-                try { $table->dropUnique('unique_timetable_room_slot'); } catch (\Throwable $e) {}
-                try { $table->dropColumn('room_id'); } catch (\Throwable $e) {}
+                try {
+                    $table->dropUnique('unique_timetable_room_slot');
+                } catch (\Throwable $e) {
+                }
+                try {
+                    $table->dropColumn('room_id');
+                } catch (\Throwable $e) {
+                }
             }
         });
 

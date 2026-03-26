@@ -13,6 +13,7 @@ class JsonController extends Controller
     public function __invoke($id)
     {
         $classroom = Classroom::with('major')->findOrFail($id);
+
         return response()->json($classroom);
     }
 }

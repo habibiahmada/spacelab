@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttendanceSession;
 use App\Models\Building;
 use App\Models\Room;
 use App\Models\TimetableEntry;
-use App\Models\AttendanceSession;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
